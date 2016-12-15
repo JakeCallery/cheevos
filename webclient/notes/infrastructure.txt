@@ -1,0 +1,9 @@
+This seems like a good setup:
+https://aghassi.github.io/NodeJS-Express-NginX-Setup/
+
+Run each service in docker containers:
+nginx -> node/express -> neo4j
+
+Maybe split push message handling to a separate node container
+Initial release, maybe keep api/web/push all handled by the same server.
+Be sure to set up the modules to be easy to split out later for the api/web/push handling
