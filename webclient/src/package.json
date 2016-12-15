@@ -1,0 +1,31 @@
+{
+  "name": "Cheevos-Client",
+  "version": "1.0.0",
+  "description": "Cheevos Web Client",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-core": "^6.20.0",
+    "babel-loader": "^6.2.9",
+    "babel-preset-es2015": "^6.18.0",
+    "css-loader": "^0.26.1",
+    "file-loader": "^0.9.0",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.24.1",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.1.0-beta.27"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://JakeCallery@bitbucket.org/JakeCallery/cheevos.git"
+  },
+  "keywords": [
+    "chevos"
+  ],
+  "author": "Jake Callery",
+  "license": "",
+  "bugs": {},
+  "homepage": ""
+}

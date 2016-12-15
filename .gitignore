@@ -1,0 +1,9 @@
+.idea
+node_modules
+*.pyc
+.vagrant
+dist
+*.avi
+*.ogg
+
+keys

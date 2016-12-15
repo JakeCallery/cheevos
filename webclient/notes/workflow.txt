@@ -1,0 +1,2 @@
+Basic webpack build
+webpack --progress --colors --watch -p < nul
