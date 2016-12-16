@@ -16,5 +16,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="service_worker_api-DefinitelyTyped" level="application" />
   </component>
 </module>
