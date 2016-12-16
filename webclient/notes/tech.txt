@@ -1,3 +1,15 @@
 Push Notifications:
 http://www.cronj.com/blog/browser-push-notifications-using-javascript/
 
+Webpack serviceworker url load hack:
+import swURL from "file?name=service-worker.js!babel!./sw";
+
+if ("serviceWorker" in navigator) {
+  // Service worker registered
+  navigator.serviceWorker.register(swURL).catch(err => {
+    // Service worker registration failed
+  });
+} else {
+  // Service worker is not supported
+}
+
