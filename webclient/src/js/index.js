@@ -5,6 +5,8 @@ import l from 'jac/logger/Logger';
 import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
+import 'file-loader?name=manifest.json!./manifest.json';
+
 import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
 
 l.addLogTarget(new ConsoleTarget());
@@ -42,8 +44,9 @@ if ("serviceWorker" in navigator) {
                                         l.debug('Good Subscription:');
                                         l.debug(subscription.subscriptionId);
                                         l.debug(subscription.endpoint);
+                                        return subscription;
                                     }, (error) => {
-                                        l.warn('Subscription Error: ', error);
+                                        l.error('Subscription Error: ', error);
                                     });
                             }
 
@@ -60,7 +63,8 @@ if ("serviceWorker" in navigator) {
             authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
 
             //Save endpoint
-            endpoint = subscription.endpoint;
+            //endpoint = subscription.endpoint;
+            endpoint = endpointWorkaround(subscription);
             l.debug('Endpoint: ', endpoint);
 
             // Send the subscription details to the server using the Fetch API.
@@ -86,8 +90,7 @@ if ("serviceWorker" in navigator) {
     l.error('Service Worker Not Supported');
 }
 
-function testPush(){
-    l.debug('Test Push...');
+document.getElementById('doIt').addEventListener('click', function() {
 
     fetch('/sendNotification', {
         method: 'post',
@@ -103,9 +106,51 @@ function testPush(){
             icon: document.getElementById("notificationIcon").value,
             link: document.getElementById("notificationLink").value
         }),
-    }).then((data) => {
-            l.debug('Fetch Complete', data);
-        }, (error) => {
-            l.error('Fetch Failed', error);
     });
+});
+
+// This method handles the removal of subscriptionId
+// in Chrome 44 by concatenating the subscription Id
+// to the subscription endpoint
+function endpointWorkaround(pushSubscription) {
+    // Make sure we only mess with GCM
+    if (pushSubscription.endpoint.indexOf('https://android.googleapis.com/gcm/send') !== 0) {
+        return pushSubscription.endpoint;
+    }
+
+    let mergedEndpoint = pushSubscription.endpoint;
+    // Chrome 42 + 43 will not have the subscriptionId attached
+    // to the endpoint.
+    if (pushSubscription.subscriptionId &&
+        pushSubscription.endpoint.indexOf(pushSubscription.subscriptionId) === -1) {
+        // Handle version 42 where you have separate subId and Endpoint
+        mergedEndpoint = pushSubscription.endpoint + '/' +
+            pushSubscription.subscriptionId;
+
+    }
+    return mergedEndpoint;
 }
+
+// function testPush(){
+//     l.debug('Test Push...');
+//
+//     fetch('/sendNotification', {
+//         method: 'post',
+//         headers: {
+//             'Content-type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             endpoint: endpoint,
+//             key: key,
+//             authSecret: authSecret,
+//             title: document.getElementById("notificationTitle").value,
+//             body: document.getElementById("notificationBody").value,
+//             icon: document.getElementById("notificationIcon").value,
+//             link: document.getElementById("notificationLink").value
+//         }),
+//     }).then((data) => {
+//             l.debug('Fetch Complete', data);
+//         }, (error) => {
+//             l.error('Fetch Failed', error);
+//     });
+// }
