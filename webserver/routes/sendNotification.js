@@ -11,16 +11,24 @@ webPush.setGCMAPIKey(process.env.GCM_API_KEY);
 router.post('/', function(req, res) {
     console.log('Endpoint:');
     console.log(req.body.endpoint);
-    webPush.sendNotification(req.body, {
-        TTL: 4000,
-        payload: JSON.stringify({
+    let pls = JSON.stringify({
+        'title': req.body.title,
+        'icon': req.body.icon,
+        'body': req.body.body,
+        url: req.body.link
+    });
+    console.log(pls);
+    let payload = JSON.stringify({
             'title': req.body.title,
             'icon': req.body.icon,
             'body': req.body.body,
             url: req.body.link
-        }),
-        userPublicKey: req.body.key,
-        userAuth: req.body.authSecret,
+    });
+
+    webPush.sendNotification(req.body, payload, {
+        TTL: 4000,
+        //userPublicKey: req.body.key,
+        //userAuth: req.body.authSecret,
         headers: {
             'Authorization':'GCM_API_KEY'
         }
