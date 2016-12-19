@@ -30,6 +30,8 @@ const applicationServerPublicKey = 'BDx-UW-LPVEI4kDQsOoiBlNnTZ1GtdUO-MgJ6WkUdPtk
 
 const pushButton = document.querySelector('.js-push-btn');
 
+const endpointTextArea = document.getElementById('endpointTextArea');
+
 function updateBtn() {
     if (Notification.permission === 'denied') {
         pushButton.textContent = 'Push Messaging Blocked.';
@@ -128,6 +130,7 @@ function unsubscribeUser(){
 
 function updateSubscriptionOnServer(subscription){
     if(subscription) {
+        endpointTextArea.value = JSON.stringify(subscription);
         l.debug(JSON.stringify(subscription));
     } else {
         l.debug('NO SUBSCRIPTION:', subscription);
