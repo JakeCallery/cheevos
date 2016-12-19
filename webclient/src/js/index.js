@@ -23,10 +23,10 @@ let swRegistration = null;
 //const applicationServerPublicKey = 'BPzMOzw-vrRVk8yVqBt4XdjxtI53nFVuUdokZMis4rgoXmjhdXfHswgHJq6c0cQGT4ly43e9quAbS4d3JKg54fo';
 
 //For Chrome
-//const applicationServerPublicKey = 'BJv6d4y1xRAthT__8xcQggXvGufg8K2ZMYbsbCCk3cxIQgGlF1-ClNFmFBEUAwB7NY9MT1nWMt-VvKi8MLj1HBU';
+const applicationServerPublicKey = 'BDx-UW-LPVEI4kDQsOoiBlNnTZ1GtdUO-MgJ6WkUdPtk_UkPaH2eF2MtyMFDLaZI6CPx_3tlS-SZ_muW5wROe_E';
 
 //For Local Companion App (node:8080)
-const applicationServerPublicKey = 'BOo6X_yRYMvEI6ok0o7LQrfIAjPFEgQb8lJyehGt-PidZs0pWKvD-3VNmR7hN5FiFHBXr6CgXBGp3n7oUNRWuYQ';
+//const applicationServerPublicKey = 'BOo6X_yRYMvEI6ok0o7LQrfIAjPFEgQb8lJyehGt-PidZs0pWKvD-3VNmR7hN5FiFHBXr6CgXBGp3n7oUNRWuYQ';
 
 const pushButton = document.querySelector('.js-push-btn');
 
