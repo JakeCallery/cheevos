@@ -6,114 +6,126 @@ import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
 import 'file-loader?name=manifest.json!./manifest.json';
+import '../css/index.css';
 
 import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
 
 l.addLogTarget(new ConsoleTarget());
 l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL | VerboseLevel.LINE);
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
-l.debug('Index.js');
 
-l.debug('Registering Service Worker...');
+let isSubscribed = false;
+let swRegistration = null;
 
-let key;
-let authSecret;
-let endpoint;
+const applicationServerPublicKey = 'BOM6hsZ1GidqcXtECJUyQaEkXCiPixzNWbIOCr5pSx4FNOzkkYD-2wbOVbAMuYPYH2jXKss3WFP6JKxvKe46iRI';
+const pushButton = document.querySelector('.js-push-btn');
 
-if ("serviceWorker" in navigator) {
-    // Service worker registered
-    navigator.serviceWorker.register(swURL)
-        .then((registration) => {
-            // Use the PushManager to get the user's subscription to the push service.
-            // serviceWorker.ready will return the promise once the service worker is registered.
-            // This can help to get rid of errors that occur while fetching subscription
-            // information before registration of the service worker
-            return navigator.serviceWorker.ready
-                .then((serviceWorkerRegistration) =>{
-                    return serviceWorkerRegistration.pushManager.getSubscription()
-                        .then((subscription) => {
-                            if(subscription) {
-                                l.debug('Already Subscribed: ', subscription);
-                                return subscription;
-                            } else {
-                                l.debug('Not yet subscribed, subscribing...');
-                                return serviceWorkerRegistration.pushManager.subscribe({
-                                    userVisibleOnly: true
-                                })
-                                    .then((subscription) => {
-                                        l.debug('Good Subscription:');
-                                        l.debug(subscription.subscriptionId);
-                                        l.debug(subscription.endpoint);
-                                        return subscription;
-                                    }, (error) => {
-                                        l.error('Subscription Error: ', error);
-                                    });
-                            }
+function updateBtn() {
+    if (Notification.permission === 'denied') {
+        pushButton.textContent = 'Push Messaging Blocked.';
+        pushButton.disabled = true;
+        updateSubscriptionOnServer(null);
+        return;
+    }
 
-                        });
-                });
-        })
-        .then((subscription) => {
-            //Get user's public key
-            // Retrieve the user's public key.
-            let rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
-            l.debug('RawKey: ', rawKey);
-            key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
-            l.debug('Key: ', key);
+    if (isSubscribed) {
+        pushButton.textContent = 'Disable Push Messaging';
+    } else {
+        pushButton.textContent = 'Enable Push Messaging';
+    }
 
-            let rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
-            l.debug('Raw Auth Secret: ', rawAuthSecret);
-            authSecret = rawAuthSecret ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
-            l.debug('Auth Secret: ', authSecret);
-
-            //Save endpoint
-            //endpoint = subscription.endpoint;
-            endpoint = endpointWorkaround(subscription);
-            l.debug('Endpoint: ', endpoint);
-
-            // Send the subscription details to the server using the Fetch API.
-            fetch('/register', {
-                method: 'post',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    key: key,
-                    authSecret: authSecret,
-                }),
-            });
-        })
-        .catch((err) => {
-        // Service worker registration failed
-            l.error('Service worker registration failed: ', err);
-    });
-} else {
-    // Service worker is not supported
-    //TODO: show error in UI
-    l.error('Service Worker Not Supported');
+    pushButton.disabled = false;
 }
 
-document.getElementById('doIt').addEventListener('click', function() {
-
-    fetch('/sendNotification', {
-        method: 'post',
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            endpoint: endpoint,
-            keys: {
-                'p256dh': key,
-                'auth': authSecret,
-            },
-            title: document.getElementById("notificationTitle").value,
-            body: document.getElementById("notificationBody").value,
-            icon: document.getElementById("notificationIcon").value,
-            link: document.getElementById("notificationLink").value
-        }),
+function initialiseUI() {
+    pushButton.addEventListener('click', () => {
+        pushButton.disabled = true;
+        if(isSubscribed) {
+            //TODO: unsubscribe user
+        } else {
+            subscribeUser();
+        }
     });
-});
+
+    // Set the initial subscription value
+    swRegistration.pushManager.getSubscription()
+        .then(function(subscription) {
+            isSubscribed = !(subscription === null);
+            updateSubscriptionOnServer(subscription);
+            if (isSubscribed) {
+                console.log('User IS subscribed.');
+            } else {
+                console.log('User is NOT subscribed.');
+            }
+
+            updateBtn();
+        });
+}
+
+if ('serviceWorker' in navigator && 'PushManager' in window) {
+    console.log('Service Worker and Push is supported');
+
+    navigator.serviceWorker.register(swURL)
+        .then(function(swReg) {
+            console.log('Service Worker is registered', swReg);
+
+            swRegistration = swReg;
+            initialiseUI();
+        })
+        .catch(function(error) {
+            console.error('Service Worker Error', error);
+        });
+} else {
+    console.warn('Push messaging is not supported');
+    pushButton.textContent = 'Push Not Supported';
+}
+
+function subscribeUser() {
+    const applicationServerKey = urlB64ToUint8Array(applicationServerPublicKey);
+    swRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey
+    })
+    .then((subscription) => {
+        l.debug('User is subscribed: ', subscription);
+        updateSubscriptionOnServer(subscription);
+        isSubscribed = true;
+        updateBtn();
+    })
+    .catch((error) => {
+        l.debug('Failed to subscribe the user: ', error);
+        updateBtn();
+    });
+}
+
+function updateSubscriptionOnServer(subscription){
+    if(subscription) {
+        l.debug(JSON.stringify(subscription));
+    } else {
+        l.debug('NO SUBSCRIPTION:', subscription);
+    }
+}
+
+// document.getElementById('doIt').addEventListener('click', function() {
+//
+//     fetch('/sendNotification', {
+//         method: 'post',
+//         headers: {
+//             'Content-type': 'application/json'
+//         },
+//         body: JSON.stringify({
+//             endpoint: endpoint,
+//             keys: {
+//                 'p256dh': key,
+//                 'auth': authSecret,
+//             },
+//             title: document.getElementById("notificationTitle").value,
+//             body: document.getElementById("notificationBody").value,
+//             icon: document.getElementById("notificationIcon").value,
+//             link: document.getElementById("notificationLink").value
+//         }),
+//     });
+// });
 
 // This method handles the removal of subscriptionId
 // in Chrome 44 by concatenating the subscription Id
@@ -145,6 +157,21 @@ function endpointWorkaround(pushSubscription) {
 
     }
     return mergedEndpoint;
+}
+
+function urlB64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
 }
 
 // function testPush(){

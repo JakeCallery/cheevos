@@ -11,35 +11,40 @@ webPush.setGCMAPIKey(process.env.GCM_API_KEY);
 router.post('/', function(req, res) {
     console.log('Endpoint:');
     console.log(req.body.endpoint);
-    let pls = JSON.stringify({
-        'title': req.body.title,
-        'icon': req.body.icon,
-        'body': req.body.body,
-        url: req.body.link
-    });
-    console.log(pls);
-    let payload = JSON.stringify({
-            'title': req.body.title,
-            'icon': req.body.icon,
-            'body': req.body.body,
-            url: req.body.link
-    });
+    // let payload = JSON.stringify({
+    //         'title': req.body.title,
+    //         'icon': req.body.icon,
+    //         'body': req.body.body,
+    //         url: req.body.link
+    // });
 
-    webPush.sendNotification(req.body, payload, {
-        TTL: 4000,
-        //userPublicKey: req.body.key,
-        //userAuth: req.body.authSecret,
-        headers: {
-            'Authorization':'GCM_API_KEY'
-        }
+    const options = {
+        vapidDetails: {
+            subject: 'https://developers.google.com/web/fundamentals/',
+            publicKey: req.body.applicationKeys.public,
+            privateKey: req.body.applicationKeys.private
+        },
+        // 1 hour in seconds.
+        TTL: 60 * 60
+    };
+
+    webPush.sendNotification(
+        req.body.subscription,
+        req.body.data,
+        options
+    )
+    .then(() => {
+        res.sendStatus(201);
     })
-
-        .then(function() {
-            res.sendStatus(201);
-        }, function(err) {
-            console.log('Error In Send');
-            console.log(err);
-        });
+    .catch((err) => {
+        console.log('Error In Send');
+        console.log(err);
+        if (err.statusCode) {
+            res.status(err.statusCode).send(err.body);
+        } else {
+            res.status(400).send(err.message);
+        }
+    });
 });
 
 module.exports = router;
