@@ -19,7 +19,15 @@ l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ER
 let isSubscribed = false;
 let swRegistration = null;
 
-const applicationServerPublicKey = 'BOM6hsZ1GidqcXtECJUyQaEkXCiPixzNWbIOCr5pSx4FNOzkkYD-2wbOVbAMuYPYH2jXKss3WFP6JKxvKe46iRI';
+//For FF
+//const applicationServerPublicKey = 'BPzMOzw-vrRVk8yVqBt4XdjxtI53nFVuUdokZMis4rgoXmjhdXfHswgHJq6c0cQGT4ly43e9quAbS4d3JKg54fo';
+
+//For Chrome
+//const applicationServerPublicKey = 'BJv6d4y1xRAthT__8xcQggXvGufg8K2ZMYbsbCCk3cxIQgGlF1-ClNFmFBEUAwB7NY9MT1nWMt-VvKi8MLj1HBU';
+
+//For Local Companion App (node:8080)
+const applicationServerPublicKey = 'BOo6X_yRYMvEI6ok0o7LQrfIAjPFEgQb8lJyehGt-PidZs0pWKvD-3VNmR7hN5FiFHBXr6CgXBGp3n7oUNRWuYQ';
+
 const pushButton = document.querySelector('.js-push-btn');
 
 function updateBtn() {
@@ -43,7 +51,7 @@ function initialiseUI() {
     pushButton.addEventListener('click', () => {
         pushButton.disabled = true;
         if(isSubscribed) {
-            //TODO: unsubscribe user
+            unsubscribeUser();
         } else {
             subscribeUser();
         }
@@ -96,6 +104,24 @@ function subscribeUser() {
     })
     .catch((error) => {
         l.debug('Failed to subscribe the user: ', error);
+        updateBtn();
+    });
+}
+
+function unsubscribeUser(){
+    swRegistration.pushManager.getSubscription()
+    .then((subscription) => {
+        if(subscription){
+            return subscription.unsubscribe();
+        }
+    })
+    .catch((error) => {
+        l.error('Error Unsubscribing: ', error);
+    })
+    .then(() => {
+        updateSubscriptionOnServer(null);
+        l.debug('User is unsubscribed');
+        isSubscribed = false;
         updateBtn();
     });
 }
