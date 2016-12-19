@@ -9,6 +9,8 @@ import 'file-loader?name=manifest.json!./manifest.json';
 import '../css/index.css';
 
 import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
+import 'file-loader?name=icon.png!../images/icon.png';
+import 'file-loader?name=badge.png!../images/badge.png';
 
 l.addLogTarget(new ConsoleTarget());
 l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL | VerboseLevel.LINE);
