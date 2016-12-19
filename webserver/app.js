@@ -4,9 +4,12 @@ let express = require('express');
 let path = require('path');
 let favicon = require('serve-favicon');
 let logger = require('morgan');
-let cookieParser = require('cookie-parser');
+//let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let ejs = require('ejs');
+let session = require('express-session');
+let passport = require('passport');
+let passportConfig = require('./config/passport')(passport);
 
 let index = require('./routes/index');
 let users = require('./routes/users');
@@ -26,7 +29,15 @@ app.engine('html', ejs.renderFile);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+//app.use(cookieParser());
+app.use(session({
+  secret: '6bXufH9qXWmZhQznx33QY26QV',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.static(path.join(__dirname, 'views/dist')));
 console.log(__dirname);
 
