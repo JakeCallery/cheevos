@@ -11,10 +11,13 @@ let session = require('express-session');
 let passport = require('passport');
 let passportConfig = require('./config/passport')(passport);
 
+//TODO: Require routes in its own file
 let index = require('./routes/index');
 let users = require('./routes/users');
 let register = require('./routes/register');
 let sendNotification = require('./routes/sendNotification');
+let authGoogle = require('./routes/authGoogle');
+let authGoogleCallback = require('./routes/authGoogleCallback');
 
 let app = express();
 
@@ -45,7 +48,8 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
 app.use('/sendNotification', sendNotification);
-
+app.use('/auth/google', authGoogle);
+app.use('/auth/google/callback', authGoogleCallback);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
