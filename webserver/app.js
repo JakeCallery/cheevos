@@ -18,6 +18,7 @@ let register = require('./routes/register');
 let sendNotification = require('./routes/sendNotification');
 let authGoogle = require('./routes/authGoogle');
 let authGoogleCallback = require('./routes/authGoogleCallback');
+let logout = require('./routes/logout');
 
 let app = express();
 
@@ -50,6 +51,7 @@ app.use('/register', register);
 app.use('/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
+app.use('/logout', logout);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
