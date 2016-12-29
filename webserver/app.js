@@ -43,10 +43,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Set static serving
-app.use(express.static(path.join(__dirname, 'views/dist')));
-console.log(__dirname);
-
 //Assign routes
 app.use('/', index);
 app.use('/users', users);
@@ -55,6 +51,10 @@ app.use('/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/logout', logout);
+
+//Set static serving
+app.use(express.static(path.join(__dirname, 'views/dist')));
+console.log(__dirname);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
