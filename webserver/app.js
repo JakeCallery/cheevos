@@ -74,9 +74,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-//TODO: Remove me
-let user = new User({name:'testUser'});
-User.findById('1111');
-/////////////////
 
 module.exports = app;
