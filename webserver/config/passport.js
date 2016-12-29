@@ -49,9 +49,9 @@ module.exports = function(passport){
                 User.findOrCreate(idObj)
                     .then((user) => {
                         console.log('Find or Create User: ', user);
-                        console.log('AccessToken: ', accessToken);
-                        console.log('refreshToken: ', refreshToken);
-                        console.log('profiles: ', profile);
+                        //console.log('AccessToken: ', accessToken);
+                        //console.log('refreshToken: ', refreshToken);
+                       //console.log('profiles: ', profile);
                         done(null, user);
                     })
                     .catch((error) => {
