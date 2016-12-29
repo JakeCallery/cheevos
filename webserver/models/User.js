@@ -10,10 +10,10 @@ class User {
         this.data = $data || {};
     }
 
-    fromGoogleIdObj($idObj) {
-        this.authType = 'google';
-
+    updateFromGoogleIdObj($idObj) {
         console.log('FromGoogleData: ', $idObj);
+
+        this.authType = 'google';
         this.data.google = {};
         this.data.google.id = $idObj.id;
         this.data.google.accessToken = $idObj.accessToken;
@@ -22,13 +22,24 @@ class User {
         this.data.google.email = $idObj.email;
     };
 
-    fromUserRecord($userRecord) {
-        console.log('FromUserRecord: ', $userRecord);
-        this.data = $userRecord;
+    updateFromUserRecord($userRecord) {
+        this.authType = $userRecord.properties.authType;
+
+        switch(this.authType) {
+            case 'google':
+                console.log('FromUserRecord: ', $userRecord.properties.googleId);
+                this.data.google = {};
+                this.data.google.id = $userRecord.properties.googleId;
+                this.data.google.email = $userRecord.properties.googleEmail;
+                this.data.google.name = $userRecord.properties.googleName;
+                break;
+            default:
+                console.error('Bad Auth Type during updateFromUserRecord: ', this.authType);
+        }
     }
 
     get id() {
-        return this.data.google.id;
+        return this.data[this.authType].id;
     }
 
     get name() {
@@ -49,23 +60,22 @@ class User {
 
     static findOrCreate($idObj) {
         if ($idObj.hasOwnProperty('google')) {
-            console.log('Finding By Google ID: ', $idObj.google);
+            console.log('Finding By Google ID: ', $idObj.google.id);
             let session = db.session();
 
             return session
                 .run(
-                    'MATCH (user:User {googleID:{googleID}}) RETURN user', {googleID: $idObj.google.id}
+                    'MATCH (user:User {googleId:{googleId}}) RETURN user', {googleId: $idObj.google.id}
                 )
                 .then(($result) => {
                     session.close();
-                    console.log('Result: ', $result);
-                    console.log('Records: ', $result.records.length);
+                    console.log('Matched User by ID: ', $idObj.google.id);
                     if ($result.records.length > 0) {
-                        console.log('Creating New User');
+                        console.log('FindOrCreate: Creating New Memory User from DB: ' + $idObj.google.id);
 
                         return new Promise((resolve, reject) => {
                             let newUser = new User();
-                            newUser.fromUserRecord($result.records[0].get('user'));
+                            newUser.updateFromUserRecord($result.records[0].get('user'));
                             resolve(newUser);
                         });
 
@@ -74,18 +84,19 @@ class User {
                         console.log('Creating a new one...');
 
                         let newUser = new User();
-                        newUser.fromGoogleIdObj($idObj.google);
-
+                        newUser.updateFromGoogleIdObj($idObj.google);
 
                         let session = db.session();
                         return session.run(
                             'CREATE (user:User ' +
                             '{' +
+                            'authType:{authType},' +
                             'googleId:{id}, ' +
                             'googleName:{name},' +
                             'googleEmail:{email}' +
                             '})',
                             {
+                                authType: 'google',
                                 id: newUser.id,
                                 name: newUser.name,
                                 email: newUser.email
@@ -99,9 +110,6 @@ class User {
                                 )
                         })
                         .then(($result) => {
-                            //TODO: remove me
-                            console.log('----- Result: ', $result);
-                            //////////////////////
                             return new Promise((resolve, reject) => {
                                 resolve(newUser);
                             });
@@ -136,26 +144,22 @@ class User {
             )
             .then(result => {
                 session.close();
-                console.log('Result: ', result);
-                console.log('Records: ', result.records.length);
                 if (result.records.length > 0) {
-                    console.log('Creating New User');
+                    console.log('FindByID: Creating Memory User from DB: ', $id);
                     return new Promise((resolve, reject) => {
                         resolve(new User(result.records[0].get('user')));
-                    })
+                    });
                 } else {
                     console.log('No User Found');
                     return new Promise((resolve, reject) => {
                         resolve(null);
                     });
                 }
-
             })
             .catch((error) => {
                 console.error('Bad user Lookup: ', error);
                 session.close();
             });
-
     }
 }
 

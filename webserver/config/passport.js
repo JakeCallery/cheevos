@@ -10,9 +10,11 @@ const User = require('../models/User');
 
 module.exports = function(passport){
     passport.serializeUser((user, done) => {
-        console.log('Serialize User Called: ', user);
-        //TODO: Check for other types of user logins
-        done(null, user.data.google.id);
+        console.log('Serialize User Called: ', user.id);
+        //Store only user ID in session, look up user from DB when needed
+        //Might be worth storing whole user or something for less DB access
+        //TODO: Look into optimization here
+        done(null, user.id);
     });
 
     passport.deserializeUser((id, done) => {
@@ -48,51 +50,13 @@ module.exports = function(passport){
                 };
                 User.findOrCreate(idObj)
                     .then((user) => {
-                        console.log('Find or Create User: ', user);
-                        //console.log('AccessToken: ', accessToken);
-                        //console.log('refreshToken: ', refreshToken);
-                       //console.log('profiles: ', profile);
+                        console.log('Find or Create User: ', user.id);
                         done(null, user);
                     })
                     .catch((error) => {
                         console.error('Error: ', error);
                         done(null,false);
                     });
-                // //Look up user based on profile.id
-                // User.findById(profile.id)
-                //     .then(($user) => {
-                //       if($user){
-                //           console.log('Found User: ', $user.data.name);
-                //           return done(null, $user);
-                //       } else {
-                //           //create new user
-                //           console.log('Creating New User');
-                //           let newUser = new User();
-                //           newUser.data.google.id = profile.id;
-                //           newUser.data.google.accessToken = accessToken;
-                //           newUser.data.google.refreshToken = refreshToken;
-                //           newUser.data.google.name = profile.displayName;
-                //           newUser.data.google.email = profile.emails[0].value;
-                //
-                //           // newUser.saveToDB(($err) => {
-                //           //       if($err){
-                //           //           throw $err;
-                //           //       }
-                //           //       console.log('New User Created');
-                //           //       return done(null, newUser);
-                //           // });
-                //       }
-                //     })
-
-
-                //if error, show error
-                //if user is found, return done(null, user);
-                //if user is not found
-                //create a new user in the DB
-                //store the id, token, name, email
-                //save the user
-                //return done(null, newUser)
-
             });
         }
     ));
