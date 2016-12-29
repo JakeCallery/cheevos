@@ -1,26 +1,27 @@
 'use strict';
 
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-//let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
-let ejs = require('ejs');
-let session = require('express-session');
-let passport = require('passport');
-let passportConfig = require('./config/passport')(passport);
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const ejs = require('ejs');
+const session = require('express-session');
+const passport = require('passport');
+const passportConfig = require('./config/passport')(passport);
+const db = require('./config/db');
+const User = require('./models/User');
 
 //TODO: Require routes in its own file
-let index = require('./routes/index');
-let users = require('./routes/users');
-let register = require('./routes/register');
-let sendNotification = require('./routes/sendNotification');
-let authGoogle = require('./routes/authGoogle');
-let authGoogleCallback = require('./routes/authGoogleCallback');
-let logout = require('./routes/logout');
+const index = require('./routes/index');
+const users = require('./routes/users');
+const register = require('./routes/register');
+const sendNotification = require('./routes/sendNotification');
+const authGoogle = require('./routes/authGoogle');
+const authGoogleCallback = require('./routes/authGoogleCallback');
+const logout = require('./routes/logout');
 
-let app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -28,23 +29,25 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);
 
-// uncomment after placing your favicon in /public
+//TODO: Favicon
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
 app.use(session({
   secret: '6bXufH9qXWmZhQznx33QY26QV',
   resave: false,
   saveUninitialized: false
 }));
+
+//Set up passport
 app.use(passport.initialize());
 app.use(passport.session());
 
+//Set static serving
 app.use(express.static(path.join(__dirname, 'views/dist')));
 console.log(__dirname);
 
+//Assign routes
 app.use('/', index);
 app.use('/users', users);
 app.use('/register', register);
@@ -70,5 +73,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+//TODO: Remove me
+let user = new User({name:'testUser'});
+User.findById('1111');
+/////////////////
 
 module.exports = app;
