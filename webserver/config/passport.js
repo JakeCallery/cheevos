@@ -18,6 +18,9 @@ module.exports = function(passport){
     });
 
     passport.deserializeUser((id, done) => {
+        //TODO: Optimize by NOT going to the DB to build the user.
+        //Build user from session info only:
+        //https://www.airpair.com/express/posts/expressjs-and-passportjs-sessions-deep-dive
         console.log('DeserializeUser Called: ', id);
         User.findById(id)
             .then(($user) => {
