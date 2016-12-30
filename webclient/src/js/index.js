@@ -5,7 +5,6 @@ import l from 'jac/logger/Logger';
 import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
-import XHR from 'forked/promiseXHR';
 
 //Import Service worker through loader
 import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
@@ -137,9 +136,13 @@ function updateSubscriptionOnServer(subscription){
     if(subscription) {
         endpointTextArea.value = JSON.stringify(subscription);
         l.debug(JSON.stringify(subscription));
-        XHR.post('/registerSubscription', {
-            json: subscription,
-            responseType: 'json'
+        fetch('/registerSubscription', {
+            method: 'post',
+            body: subscription,
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
         })
         .then(($response) => {
             l.debug('Success: ', $response);
