@@ -6,11 +6,15 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
-const session = require('express-session');
+const session = require('cookie-session');
 const passport = require('passport');
 const passportConfig = require('./config/passport')(passport);
+const helmet = require('helmet');
+
+//Custom requires
 const db = require('./config/db');
 const User = require('./models/User');
+
 
 //TODO: Require routes in its own file
 const index = require('./routes/index');
@@ -26,17 +30,25 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 //app.set('view engine', 'ejs');
 app.set('view engine', 'html');
+app.set('trust proxy', 1);
 app.engine('html', ejs.renderFile);
 
 //TODO: Favicon
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(helmet());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+//TODO: More Security:
+//https://expressjs.com/en/advanced/best-practice-security.html
+
+//TODO: externalize keys
 app.use(session({
-  secret: '6bXufH9qXWmZhQznx33QY26QV',
-  resave: false,
-  saveUninitialized: false
+    name: 'session',
+    keys: ['6bXufH9qXWmZhQznx33QY26QV','5BBqd75pQ3mMwKohtSjf8Thqp'],
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
 //Set up passport
@@ -50,6 +62,12 @@ app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/logout', logout);
 app.use('/registerSubscription', registerSubscription);
+
+//TODO: Fix up static serving so that index.html is not static served when
+//express.static is above the session setup
+
+//TODO: Put static serving BEFORE session setup:
+//https://www.airpair.com/express/posts/expressjs-and-passportjs-sessions-deep-dive
 
 //Set static serving
 app.use(express.static(path.join(__dirname, 'views/dist')));
