@@ -3,10 +3,12 @@
  */
 'use strict';
 
-let express = require('express');
-let router = express.Router();
-let webPush = require('web-push');
-webPush.setGCMAPIKey(process.env.GCM_API_KEY);
+const express = require('express');
+const router = express.Router();
+const webPush = require('web-push');
+const authConfig = require('../keys/authConfig');
+
+webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 
 router.post('/', function(req, res) {
     console.log('Endpoint:');
@@ -20,9 +22,9 @@ router.post('/', function(req, res) {
 
     const options = {
         vapidDetails: {
-            subject: 'https://developers.google.com/web/fundamentals/',
-            publicKey: req.body.applicationKeys.public,
-            privateKey: req.body.applicationKeys.private
+            subject: 'Cheevos Push',
+            publicKey: authConfig.pushAuth.publicKey,
+            privateKey: authConfig.pushAuth.privateKey
         },
         // 1 hour in seconds.
         TTL: 60 * 60
@@ -34,6 +36,7 @@ router.post('/', function(req, res) {
         options
     )
     .then(() => {
+        console.log('Good Push Send');
         res.sendStatus(201);
     })
     .catch((err) => {

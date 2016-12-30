@@ -17,7 +17,11 @@
                 Enable Push Messaging
             </button>
 
-            <a href="<%= googleButtonHref %>"><%= googleButtonText %></a>
+            <% if (isLoggedIn) { %>
+                <a href="/logout">Google Logout</a>
+            <% } else { %>
+                <a href="/auth/google">Google LogIn</a>
+            <% } %>
         </p>
         <textarea id="endpointTextArea">
 
