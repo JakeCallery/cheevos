@@ -5,10 +5,14 @@ import l from 'jac/logger/Logger';
 import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
+import XHR from 'forked/promiseXHR';
+
+//Import Service worker through loader
+import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
+
+//Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
 import '../css/index.css';
-
-import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';
 
@@ -53,7 +57,8 @@ function initialiseUI() {
     pushButton.addEventListener('click', () => {
         pushButton.disabled = true;
         if(isSubscribed) {
-            unsubscribeUser();
+            let result = unsubscribeUser();
+            l.debug('Result: ', result);
         } else {
             subscribeUser();
         }
@@ -132,6 +137,17 @@ function updateSubscriptionOnServer(subscription){
     if(subscription) {
         endpointTextArea.value = JSON.stringify(subscription);
         l.debug(JSON.stringify(subscription));
+        XHR.post('/registerSubscription', {
+            json: subscription,
+            responseType: 'json'
+        })
+        .then(($response) => {
+            l.debug('Success: ', $response);
+        })
+        .catch(($response) => {
+            l.error('Error: ', $response);
+        })
+
     } else {
         l.debug('NO SUBSCRIPTION:', subscription);
     }
@@ -158,37 +174,6 @@ function updateSubscriptionOnServer(subscription){
 //     });
 // });
 
-// This method handles the removal of subscriptionId
-// in Chrome 44 by concatenating the subscription Id
-// to the subscription endpoint
-function endpointWorkaround(pushSubscription) {
-
-    if(pushSubscription.endpoint.indexOf('https://android.googleapis.com/gcm/send') === 0){
-        let list = pushSubscription.endpoint.split('https://android.googleapis.com/gcm/send');
-        list[0] = 'https://fcm.googleapis.com/fcm/send';
-        //list[0] = 'https://gcm-http.googleapis.com/gcm';
-        let alteredEndpoint = list.join('');
-        l.debug('Altered Endpoint: ', alteredEndpoint);
-        return alteredEndpoint;
-    }
-
-    // Make sure we only mess with GCM
-    if (pushSubscription.endpoint.indexOf('https://android.googleapis.com/gcm/send') !== 0) {
-        return pushSubscription.endpoint;
-    }
-
-    let mergedEndpoint = pushSubscription.endpoint;
-    // Chrome 42 + 43 will not have the subscriptionId attached
-    // to the endpoint.
-    if (pushSubscription.subscriptionId &&
-        pushSubscription.endpoint.indexOf(pushSubscription.subscriptionId) === -1) {
-        // Handle version 42 where you have separate subId and Endpoint
-        mergedEndpoint = pushSubscription.endpoint + '/' +
-            pushSubscription.subscriptionId;
-
-    }
-    return mergedEndpoint;
-}
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

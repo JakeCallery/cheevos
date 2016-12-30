@@ -18,6 +18,7 @@ const sendNotification = require('./routes/sendNotification');
 const authGoogle = require('./routes/authGoogle');
 const authGoogleCallback = require('./routes/authGoogleCallback');
 const logout = require('./routes/logout');
+const registerSubscription = require('./routes/registerSubscription');
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/logout', logout);
+app.use('/registerSubscription', registerSubscription);
 
 //Set static serving
 app.use(express.static(path.join(__dirname, 'views/dist')));

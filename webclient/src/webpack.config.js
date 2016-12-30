@@ -16,6 +16,7 @@ module.exports = {
     resolve: {
         modules: [
             'node_modules',
+            './js',
             './js/jacjslibes6'
         ]
     },
