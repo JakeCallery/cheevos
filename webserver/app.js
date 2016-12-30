@@ -14,8 +14,6 @@ const User = require('./models/User');
 
 //TODO: Require routes in its own file
 const index = require('./routes/index');
-const users = require('./routes/users');
-const register = require('./routes/register');
 const sendNotification = require('./routes/sendNotification');
 const authGoogle = require('./routes/authGoogle');
 const authGoogleCallback = require('./routes/authGoogleCallback');
@@ -46,8 +44,6 @@ app.use(passport.session());
 
 //Assign routes
 app.use('/', index);
-app.use('/users', users);
-app.use('/register', register);
 app.use('/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
