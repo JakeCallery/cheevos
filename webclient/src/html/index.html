@@ -5,15 +5,11 @@
 
     <title><%= title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.2.1/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.2.1/material.min.js"></script>
     <link rel="manifest" href="manifest.json">
 </head>
     <body>
         <p>
-            <button disabled class="js-push-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+            <button id="pushButton" class="simpleButton">
                 Enable Push Messaging
             </button>
 
@@ -22,11 +18,10 @@
             <% } else { %>
                 <a href="/auth/google">Google LogIn</a>
             <% } %>
-        </p>
-        <textarea id="endpointTextArea">
 
-        </textarea>
-        <script src="https://code.getmdl.io/1.2.1/material.min.js"></script>
+        </p>
+        <textarea id="endpointTextArea"></textarea>
+
     </body>
 
-</html
+</html>

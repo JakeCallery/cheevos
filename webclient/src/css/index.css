@@ -55,3 +55,50 @@ pre code {
         font-size: 36px;
     }
 }
+
+/*************************
+*** Buttons
+ */
+
+button {
+    cursor: pointer;
+}
+
+.simpleButton {
+    width:100px;
+    height:40px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bolder;
+    font-size: 10pt;
+    color: #000000;
+    text-align: center;
+    text-decoration: none;
+    background: #bcc2c6;
+    border: 0;
+    border-radius: 7px;
+    outline: none;
+}
+
+.simpleButton:hover {
+    color: #222222;
+    background: #e0e6ea;
+}
+
+.simpleButton:disabled {
+    color: #949494;
+    background: #454545;
+    pointer-events: none;
+    cursor: default;
+}
+
+.browseButton {
+    vertical-align: middle;
+    width: 50px;
+    height: 30px;
+    font-size: 1.5em;
+}
+.buttonGroup {
+    position: absolute;
+    bottom: 5px;
+    right: 22px;
+}
