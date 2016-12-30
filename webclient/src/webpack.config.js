@@ -45,7 +45,14 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: 'html/index.html'
-        })
+        }),
+
+        function() {
+            this.plugin('watch-run', function(watching, callback) {
+                console.log('Begin Compile At ' + new Date());
+                callback();
+            })
+        }
     ],
 
     devtool: 'source-map'
