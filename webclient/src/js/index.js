@@ -50,7 +50,23 @@ function updateBtn() {
 function initialiseUI() {
     sendButton.addEventListener('click', ($event) => {
         l.debug('Caught Send Click');
-        //fetch('')
+        fetch('/api/sendCheevo', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                recipientId: userIdField.value,
+                data:'test data!'
+            })
+        })
+        .then((response) => {
+             l.debug('Response: ', response);
+        })
+        .catch((error) => {
+            l.debug('Send Cheevo Error: ', error);
+        });
     });
 
     pushButton.addEventListener('click', () => {

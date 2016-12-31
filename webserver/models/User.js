@@ -40,11 +40,6 @@ class User {
                     reject(error);
                 });
             });
-
-
-        //create new subscription node
-
-        //attach subscription node to user node
     };
 
     updateFromGoogleIdObj($idObj) {
@@ -200,6 +195,32 @@ class User {
                     reject(error);
                 });
             });
+    }
+
+    static findEndPointsByUserId($userId) {
+        console.log('Find Endpoints by user id: ', $userId);
+        let session = db.session();
+        return session.run (
+            'MATCH (user:User {googleId:{googleId}})-[:SUBSCRIBED_BY]->(subscription) ' +
+            'RETURN user, subscription',
+            {
+                googleId: $userId
+            }
+        )
+        .then((result) => {
+            session.close();
+            console.log('Results: ', result);
+            return new Promise((resolve, reject) => {
+                resolve(result);
+            });
+        })
+        .catch((error) => {
+            session.close();
+            console.error('Bad find endpoints: ', error);
+            return new Promise((resolve, reject) => {
+                reject(error);
+            })
+        });
     }
 }
 
