@@ -129,7 +129,7 @@ function updateSubscriptionOnServer(subscription){
         l.debug(JSON.stringify(subscription));
         fetch('/registerSubscription', {
             method: 'post',
-            body: subscription,
+            body: JSON.stringify(subscription),
             credentials: 'include',
             headers: new Headers({
                 'Content-Type': 'application/json'

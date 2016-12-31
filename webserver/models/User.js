@@ -10,6 +10,43 @@ class User {
         this.data = $data || {};
     }
 
+    registerSubscription($subscription) {
+        console.log('Registering Subscription to user: ', this.id);
+        console.log('Sub: ', $subscription);
+
+        //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (user:User {googleId:{googleId}}) ' +
+                'MERGE (user)-[rel:SUBSCRIBED_BY]->(sub:SUBSCRIPTION {endpoint:{endpoint},p256dh:{p256dh},auth:{auth}}) ' +
+                'RETURN user, sub, rel',
+                {
+                    googleId: this.id,
+                    endpoint: $subscription.endpoint,
+                    p256dh: $subscription.keys.p256dh,
+                    auth: $subscription.keys.auth
+                }
+            )
+            .then((result) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    resolve(result);
+                });
+            })
+            .catch((error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    reject(error);
+                });
+            });
+
+
+        //create new subscription node
+
+        //attach subscription node to user node
+    };
+
     updateFromGoogleIdObj($idObj) {
         console.log('FromGoogleData: ', $idObj);
 
@@ -135,17 +172,17 @@ class User {
         }
     }
 
-    static findById($id) {
-        console.log('Find By ID: ', $id);
+    static findById($userId) {
+        console.log('Find By ID: ', $userId);
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}}) RETURN user', {googleId: $id}
+                'MATCH (user:User {googleId:{googleId}}) RETURN user', {googleId: $userId}
             )
             .then(result => {
                 session.close();
                 if (result.records.length > 0) {
-                    console.log('FindByID: Creating Memory User from DB: ', $id);
+                    console.log('FindByID: Creating Memory User from DB: ', $userId);
                     return new Promise((resolve, reject) => {
                         resolve(new User(result.records[0].get('user')));
                     });
@@ -159,6 +196,9 @@ class User {
             .catch((error) => {
                 console.error('Bad user Lookup: ', error);
                 session.close();
+                return new Promise((resolve, reject) => {
+                    reject(error);
+                });
             });
     }
 }
