@@ -25,6 +25,10 @@ let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E
 
 const pushButton = document.getElementById('pushButton');
 const endpointTextArea = document.getElementById('endpointTextArea');
+const sendButton = document.getElementById('sendButton');
+const userIdField = document.getElementById('userIdField');
+
+userIdField.value = '101328274856075903430';
 
 function updateBtn() {
     if (Notification.permission === 'denied') {
@@ -44,6 +48,11 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    sendButton.addEventListener('click', ($event) => {
+        l.debug('Caught Send Click');
+        //fetch('')
+    });
+
     pushButton.addEventListener('click', () => {
         pushButton.disabled = true;
         if(isSubscribed) {
@@ -127,7 +136,7 @@ function updateSubscriptionOnServer(subscription){
     if(subscription) {
         endpointTextArea.value = JSON.stringify(subscription);
         l.debug(JSON.stringify(subscription));
-        fetch('/registerSubscription', {
+        fetch('/api/registerSubscription', {
             method: 'post',
             body: JSON.stringify(subscription),
             credentials: 'include',

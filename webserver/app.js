@@ -57,11 +57,11 @@ app.use(passport.session());
 
 //Assign routes
 app.use('/', index);
-app.use('/sendNotification', sendNotification);
+app.use('/api/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/logout', logout);
-app.use('/registerSubscription', registerSubscription);
+app.use('/api/registerSubscription', registerSubscription);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup
