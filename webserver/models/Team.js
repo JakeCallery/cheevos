@@ -27,6 +27,8 @@ class Team {
                         'MATCH (user:User {googleId:{googleId}}) ' +
                         'MERGE (user)-[rel:MEMBER_OF]->(team:TEAM {teamId:{teamId},teamName:{teamName}}) ' +
                         'MERGE (team)-[rel1:HAS_MEMBER]->(user) ' +
+                        'MERGE (team)-[rel2:MODERATED_BY]->(user)' +
+                        'MERGE (user)-[rel3:MODERATES]->(team) ' +
                         'RETURN user, team',
                         {
                             googleId: $initialTeamMemeberId,
