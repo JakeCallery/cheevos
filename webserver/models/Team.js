@@ -26,6 +26,7 @@ class Team {
                     .run(
                         'MATCH (user:User {googleId:{googleId}}) ' +
                         'MERGE (user)-[rel:MEMBER_OF]->(team:TEAM {teamId:{teamId},teamName:{teamName}}) ' +
+                        'MERGE (team)-[rel1:HAS_MEMBER]->(user) ' +
                         'RETURN user, team',
                         {
                             googleId: $initialTeamMemeberId,
@@ -56,20 +57,9 @@ class Team {
                 });
             }
         })
-        // .then(($dbResult) => {
-        //     return new Promise((resolve, reject) => {
-        //         resolve($dbResult);
-        //     });
-        // })
         .catch(($error) => {
             console.log('Error: ', $error);
         });
-
-        //Check to see if Team already exists
-        //If not, create a new one
-        //If it does, see if name matches
-        //If name does not match, save new name
-        //Otherwise we are done
     }
 
     getMembers(){
