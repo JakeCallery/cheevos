@@ -27,6 +27,9 @@ const pushButton = document.getElementById('pushButton');
 const endpointTextArea = document.getElementById('endpointTextArea');
 const sendButton = document.getElementById('sendButton');
 const userIdField = document.getElementById('userIdField');
+const teamNameField = document.getElementById('teamNameField');
+const createTeamButton = document.getElementById('createTeamButton');
+const listTeamsButton = document.getElementById('listTeamsButton');
 
 userIdField.value = '101328274856075903430';
 
@@ -69,6 +72,28 @@ function initialiseUI() {
         });
     });
 
+    createTeamButton.addEventListener('click', ($event) => {
+        l.debug('Caught Create Team Click: ' + teamNameField.value);
+        fetch('/api/createTeam', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                teamName: teamNameField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+
+    });
+
+    listTeamsButton.addEventListener('click', ($efent) => {
+        l.debug('Caught List Teams Click');
+    });
+
     pushButton.addEventListener('click', () => {
         pushButton.disabled = true;
         if(isSubscribed) {
@@ -92,6 +117,7 @@ function initialiseUI() {
 
             updateBtn();
         });
+
 }
 
 if ('serviceWorker' in navigator && 'PushManager' in window) {

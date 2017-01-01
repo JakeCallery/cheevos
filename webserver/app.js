@@ -24,6 +24,7 @@ const authGoogleCallback = require('./routes/authGoogleCallback');
 const logout = require('./routes/logout');
 const registerSubscription = require('./routes/registerSubscription');
 const sendCheevo = require('./routes/sendCheevo');
+const createTeam = require('./routes/createTeam');
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.use('/auth/google/callback', authGoogleCallback);
 app.use('/logout', logout);
 app.use('/api/registerSubscription', registerSubscription);
 app.use('/api/sendCheevo', sendCheevo);
+app.use('/api/createTeam', createTeam);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup
