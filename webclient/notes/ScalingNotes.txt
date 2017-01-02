@@ -13,3 +13,4 @@ shortid.worker(1);
 
 --------
 
+Will Probably Need Redis to be the session store, that way all webserver processes will have the same set of sessions to work from
