@@ -27,6 +27,7 @@ const sendCheevo = require('./routes/sendCheevo');
 const createTeam = require('./routes/createTeam');
 const inviteMember = require('./routes/inviteMember');
 const invited = require('./routes/invited');
+const acceptInvite = require('./routes/acceptInvite');
 
 //Set up express
 const app = express();
@@ -70,6 +71,7 @@ app.use('/api/registerSubscription', registerSubscription);
 app.use('/api/sendCheevo', sendCheevo);
 app.use('/api/createTeam', createTeam);
 app.use('/api/inviteMember', inviteMember);
+app.use('/api/acceptInvite', acceptInvite);
 app.use('/invited', invited);
 
 //TODO: Fix up static serving so that index.html is not static served when

@@ -11,7 +11,7 @@ import swURL from "file-loader?name=service-worker.js!babel-loader!./service-wor
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
-import '../css/index.css';
+import '../css/main.css';
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';
 
@@ -230,27 +230,6 @@ function updateSubscriptionOnServer(subscription){
     }
 }
 
-// document.getElementById('doIt').addEventListener('click', function() {
-//
-//     fetch('/sendNotification', {
-//         method: 'post',
-//         headers: {
-//             'Content-type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             endpoint: endpoint,
-//             keys: {
-//                 'p256dh': key,
-//                 'auth': authSecret,
-//             },
-//             title: document.getElementById("notificationTitle").value,
-//             body: document.getElementById("notificationBody").value,
-//             icon: document.getElementById("notificationIcon").value,
-//             link: document.getElementById("notificationLink").value
-//         }),
-//     });
-// });
-
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
@@ -266,27 +245,3 @@ function urlB64ToUint8Array(base64String) {
     }
     return outputArray;
 }
-
-// function testPush(){
-//     l.debug('Test Push...');
-//
-//     fetch('/sendNotification', {
-//         method: 'post',
-//         headers: {
-//             'Content-type': 'application/json'
-//         },
-//         body: JSON.stringify({
-//             endpoint: endpoint,
-//             key: key,
-//             authSecret: authSecret,
-//             title: document.getElementById("notificationTitle").value,
-//             body: document.getElementById("notificationBody").value,
-//             icon: document.getElementById("notificationIcon").value,
-//             link: document.getElementById("notificationLink").value
-//         }),
-//     }).then((data) => {
-//             l.debug('Fetch Complete', data);
-//         }, (error) => {
-//             l.error('Fetch Failed', error);
-//     });
-// }

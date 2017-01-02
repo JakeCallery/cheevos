@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 router.get('/:code', (req, res) => {
     console.log('Caught Invited Request: ', req.params.code);
-    res.render('invited', {
+    res.render('dist/invited', {
         code: req.params.code
     });
 });

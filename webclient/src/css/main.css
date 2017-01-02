@@ -46,6 +46,10 @@ pre code {
     opacity: 0;
 }
 
+.is-hidden {
+    visibility: hidden;
+}
+
 .subscription-details {
     transition: opacity 1s;
 }
