@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
             let resObj = {
                 status:'SUCCESS'
             };
-            res.status(202).json(resObj);
+            res.status(200).json(resObj);
         })
         .catch((error) => {
             console.log('registration error: ', error);

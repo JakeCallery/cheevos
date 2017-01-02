@@ -4,13 +4,15 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: [
-        './js/index.js'
-    ],
+    entry: {
+        indexEntry:'./js/index.js',
+        invitedEntry:'./js/invited.js'
+    },
 
     output: {
-        filename: 'bundle.js',
-        path: __dirname + '/../dist'
+        filename: '[name].js',
+        path: __dirname + '/../dist',
+        publicPath: '/'
     },
 
     resolve: {
@@ -44,7 +46,20 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'html/index.html'
+            template: 'html/index.html',
+            hash: true,
+            chunks: [
+                'indexEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'invited.html',
+            template: 'html/invited.html',
+            hash: true,
+            chunks: [
+                'invitedEntry'
+            ]
         }),
 
         function() {
