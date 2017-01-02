@@ -25,7 +25,9 @@ const logout = require('./routes/logout');
 const registerSubscription = require('./routes/registerSubscription');
 const sendCheevo = require('./routes/sendCheevo');
 const createTeam = require('./routes/createTeam');
+const inviteMember = require('./routes/inviteMember');
 
+//Set up express
 const app = express();
 
 // view engine setup
@@ -66,6 +68,7 @@ app.use('/logout', logout);
 app.use('/api/registerSubscription', registerSubscription);
 app.use('/api/sendCheevo', sendCheevo);
 app.use('/api/createTeam', createTeam);
+app.use('/api/inviteMember', inviteMember);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup

@@ -19,7 +19,7 @@ class User {
         return session
             .run(
                 'MATCH (user:User {googleId:{googleId}}) ' +
-                'MERGE (user)-[rel:SUBSCRIBED_BY]->(sub:SUBSCRIPTION {endpoint:{endpoint},p256dh:{p256dh},auth:{auth}}) ' +
+                'MERGE (user)-[rel:subscribed_by]->(sub:Subscription {endpoint:{endpoint},p256dh:{p256dh},auth:{auth}}) ' +
                 'RETURN user, sub, rel',
                 {
                     googleId: this.id,
@@ -201,7 +201,7 @@ class User {
         console.log('Find Endpoints by user id: ', $userId);
         let session = db.session();
         return session.run (
-            'MATCH (user:User {googleId:{googleId}})-[:SUBSCRIBED_BY]->(subscription) ' +
+            'MATCH (user:User {googleId:{googleId}})-[:subscribed_by]->(subscription) ' +
             'RETURN user, subscription',
             {
                 googleId: $userId

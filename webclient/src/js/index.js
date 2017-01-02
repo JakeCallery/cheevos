@@ -30,8 +30,16 @@ const userIdField = document.getElementById('userIdField');
 const teamNameField = document.getElementById('teamNameField');
 const createTeamButton = document.getElementById('createTeamButton');
 const listTeamsButton = document.getElementById('listTeamsButton');
+const inviteEmailAddressField = document.getElementById('inviteEmailAddressField');
+const inviteTeamNameField = document.getElementById('inviteTeamNameField');
+const inviteTeamIdField = document.getElementById('inviteTeamIdField');
+const inviteMemberButton = document.getElementById('inviteMemberButton');
 
 userIdField.value = '101328274856075903430';
+teamNameField.value = 'TestTeam1';
+inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
+inviteTeamNameField.value = 'TestTeam1';
+inviteTeamIdField.value = 'rJXKvXPSx';
 
 function updateBtn() {
     if (Notification.permission === 'denied') {
@@ -87,11 +95,35 @@ function initialiseUI() {
         .then(($response) => {
             l.debug('Response: ', $response);
         })
-
+        .catch(($error) => {
+            l.error('Create Team Error: ', $error);
+        });
     });
 
-    listTeamsButton.addEventListener('click', ($efent) => {
+    listTeamsButton.addEventListener('click', ($event) => {
         l.debug('Caught List Teams Click');
+    });
+
+    inviteMemberButton.addEventListener('click', ($event) => {
+        l.debug('Caught Invite Click');
+        fetch('/api/inviteMember', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                email: inviteEmailAddressField.value,
+                teamName: inviteTeamNameField.value,
+                teamId: inviteTeamIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Invite Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Invite Error: ', $error);
+        })
     });
 
     pushButton.addEventListener('click', () => {

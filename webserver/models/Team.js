@@ -3,6 +3,8 @@
  */
 
 const db = require('../config/db');
+const uuid = require('node-uuid');
+const md5 = require('md5');
 
 class Team {
     constructor() {
@@ -25,10 +27,10 @@ class Team {
                 return session
                     .run(
                         'MATCH (user:User {googleId:{googleId}}) ' +
-                        'MERGE (user)-[rel:MEMBER_OF]->(team:TEAM {teamId:{teamId},teamName:{teamName}}) ' +
-                        'MERGE (team)-[rel1:HAS_MEMBER]->(user) ' +
-                        'MERGE (team)-[rel2:MODERATED_BY]->(user)' +
-                        'MERGE (user)-[rel3:MODERATES]->(team) ' +
+                    'MERGE (user)-[rel:member_of]->(team:Team {teamId:{teamId},teamName:{teamName}}) ' +
+                        'MERGE (team)-[rel1:has_member]->(user) ' +
+                        'MERGE (team)-[rel2:moderated_by]->(user)' +
+                        'MERGE (user)-[rel3:moderates]->(team) ' +
                         'RETURN user, team',
                         {
                             googleId: $initialTeamMemeberId,
@@ -66,6 +68,45 @@ class Team {
 
     getMembers(){
         //TODO: Fill this in
+    }
+
+    static inviteMember($invitorId, $email, $teamName, $teamId) {
+        let session = db.session();
+        console.log('InviteMember:');
+        console.log($invitorId);
+        console.log($email);
+        console.log($teamName);
+        console.log($teamId);
+
+        let inviteCode = md5($invitorId + $teamId + uuid.v4());
+        console.log('InviteCode: ' + inviteCode);
+        return session
+            .run(
+                'MATCH (user:User {googleId:{googleId}}) ' +
+                'MATCH (team:Team {teamId:{teamId},teamName:{teamName}}) ' +
+                'MERGE (user)-[rel:sent_invite]->(invite:Invite {code:{inviteCode},email:{email}}) ' +
+                'MERGE (invite)-[rel1:invited_to]->(team) ' +
+                'RETURN user, team, invite',{
+                    googleId: $invitorId,
+                    teamId: $teamId,
+                    teamName: $teamName,
+                    email: $email,
+                    inviteCode: inviteCode
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            })
+            .catch(($error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    console.log('Invite Error: ', $error);
+                    reject($error);
+                });
+            });
     }
 
     static findTeam($name, $id) {
