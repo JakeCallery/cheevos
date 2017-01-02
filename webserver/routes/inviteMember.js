@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Team = require('../models/Team');
+const EmailManager = require('../managers/EmailManager');
 
 router.post('/', (req, res) => {
     console.log('Caught Invite Member Request: ', req.body);
@@ -18,13 +19,33 @@ router.post('/', (req, res) => {
         Team.inviteMember(user.id, req.body.email, req.body.teamName, req.body.teamId)
         .then(($dbResult) => {
 
-            //TODO: Properly handle response from DB
-            //TODO: Check for zero records returned
-
             console.log('Invite Result: ', $dbResult);
+
+            if($dbResult.records.length === 1) {
+                let inviteRecord = $dbResult.records[0].get('invite');
+
+                return new Promise((resolve, reject) => {
+                    resolve(inviteRecord);
+                });
+            } else if($dbResult.records.length > 1) {
+                return new Promise((resolve, reject) => {
+                    reject('Multiple invites matched, something went wrong');
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    reject('Could not find user or team to invite to');
+                });
+            }
+        })
+        .then(($inviteRecord) => {
+            return EmailManager.sendInviteEmail($inviteRecord, user.id);
+        })
+        .then(($emailResult) => {
+            //TODO: For now just assuming that all went well
+            //handle email failure here
             let resObj = {
                 data:{
-                    inviteCode: $dbResult.records[0].get('invite').properties.code
+                    inviteCode: $emailResult.inviteCode
                 },
                 status:'SUCCESS'
             };
@@ -38,7 +59,6 @@ router.post('/', (req, res) => {
                     error:$error.error,
                     status:'ERROR'
                 };
-
                 res.status(400).json(resObj);
             }
         });
