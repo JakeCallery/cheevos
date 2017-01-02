@@ -19,9 +19,13 @@ router.post('/', (req, res) => {
         .then(($dbResult) => {
 
             //TODO: Properly handle response from DB
+            //TODO: Check for zero records returned
 
             console.log('Invite Result: ', $dbResult);
             let resObj = {
+                data:{
+                    inviteCode: $dbResult.records[0].get('invite').properties.code
+                },
                 status:'SUCCESS'
             };
             res.status(200).json(resObj);
