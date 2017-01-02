@@ -1,2 +1,4 @@
 Currently things are based off of a userid that is saved in a session referenced by a session id in a cookie
 - Can this exploited? Someone substituting
+
+Disable the detailed 500 response codes to the client
