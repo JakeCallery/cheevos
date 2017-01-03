@@ -71,7 +71,7 @@ class User {
     }
 
     acceptInvite($inviteCode){
-
+        //TODO: Proper response to user if invite is invalid
         console.log('Accepting invite: ', $inviteCode);
         let session = db.session();
         return session

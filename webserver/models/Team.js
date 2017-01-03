@@ -14,6 +14,8 @@ class Team {
     }
 
     static addMember($teamName, $teamId, $memberId) {
+        //TODO: Actually notifiy the user if they are already on the team.
+
         console.log('Adding Team Member...');
         let session = db.session();
         return session
