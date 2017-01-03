@@ -34,12 +34,17 @@ const inviteEmailAddressField = document.getElementById('inviteEmailAddressField
 const inviteTeamNameField = document.getElementById('inviteTeamNameField');
 const inviteTeamIdField = document.getElementById('inviteTeamIdField');
 const inviteMemberButton = document.getElementById('inviteMemberButton');
+const listMembersTeamNameField = document.getElementById('listMembersTeamNameField');
+const listMembersTeamIdField = document.getElementById('listMembersTeamIdField');
+const listMembersButton = document.getElementById('listMembersButton');
 
 userIdField.value = '101328274856075903430';
 teamNameField.value = 'TestTeam1';
 inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
 inviteTeamNameField.value = 'TestTeam1';
 inviteTeamIdField.value = 'rJXKvXPSx';
+listMembersTeamNameField.value = 'W00t';
+listMembersTeamIdField.value = 'r1atrFdHx';
 
 function updateBtn() {
     if (Notification.permission === 'denied') {
@@ -59,6 +64,27 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    listMembersButton.addEventListener('click', ($event) => {
+        l.debug('Caught List Members Click');
+        fetch('/api/listMembers', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                teamId: listMembersTeamIdField.value,
+                teamName: listMembersTeamNameField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('List Members API Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('List Members API Error: ', $error);
+        })
+    });
+
     sendButton.addEventListener('click', ($event) => {
         l.debug('Caught Send Click');
         fetch('/api/sendCheevo', {

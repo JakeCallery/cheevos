@@ -13,6 +13,44 @@ class Team {
         this.id = null;
     }
 
+    static getMembers($teamName, $teamId) {
+        console.log('Getting Team Memebers');
+
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team)-[:has_member]->(member) ' +
+            'RETURN member',
+            {
+                teamName: $teamName,
+                teamId: $teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('Get Members Returned: ' + $dbResult.records.length);
+            if($dbResult.records.length > 0) {
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    return new Promise((resolve,reject) => {
+                        reject('Add Member Error, no records returned');
+                    }) ;
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            console.log('List Members Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        })
+    }
+
     static addMember($teamName, $teamId, $memberId) {
         //TODO: Actually notifiy the user if they are already on the team.
 
