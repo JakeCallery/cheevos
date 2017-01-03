@@ -13,6 +13,46 @@ class Team {
         this.id = null;
     }
 
+    static addMember($teamName, $teamId, $memberId) {
+        console.log('Adding Team Member...');
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+                'MATCH (member:User {googleId:{googleId}}) ' +
+                'MERGE (member)-[:member_of]->(team) ' +
+                'MERGE (team)-[:has_member]->(member) ' +
+                'RETURN member, team',
+                {
+                    teamName:$teamName,
+                    teamId:$teamId,
+                    googleId:$memberId
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                console.log('Add Member Returned Records: ' + $dbResult.records.length);
+                if($dbResult.records.length > 0) {
+                    return new Promise((resolve, reject) => {
+                        resolve($dbResult);
+                    });
+                } else {
+                    return new Promise((resolve, reject) => {
+                        return new Promise((resolve,reject) => {
+                            reject('Add Member Error, no records returned');
+                        }) ;
+                    });
+                }
+            })
+            .catch(($error) => {
+                session.close();
+                console.log('Add Member Error: ', $error);
+                return new Promise((resolve, reject) => {
+                    reject($error);
+                });
+            });
+    }
+
     static createTeam($teamName, $teamId, $initialTeamMemeberId){
         console.log('Saving Team To DB...');
         console.log('Searching for existing team: ', $teamName, $teamId);
@@ -63,10 +103,6 @@ class Team {
         .catch(($error) => {
             console.log('Error: ', $error);
         });
-    }
-
-    getMembers(){
-        //TODO: Fill this in
     }
 
     static inviteMember($invitorId, $email, $teamName, $teamId) {

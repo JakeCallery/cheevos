@@ -4,6 +4,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const InviteManager = require('../managers/InviteManager');
 
 router.post('/', (req, res) => {
      console.log('Caught request to accept an invite');
@@ -13,12 +14,26 @@ router.post('/', (req, res) => {
         user.updateFromUserRecord(req.user.data);
 
         console.log('Invite Code: ', req.body.inviteCode);
+        user.acceptInvite(req.body.inviteCode)
+        .then(($dbResult) => {
+            console.log('Caught Accept Invite results: ', $dbResult);
+            let resObj = {
+                status:'SUCCESS'
+            };
 
-        let resObj = {
-            status:'SUCCESS'
-        };
+            res.status(200).json(resObj);
 
-        res.status(200).json(resObj);
+        })
+        .catch(($error) => {
+            console.log('Accept Invite Top Level Error: ', $error);
+            let resObj = {
+                error:'ACCEPT_INVITE_ERROR',
+                status:'ERROR',
+                message:$error
+            };
+            res.status(404).json(resObj);
+        });
+
 
      } else {
          //not logged in

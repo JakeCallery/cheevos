@@ -4,7 +4,7 @@
 'use strict';
 
 const db = require('../config/db');
-
+const Team = require('../models/Team');
 class User {
     constructor($data) {
         this.data = $data || {};
@@ -68,6 +68,47 @@ class User {
             default:
                 console.error('Bad Auth Type during updateFromUserRecord: ', this.authType);
         }
+    }
+
+    acceptInvite($inviteCode){
+
+        console.log('Accepting invite: ', $inviteCode);
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (invite:Invite {code:{inviteCode}})-[:invited_to]->(team) ' +
+                'MATCH (invitee:User {googleId:{inviteeId}}) ' +
+                'RETURN invitee,team',
+                {
+                    inviteCode:$inviteCode,
+                    inviteeId:this.id
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                if($dbResult.records.length === 1) {
+                    console.log('Accept invite returned records: ' + $dbResult.records.length);
+                    return Team.addMember(
+                        $dbResult.records[0].get('team').properties.teamName,
+                        $dbResult.records[0].get('team').properties.teamId,
+                        $dbResult.records[0].get('invitee').properties.googleId
+                    );
+                } else if($dbResult.records.length > 1){
+                    //Too many, duplicate invites?  Should not happen
+                    return new Promise((resolve, reject) => {
+                        reject('More then 1 record was returned, should be only 1');
+                    });
+                } else {
+                    //None returned, error
+                    return new Promise((resolve, reject) => {
+                        reject('No records returned');
+                    });
+                }
+            })
+            .catch(($error) => {
+                session.close();
+                console.error('Accept Invite Error: ', $error);
+            });
     }
 
     get id() {
