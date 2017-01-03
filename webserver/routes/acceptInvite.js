@@ -21,6 +21,11 @@ router.post('/', (req, res) => {
         })
         .then(($removeInviteDBResults) => {
             console.log('Removed Invite: ', $removeInviteDBResults);
+
+            let resObj = {
+                status:'SUCCESS',
+            };
+            res.status(200).json(resObj);
         })
         .catch(($error) => {
             console.log('Accept Invite Top Level Error: ', $error);
