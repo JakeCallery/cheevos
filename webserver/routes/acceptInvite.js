@@ -17,12 +17,10 @@ router.post('/', (req, res) => {
         user.acceptInvite(req.body.inviteCode)
         .then(($dbResult) => {
             console.log('Caught Accept Invite results: ', $dbResult);
-            let resObj = {
-                status:'SUCCESS'
-            };
-
-            res.status(200).json(resObj);
-
+            return InviteManager.removeInvite(req.body.inviteCode);
+        })
+        .then(($removeInviteDBResults) => {
+            console.log('Removed Invite: ', $removeInviteDBResults);
         })
         .catch(($error) => {
             console.log('Accept Invite Top Level Error: ', $error);

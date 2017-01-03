@@ -11,6 +11,24 @@ class InviteManager {
         //Nothing to construct
     }
 
+    static removeInvite($inviteCode){
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (invite:Invite {code:{inviteCode}})' +
+            'DETACH DELETE invite',
+            {
+                inviteCode: $inviteCode
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+        })
+        .catch(($error) => {
+            console.error('Remove Invite Error: ', $error);
+        });
+    }
+
     static createInvite($invitorId, $email, $teamName, $teamId){
         let inviteCode = md5($invitorId + $teamId + uuid.v4());
         console.log('InviteCode: ' + inviteCode);
