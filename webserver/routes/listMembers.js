@@ -26,7 +26,11 @@ router.post('/', (req, res) => {
 
             for(let i = 0; i < $dbResult.records.length; i++) {
                 //TODO: Add member information to the response
-                //resObj.data[]
+                let member = $dbResult.records[i].get('member');
+                resObj.data.members.push({
+                    id: member.properties.googleId,
+                    name: member.properties.googleName
+                });
             }
 
             res.status(200).json(resObj);
