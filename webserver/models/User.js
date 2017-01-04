@@ -14,6 +14,9 @@ class User {
         console.log('Registering Subscription to user: ', this.id);
         console.log('Sub: ', $subscription);
 
+        //TODO: Maintain custom internal ID and Name, so we don't have to give out googleId
+        //during API calls
+
         //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
         let session = db.session();
         return session
