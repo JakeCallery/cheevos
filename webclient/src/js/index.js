@@ -128,6 +128,22 @@ function initialiseUI() {
 
     listTeamsButton.addEventListener('click', ($event) => {
         l.debug('Caught List Teams Click');
+        fetch('/api/listMyTeams', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+
+            })
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+        .catch(($error) => {
+            l.debug('List Teams Error: ', $error);
+        });
     });
 
     inviteMemberButton.addEventListener('click', ($event) => {
