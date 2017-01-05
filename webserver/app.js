@@ -29,6 +29,7 @@ const inviteMember = require('./routes/inviteMember');
 const invited = require('./routes/invited');
 const acceptInvite = require('./routes/acceptInvite');
 const listMembers = require('./routes/listMembers');
+const login = require('./routes/login');
 
 //Set up express
 const app = express();
@@ -75,6 +76,7 @@ app.use('/api/inviteMember', inviteMember);
 app.use('/api/acceptInvite', acceptInvite);
 app.use('/invited', invited);
 app.use('/api/listMembers', listMembers);
+app.use('/login', login);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup

@@ -6,7 +6,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     entry: {
         indexEntry:'./js/index.js',
-        invitedEntry:'./js/invited.js'
+        invitedEntry:'./js/invited.js',
+        loginEntry:'./js/login.js'
     },
 
     output: {
@@ -59,6 +60,15 @@ module.exports = {
             hash: true,
             chunks: [
                 'invitedEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'login.html',
+            template: 'html/login.html',
+            hash: true,
+            chunks: [
+                'loginEntry'
             ]
         }),
 
