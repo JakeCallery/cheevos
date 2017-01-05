@@ -14,13 +14,41 @@ router.post('/', (req, res) => {
         let user = new User();
         user.updateFromUserRecord(req.user.data);
 
-        //TODO: Grab teams from db
-        //we generated the error
         let resObj = {
+            data:{
+                teams:[],
+                moderatedTeams:[]
+            },
             status:'SUCCESS'
         };
-        res.status(200).json(resObj);
 
+        user.getMyTeams()
+        .then(($dbResult) => {
+            console.log('List My Teams DB Result: ', $dbResult);
+
+            for(let i = 0; i < $dbResult.records.length; i++) {
+                let team = $dbResult.records[i].get('team');
+                let moderatedTeam = $dbResult.records[i].get('moderatedteam');
+                resObj.data.teams.push({
+                    id: team.properties.teamId,
+                    name: team.properties.teamName
+                });
+
+                if(typeof(moderatedTeam) !== 'undefined'){
+                    resObj.data.moderatedTeams.push({
+                        id: moderatedTeam.properties.teamId,
+                        name: moderatedTeam.properties.teamName
+                    });
+                }
+            }
+            res.status(200).json(resObj);
+        })
+        .catch(($error) => {
+            console.log('Error from getMyTeams: ', $error);
+            resObj.status = 'ERROR';
+            resObj.error = $error;
+            res.status(200).json(resObj);
+        });
     } else {
         console.log('Not logged in, can\'t invite member');
         let resObj = {

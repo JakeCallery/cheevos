@@ -10,6 +10,39 @@ class User {
         this.data = $data || {};
     }
 
+    getMyTeams() {
+        console.log('Getting My Teams...');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (user)-[:member_of]->(team) ' +
+            'MATCH (user)-[:moderates]->(moderatedteam) ' +
+            'RETURN team, moderatedteam',
+            {
+                googleId: this.id
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                if($dbResult.records.length > 0){
+                    resolve($dbResult);
+                } else {
+                    reject('List My Teams error, no records returned');
+                }
+
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            console.log('List My Teams error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
     registerSubscription($subscription) {
         console.log('Registering Subscription to user: ', this.id);
         console.log('Sub: ', $subscription);
