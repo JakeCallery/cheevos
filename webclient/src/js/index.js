@@ -37,6 +37,9 @@ const inviteMemberButton = document.getElementById('inviteMemberButton');
 const listMembersTeamNameField = document.getElementById('listMembersTeamNameField');
 const listMembersTeamIdField = document.getElementById('listMembersTeamIdField');
 const listMembersButton = document.getElementById('listMembersButton');
+const removeMeButton = document.getElementById('removeMeButton');
+const removeMeTeamNameField = document.getElementById('removeMeTeamNameField');
+const removeMeTeamIdField = document.getElementById('removeMeTeamIdField');
 
 userIdField.value = '101328274856075903430';
 teamNameField.value = 'TestTeam1';
@@ -45,6 +48,7 @@ inviteTeamNameField.value = 'TestTeam1';
 inviteTeamIdField.value = 'rJXKvXPSx';
 listMembersTeamNameField.value = 'W00t';
 listMembersTeamIdField.value = 'r1atrFdHx';
+
 
 function updateBtn() {
     if (Notification.permission === 'denied') {
@@ -83,6 +87,27 @@ function initialiseUI() {
         .catch(($error) => {
             l.error('List Members API Error: ', $error);
         })
+    });
+
+    removeMeButton.addEventListener('click', ($event) => {
+         l.debug('Caught Remove Me Click');
+         fetch('/api/removeMeFromTeam', {
+             method: 'POST',
+             credentials: 'include',
+             headers: new Headers({
+                 'Content-Type': 'application/json'
+             }),
+             body: JSON.stringify({
+                 teamId: removeMeTeamIdField.value,
+                 teamName: removeMeTeamNameField.value
+             })
+         })
+         .then(($response) => {
+             l.debug('Response: ', $response);
+         })
+         .catch(($error) => {
+            l.error('Remove Me API Error: ', $error);
+         });
     });
 
     sendButton.addEventListener('click', ($event) => {
