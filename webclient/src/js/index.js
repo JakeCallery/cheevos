@@ -92,7 +92,7 @@ function initialiseUI() {
     removeMeButton.addEventListener('click', ($event) => {
          l.debug('Caught Remove Me Click');
          fetch('/api/removeMeFromTeam', {
-             method: 'POST',
+             method: 'DELETE',
              credentials: 'include',
              headers: new Headers({
                  'Content-Type': 'application/json'

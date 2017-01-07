@@ -13,6 +13,50 @@ class Team {
         this.id = null;
     }
 
+    static isMemberModerator($teamName, $teamId, $memberId){
+            //TODO: Fill this in
+    }
+
+    static removeMember($memberId, $teamName, $teamId){
+        console.log('Removing member from team: ', $memberId, $teamName);
+
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})-[rel:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}})' +
+            '-[rel1:has_member]->(user) ' +
+            'DELETE rel, rel1 ' +
+            'RETURN rel,rel1,team',
+            {
+                googleId: $memberId,
+                teamName: $teamName,
+                teamId: $teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('removeMember returned: ', $dbResult);
+            if($dbResult.records.length > 0){
+                console.log('Results: ', $dbResult.records.length)
+
+            } else {
+                console.error('no records returned...');
+            }
+
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            console.log('removeMember Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+
+    }
+
     static getMembers($teamName, $teamId) {
         console.log('Getting Team Memebers');
 
@@ -36,9 +80,7 @@ class Team {
                 });
             } else {
                 return new Promise((resolve, reject) => {
-                    return new Promise((resolve,reject) => {
-                        reject('Add Member Error, no records returned');
-                    }) ;
+                    reject('Add Member Error, no records returned');
                 });
             }
         })
