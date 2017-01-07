@@ -30,10 +30,10 @@ router.delete('/', (req, res) => {
         .catch(($error) => {
             console.error('Remove Me From Team Error: ', $error);
                         let resObj = {
-                error:'NOT_LOGGED_IN',
+                error:$error,
                 status:'ERROR'
             };
-            res.status(401).json(resObj);
+            res.status(400).json(resObj);
 
         });
 
