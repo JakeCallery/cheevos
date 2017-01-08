@@ -16,7 +16,44 @@ class Team {
     static removeTeam($teamName, $teamId){
         console.log('removeTeam Called: ', $teamName, $teamId);
 
-
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'DETACH DELETE team ' +
+            'RETURN team',
+            {
+                teamName:$teamName,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('removeTeamResult: ', $dbResult);
+            if($dbResult.records.length === 1){
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else if($dbResult.records.length > 1){
+                //something bad happened
+                console.error('Should not be here, more than 1 team removed!');
+                return new Promise((resolve, reject) => {
+                    reject('More than 1 team removed!!');
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    console.log('No Teams deleted...');
+                    reject('Zero teams deleted');
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            console.error('Remove Team Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        })
     }
 
     static isMemberOnlyModerator($memberId, $teamName, $teamId){
