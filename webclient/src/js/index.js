@@ -44,7 +44,10 @@ const isModeratorTeamNameField = document.getElementById('isModeratorTeamNameFie
 const isModeratorTeamIdField = document.getElementById('isModeratorTeamIdField');
 const isModeratorButton = document.getElementById('isModeratorButton');
 const isOnlyModeratorButton = document.getElementById('isOnlyModeratorButton');
-
+const removeMemberMemberIdField = document.getElementById('removeMemberMemberIdField');
+const removeMemberTeamNameField = document.getElementById('removeMemberTeamNameField');
+const removeMemberTeamIdField = document.getElementById('removeMemberTeamIdField');
+const removeMemberButton = document.getElementById('removeMemberButton');
 
 userIdField.value = '101328274856075903430';
 teamNameField.value = 'TestTeam1';
@@ -73,6 +76,28 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    removeMemberButton.addEventListener('click', ($event) => {
+        l.debug('Caught removeMember click');
+        fetch('/api/removeMemberFromTeam', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                memberId: removeMemberMemberIdField.value,
+                teamName: removeMemberTeamNameField.value,
+                teamId: removeMemberTeamIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Remove Member Error: ', $error);
+        })
+    });
+
     isOnlyModeratorButton.addEventListener('click', ($event) => {
         l.debug('Caught Is Only Moderator Click');
         fetch('/api/isOnlyModerator', {
