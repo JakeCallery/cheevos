@@ -32,6 +32,7 @@ const listMembers = require('./routes/listMembers');
 const listMyTeams = require('./routes/listMyTeams');
 const login = require('./routes/login');
 const removeMeFromTeam = require('./routes/removeMeFromTeam');
+const isModerator = require('./routes/isModerator');
 
 //Set up express
 const app = express();
@@ -81,6 +82,7 @@ app.use('/api/listMembers', listMembers);
 app.use('/api/listMyTeams', listMyTeams);
 app.use('/login', login);
 app.use('/api/removeMeFromTeam', removeMeFromTeam);
+app.use('/api/isModerator', isModerator);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup

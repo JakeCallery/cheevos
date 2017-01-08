@@ -40,6 +40,9 @@ const listMembersButton = document.getElementById('listMembersButton');
 const removeMeButton = document.getElementById('removeMeButton');
 const removeMeTeamNameField = document.getElementById('removeMeTeamNameField');
 const removeMeTeamIdField = document.getElementById('removeMeTeamIdField');
+const isModeratorTeamNameField = document.getElementById('isModeratorTeamNameField');
+const isModeratorTeamIdField = document.getElementById('isModeratorTeamIdField');
+const isModeratorButton = document.getElementById('isModeratorButton');
 
 userIdField.value = '101328274856075903430';
 teamNameField.value = 'TestTeam1';
@@ -68,6 +71,33 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    isModeratorButton.addEventListener('click', ($event) => {
+        l.debug('Caught Is Moderator Click');
+        fetch('/api/isModerator', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                teamId: isModeratorTeamIdField.value,
+                teamName: isModeratorTeamNameField.value
+            })
+        })
+        .then(($response) => {
+            $response.json()
+            .then(($res) => {
+                l.debug('IsModerator: ', $res.isModerator);
+            })
+            .catch(($error) => {
+                l.error('isModerator bad json response: ', $err);
+            })
+        })
+        .catch(($error) => {
+            l.error($error);
+        });
+    });
+
     listMembersButton.addEventListener('click', ($event) => {
         l.debug('Caught List Members Click');
         fetch('/api/listMembers', {

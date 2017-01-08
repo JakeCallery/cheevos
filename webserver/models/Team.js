@@ -13,8 +13,42 @@ class Team {
         this.id = null;
     }
 
-    static isMemberModerator($teamName, $teamId, $memberId){
-            //TODO: Fill this in
+    static isMemberModerator($memberId, $teamName, $teamId){
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (user)-[rel:moderates]->(team) ' +
+            'RETURN rel',
+            {
+                googleId: $memberId,
+                teamName: $teamName,
+                teamId: $teamId
+            }
+
+        )
+        .then(($dbResult) => {
+           session.close();
+           if($dbResult.records.length > 0) {
+               return new Promise((resolve, reject) => {
+                   console.log('Is a moderator');
+                   resolve(true);
+               });
+           } else {
+               return new Promise((resolve, reject) => {
+                   console.log('Is NOT a moderator');
+                   resolve(false);
+               });
+           }
+
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
     }
 
     static removeMember($memberId, $teamName, $teamId){
