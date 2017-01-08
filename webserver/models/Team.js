@@ -101,10 +101,11 @@ class Team {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})-[rel:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}})' +
-            '-[rel1:has_member]->(user) ' +
-            'DELETE rel, rel1 ' +
-            'RETURN rel,rel1,team',
+            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}})' +
+            'MATCH (user)-[rels]-(team) ' +
+            'DELETE rels ' +
+            'RETURN rels',
             {
                 googleId: $memberId,
                 teamName: $teamName,
