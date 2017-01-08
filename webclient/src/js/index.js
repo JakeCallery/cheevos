@@ -52,6 +52,9 @@ const addModUserIdField = document.getElementById('addModUserIdField');
 const addModTeamNameField = document.getElementById('addModTeamNameField');
 const addModTeamIdField = document.getElementById('addModTeamIdField');
 const addModButton = document.getElementById('addModButton');
+const removeTeamTeamNameField = document.getElementById('removeTeamTeamNameField');
+const removeTeamTeamIdField = document.getElementById('removeTeamTeamIdField');
+const removeTeamButton = document.getElementById('removeTeamButton');
 
 userIdField.value = '101328274856075903430';
 teamNameField.value = 'TestTeam1';
@@ -80,6 +83,27 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    removeTeamButton.addEventListener('click', ($event) => {
+        l.debug('Caught remove team click');
+        fetch('/api/removeTeam', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                teamName:removeTeamTeamNameField.value,
+                teamId:removeTeamTeamIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Remove Team Error: ', $error);
+        });
+    });
+
     addModButton.addEventListener('click', ($event) => {
         l.debug('Caught Add Mod Click');
         fetch('/api/addModerator', {

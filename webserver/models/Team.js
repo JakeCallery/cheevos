@@ -16,10 +16,7 @@ class Team {
     static removeTeam($teamName, $teamId){
         console.log('removeTeam Called: ', $teamName, $teamId);
 
-        //TODO: Actually implement this (different branch)
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
+
     }
 
     static isMemberOnlyModerator($memberId, $teamName, $teamId){
