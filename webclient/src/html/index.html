@@ -6,6 +6,7 @@
         <title><%= title %></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="manifest" href="manifest.json">
+        <script src="../../../webserver/routes/removeMeFromTeam.js"></script>
     </head>
     <body>
         <p>
@@ -71,6 +72,17 @@
             <input type="text" id="isModeratorTeamIdField"> <br>
             <button id="isModeratorButton" class="simpleButton">Check is Mod.</button>
             <button id="isOnlyModeratorButton" class="simpleButton">Check Only Mod.</button>
+        </p>
+
+        <p>
+            Add Moderator: <br>
+            User Id: <br>
+            <input type="text" id="addModUserIdField"> <br>
+            Team Name: <br>
+            <input type="text" id="addModTeamNameField"> <br>
+            Team Id: <br>
+            <input type="text" id="addModTeamIdField"> <br>
+            <button id="addModButton" class="simpleButton">Add Mod</button>
         </p>
 
         <p>

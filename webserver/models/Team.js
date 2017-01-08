@@ -97,7 +97,7 @@ class Team {
 
     static removeMember($memberId, $teamName, $teamId){
         console.log('Removing member from team: ', $memberId, $teamName);
-
+        //TODO: Remove moderated_by and moderates relationships as well
         let session = db.session();
         return session
         .run(
@@ -169,6 +169,87 @@ class Team {
                 reject($error);
             });
         })
+    }
+
+    static addModerator($memberId, $teamName, $teamId) {
+        console.log('Adding Team Moderator...', $memberId);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MERGE (user)-[rel:moderates]->(team) ' +
+            'MERGE (team)-[rel1:moderated_by]->(user)' +
+            'RETURN rel, rel1',
+            {
+                googleId:$memberId,
+                teamName:$teamName,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('addModerator Results: ', $dbResult.records.length);
+            if($dbResult.records.length === 1) {
+                //Good result
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else if($dbResult > 1) {
+                //something strange happened
+                return new Promise((resolve, reject) => {
+                    reject('Should not be here, more than 1 set of relationships added');
+                });
+            } else {
+                //not added
+                return new Promise((resolve, reject) => {
+                    reject('Zero Records added');
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+
+    }
+
+    static isMember($memberId, $teamName, $teamId){
+        console.log('Checking if is member: ', $memberId, $teamName, $teamId);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})-[rel:member_of]->' +
+            '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'RETURN rel',
+            {
+                googleId:$memberId,
+                teamName:$teamName,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('DB Result: ', $dbResult);
+            if($dbResult.records.length > 0){
+                return new Promise((resolve, reject) => {
+                    resolve(true);
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    resolve(false);
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                console.log('isMemberError: ', $error);
+                reject($error);
+            });
+        });
     }
 
     static addMember($teamName, $teamId, $memberId) {
