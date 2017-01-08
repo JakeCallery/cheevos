@@ -14,22 +14,34 @@ router.delete('/', (req, res) => {
         let user = new User();
         user.updateFromUserRecord(req.user.data);
 
-        Team.removeMember(user.id, req.body.teamName, req.body.teamId)
-        .then(($dbResult) => {
-            console.log('Num Results: ', $dbResult.records.length);
-            //TODO: Proper return if no records were found
-            let resObj = {
-                data:{
-                },
-                status:'SUCCESS'
-            };
+        Team.isMemberOnlyModerator(user.id, req.body.teamName, req.body.teamId)
+        .then(($isOnlyModerator) => {
+            if($isOnlyModerator === false){
+                Team.removeMember(user.id, req.body.teamName, req.body.teamId)
+                    .then(($dbResult) => {
+                        console.log('Num Results: ', $dbResult.records.length);
+                        //TODO: Proper return if no records were found
+                        let resObj = {
+                            data:{
+                            },
+                            status:'SUCCESS'
+                        };
 
-            res.status(200).json(resObj);
+                        res.status(200).json(resObj);
+
+                    })
+            } else {
+                let resObj = {
+                    error:'Can\'t remove only moderator from team',
+                    status:'ERROR'
+                };
+                res.status(400).json(resObj);
+            }
 
         })
         .catch(($error) => {
             console.error('Remove Me From Team Error: ', $error);
-                        let resObj = {
+            let resObj = {
                 error:$error,
                 status:'ERROR'
             };

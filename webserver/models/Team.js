@@ -13,6 +13,50 @@ class Team {
         this.id = null;
     }
 
+    static removeTeam($teamName, $teamId){
+        console.log('removeTeam Called: ', $teamName, $teamId);
+
+        //TODO: Actually implement this (different branch)
+        return new Promise((resolve, reject) => {
+            resolve(true);
+        });
+    }
+
+    static isMemberOnlyModerator($memberId, $teamName, $teamId){
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            '-[:moderated_by]->(user:User) ' +
+            'return user',
+            {
+                teamName:$teamName,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('isMemberOnlyModerator Results: ', $dbResult);
+            if($dbResult.records.length === 1 &&
+                $dbResult.records[0].get('user').properties.googleId === $memberId){
+                return new Promise((resolve, reject) => {
+                    resolve(true);
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    resolve(false);
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            console.log('isMemberOnlyModerator Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
     static isMemberModerator($memberId, $teamName, $teamId){
         let session = db.session();
         return session
