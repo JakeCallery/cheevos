@@ -1,0 +1,31 @@
+Plan:
+Create/Storge badges per user
+Send Team based notifications
+User Preferences (get team notifications?)
+When user unsubscribes, remove endpoint
+On Notification send, check if enpoint is still valid (remove if not)
+
+---------------------------------------
+Secondary Plan:
+Clean up API responses
+Set up Test User Bots
+---------------------------------------
+
+DONE:
+Allow Team Member to remove themselves
+Finish accept invite flow
+- Take code, add user to team based on the invite db object
+- Remove invite db object
+- redirect back to index page
+
+Handle Not logged in flow for accept invite
+- store invite code in session (full invite url)
+req.session.return_url = req.query.return_url;
+- handle the login through google
+- redirect back to return_url from session
+- clean up return url from session
+
+List Team Memebers
+Moderator Remove Team Members
+Moderator add additional moderator
+Delete Team (moderator only)
