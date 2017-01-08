@@ -288,7 +288,7 @@ class Team {
     }
 
     static addMember($teamName, $teamId, $memberId) {
-        //TODO: Actually notifiy the user if they are already on the team.
+        //TODO: Actually notify the user if they are already on the team.
 
         console.log('Adding Team Member...');
         let session = db.session();
@@ -313,11 +313,9 @@ class Team {
                         resolve($dbResult);
                     });
                 } else {
-                    return new Promise((resolve, reject) => {
-                        return new Promise((resolve,reject) => {
-                            reject('Add Member Error, no records returned');
-                        }) ;
-                    });
+                    return new Promise((resolve,reject) => {
+                        reject('Add Member Error, no records returned');
+                    }) ;
                 }
             })
             .catch(($error) => {
