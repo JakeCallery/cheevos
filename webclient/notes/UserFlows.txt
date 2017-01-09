@@ -1,5 +1,0 @@
-Index Page:
-Google Login/Logout Button
-Enable/Disable Push Notifications
-Create Team Button
-Send Cheevo Button
