@@ -6,9 +6,12 @@ When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
 
 ---------------------------------------
-Secondary Plan:
+Upcoming Plan:
+Validate against google login status
+Generate user ids, don't use google id
 Clean up API responses
 Set up Test User Bots
+Test APIs against odd characters
 ---------------------------------------
 
 DONE:

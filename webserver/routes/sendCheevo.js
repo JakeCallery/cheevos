@@ -14,7 +14,7 @@ webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 router.post('/', (req, res) => {
     if(typeof(req.user) !== 'undefined'){
         console.log('Looking Up User to send to...');
-        User.findEndPointsByUserId(req.body.recipientId)
+        User.findEndPointsByUserId(req.body.memberId)
         .then((result) => {
             console.log('Have Endpoints: ', result.records.length);
             const options = {
@@ -29,7 +29,7 @@ router.post('/', (req, res) => {
 
             //TODO: Green thread this maybe? / Hand off to another process?
             //Hand off to queue process of some kind?
-            //Might be a good place to play with "yield"
+            //Might be a good place to play with "yield", or "async"
             for (let i = 0; i < result.records.length; i++) {
                 let sub = result.records[i].get('subscription');
                 let subscription = {
@@ -42,7 +42,13 @@ router.post('/', (req, res) => {
 
                 webPush.sendNotification(
                     subscription,
-                    req.body.data,
+                    JSON.stringify(
+                        {
+                            iconUrl: req.body.iconUrl,
+                            nameText: req.body.nameText,
+                            descText: req.body.descText
+                        }
+                    ),
                     options
                 )
                 .then((result) => {

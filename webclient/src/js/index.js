@@ -25,8 +25,11 @@ let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E
 
 const pushButton = document.getElementById('pushButton');
 const endpointTextArea = document.getElementById('endpointTextArea');
-const sendButton = document.getElementById('sendButton');
-const userIdField = document.getElementById('userIdField');
+const badgeSendButton = document.getElementById('badgeSendButton');
+const badgeUserIdField = document.getElementById('badgeUserIdField');
+const badgeNameField = document.getElementById('badgeNameField');
+const badgeDescField = document.getElementById('badgeDescField');
+const badgeIconUrlField = document.getElementById('badgeIconUrlField');
 const teamNameField = document.getElementById('teamNameField');
 const createTeamButton = document.getElementById('createTeamButton');
 const listTeamsButton = document.getElementById('listTeamsButton');
@@ -56,7 +59,10 @@ const removeTeamTeamNameField = document.getElementById('removeTeamTeamNameField
 const removeTeamTeamIdField = document.getElementById('removeTeamTeamIdField');
 const removeTeamButton = document.getElementById('removeTeamButton');
 
-userIdField.value = '101328274856075903430';
+badgeUserIdField.value = '101328274856075903430';
+badgeIconUrlField.value = '/testBadgeIcon.png';
+badgeNameField.value = 'Test Badge ' + new Date();
+badgeDescField.value = 'Sweet Test Badge description! W00t! ' + new Date();
 teamNameField.value = 'TestTeam1';
 inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
 inviteTeamNameField.value = 'TestTeam1';
@@ -244,7 +250,7 @@ function initialiseUI() {
          });
     });
 
-    sendButton.addEventListener('click', ($event) => {
+    badgeSendButton.addEventListener('click', ($event) => {
         l.debug('Caught Send Click');
         fetch('/api/sendCheevo', {
             method: 'POST',
@@ -253,8 +259,10 @@ function initialiseUI() {
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify({
-                recipientId: userIdField.value,
-                data:'test data!'
+                memberId: badgeUserIdField.value,
+                iconUrl: badgeIconUrlField.value,
+                nameText: badgeNameField.value,
+                descText: badgeDescField.value
             })
         })
         .then((response) => {

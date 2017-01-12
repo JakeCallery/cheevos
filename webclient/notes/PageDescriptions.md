@@ -75,7 +75,7 @@
   * Shown to the left of the notification
     * Allow for custom links to images
     * Selection of pre-made icons
-    * Title Text
-      * ex. Sleepless Warrior
-    * Body Text
-      * ex. Turned caffeine and pizza into code for 48hrs straight.
+* Title Text
+  * ex. Sleepless Warrior
+* Body Text
+  * ex. Turned caffeine and pizza into code for 48hrs straight.
