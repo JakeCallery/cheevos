@@ -14,18 +14,23 @@ self.addEventListener('activate', function(event) {
 });
 
 // Register event listener for the 'push' event.
-self.addEventListener('push', function(event) {
+self.addEventListener('push', function($event) {
     console.log('[Service Worker] Push Received.');
-    console.log(`[Service Worker] Push had this data: "${event.data.text()}"`);
+    console.log(`[Service Worker] Push had this data: "${$event.data.text()}"`);
+    console.log('Event: ', $event);
+    let payload = $event.data.json();
+    console.log('Payload: ', payload);
 
-    const title = 'Push Codelab';
+    const title = payload.nameText;
     const options = {
-        body: 'Yay it works.',
-        icon: 'icon.png',
+        body: payload.descText,
+        icon: payload.iconUrl,
         badge: 'badge.png'
     };
 
-    event.waitUntil(self.registration.showNotification(title, options));
+    $event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
     // // Retrieve the textual payload from event.data (a PushMessageData object).
     // let payload = JSON.parse(event.data.text());
     // let clickUrl = payload.url;
