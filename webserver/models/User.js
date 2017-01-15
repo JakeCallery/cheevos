@@ -11,6 +11,62 @@ class User {
         this.data = $data || {};
     }
 
+    getAllMyBadges() {
+        console.log('Getting ALL badges...');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '<-[:sent_to]-(badge:Badge) ' +
+            'RETURN badge',
+            {
+                googleId:this.id
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
+    getMyBadgesOnTeam($teamName, $teamId) {
+        console.log('Getting my badges on team...');
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (user:User {googleId:{googleId}})' +
+                '-[:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}})' +
+                '<-[:sent_to]-(badge:Badge) ' +
+                'RETURN badge',
+                {
+                    googleId:this.id,
+                    teamName:$teamname,
+                    teamId:$teamId
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            })
+            .catch(($error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    reject($error);
+                });
+            });
+
+    }
+
     getMyTeams() {
         console.log('Getting My Teams...');
         let session = db.session();

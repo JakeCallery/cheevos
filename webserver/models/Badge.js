@@ -17,6 +17,17 @@ class Badge {
         this.descText = $desc || null;
     }
 
+    json(){
+        return {
+            id: this.id,
+            createdTime: this.createdTime,
+            badgeUrl: this.badgeUrl,
+            iconUrl: this.iconUrl,
+            titleText: this.titleText,
+            descText: this.descText
+        }
+    }
+
     static newBadgeFromDB($dbRecord){
         let badge = new Badge();
         badge.id = $dbRecord.properties.id;
@@ -25,7 +36,7 @@ class Badge {
         badge.titleText = $dbRecord.properties.titleText;
         badge.descText = $dbRecord.properties.descText;
         badge.createdTime = $dbRecord.properties.createdTime;
-        return Badge;
+        return badge;
     }
 }
 

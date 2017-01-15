@@ -64,6 +64,9 @@ const removeBadgeCompletelyBadgeIdField = document.getElementById('removeBadgeCo
 const removeBadgeCompletelyButton = document.getElementById('removeBadgeCompletelyButton');
 const badgeTeamIdField = document.getElementById('badgeTeamIdField');
 const badgeTeamNameField = document.getElementById('badgeTeamNameField');
+const getBadgesTeamName = document.getElementById('getBadgesTeamName');
+const getBadgesTeamId = document.getElementById('getBadgesTeamId');
+const getBadgesButton = document.getElementById('getBadgesButton');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -98,6 +101,27 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    getBadgesButton.addEventListener('click', ($event) => {
+        l.debug('Caught Get Badges Click');
+        fetch('/api/listMyBadges', {
+            method:'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                teamName: getBadgesTeamName.value,
+                teamId: getBadgesTeamId.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Get Badges Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Get Badges Error: ', $error);
+        })
+    });
+
     removeBadgeCompletelyButton.addEventListener('click', ($event) => {
         l.debug('Caught Remove badge completely click...');
         fetch('/api/removeBadgeCompletely', {
