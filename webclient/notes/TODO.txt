@@ -1,5 +1,6 @@
 Plan:
-Create/Store badges per user
+Remove Badge
+Block/Unblock user
 Send Team based notifications
 User Preferences (get team notifications?)
 When user unsubscribes, remove endpoint
@@ -23,6 +24,7 @@ This will help prevent people from using the api when not from the page
 -----------------------------------------
 
 DONE:
+Create/Store badges per user
 Allow Team Member to remove themselves
 Finish accept invite flow
 - Take code, add user to team based on the invite db object
