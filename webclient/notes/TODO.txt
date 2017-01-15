@@ -1,12 +1,12 @@
 Plan:
 Remove Badge Completely
 List My Badges
+Badges By Team (team/badge integration)
 Block/Unblock user
 Send Team based notifications
 User Preferences (get team notifications?)
 When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
-
 ---------------------------------------
 Upcoming Plan:
 Validate against google login status
