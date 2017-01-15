@@ -1,7 +1,6 @@
 Plan:
-Remove Badge Completely
-List My Badges
 Badges By Team (team/badge integration)
+List My Badges
 Block/Unblock user
 Send Team based notifications
 User Preferences (get team notifications?)
@@ -25,6 +24,7 @@ This will help prevent people from using the api when not from the page
 -----------------------------------------
 
 DONE:
+Remove Badge Completely
 Remove Badge For Me
 Create/Store badges per user
 Allow Team Member to remove themselves

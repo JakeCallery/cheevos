@@ -60,6 +60,8 @@ const removeTeamTeamIdField = document.getElementById('removeTeamTeamIdField');
 const removeTeamButton = document.getElementById('removeTeamButton');
 const removeBadgeForUserBadgeIdField = document.getElementById('removeBadgeForUserBadgeIdField');
 const removeBadgeForUserButton = document.getElementById('removeBadgeForUserButton');
+const removeBadgeCompletelyBadgeIdField = document.getElementById('removeBadgeCompletelyBadgeIdField');
+const removeBadgeCompletelyButton = document.getElementById('removeBadgeCompletelyButton');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -91,6 +93,26 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    removeBadgeCompletelyButton.addEventListener('click', ($event) => {
+        l.debug('Caught Remove badge completely click...');
+        fetch('/api/removeBadgeCompletely', {
+            method: 'DELETE',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                badgeId: removeBadgeCompletelyBadgeIdField.value
+            })
+        })
+            .then(($response) => {
+                l.debug('Remove Badge Response: ', $response)
+            })
+            .catch(($error) => {
+                l.error('Remove Badge Error: ', $error);
+            });
+    });
+
     removeBadgeForUserButton.addEventListener('click', ($event) => {
         l.debug('Caught Remove badge for user click...');
         fetch('/api/removeBadgeFromMe', {

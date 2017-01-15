@@ -12,6 +12,7 @@ class BadgeManager {
 
     static removeBadgeCompletely($memberId, $badgeId){
         let session = db.session();
+        console.log('Removing Badge Completely: ', $memberId, ' / ', $badgeId);
         //TODO: make sure only owner of badge can remove it
         return session
             .run(
