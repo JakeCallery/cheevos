@@ -43,12 +43,12 @@ class User {
         return session
             .run(
                 'MATCH (user:User {googleId:{googleId}})' +
-                '-[:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}})' +
-                '<-[:sent_to]-(badge:Badge) ' +
+                '<-[:sent_to]-(badge:Badge)-[:part_of_team]->' +
+                '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
                 'RETURN badge',
                 {
                     googleId:this.id,
-                    teamName:$teamname,
+                    teamName:$teamName,
                     teamId:$teamId
                 }
             )

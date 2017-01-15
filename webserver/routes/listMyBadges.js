@@ -40,9 +40,33 @@ router.post('/', (req, res) => {
                     status:'ERROR'
                 };
                 res.status(400).json(resObj);
-            })
+            });
         } else {
             //List all badges from team
+            user.getMyBadgesOnTeam(req.body.teamName, req.body.teamId)
+                .then(($dbResult) => {
+                    let resObj = {
+                        data:{
+                            badges:[]
+                        },
+                        status:'SUCCESS'
+                    };
+
+                    for(let i = 0; i < $dbResult.records.length; i++) {
+                        let dbBadge = $dbResult.records[i].get('badge');
+                        resObj.data.badges.push(Badge.newBadgeFromDB(dbBadge).json());
+                    }
+
+                    res.status(200).json(resObj);
+                })
+                .catch(($error) => {
+                    console.error('listMyBadges Error: ', $error);
+                    let resObj = {
+                        error:$error,
+                        status:'ERROR'
+                    };
+                    res.status(400).json(resObj);
+                })
         }
 
     } else {
