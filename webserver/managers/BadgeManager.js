@@ -10,6 +10,73 @@ class BadgeManager {
         //nothing yet
     }
 
+    static removeBadgeCompletely($memberId, $badgeId){
+        let session = db.session();
+        //TODO: make sure only owner of badge can remove it
+        return session
+            .run(
+                'MATCH (user:User {googleId:{googleId}})' +
+                '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
+                'DETACH DELETE badge ' +
+                'RETURN badge',
+                {
+                    googleId: $memberId,
+                    badgeId: $badgeId
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                if($dbResult.records.length === 1) {
+                    console.log('Removed Badge: ', $dbResult);
+                    return new Promise((resolve, reject) => {
+                        resolve($dbResult);
+                    });
+                } else {
+                    return new Promise((resolve, reject) => {
+                        reject('Expected 1 badge record, received: ', $dbResult.records.length);
+                    });
+                }
+            })
+            .catch(($error) => {
+                return new Promise((resolve, reject) => {
+                    reject($error);
+                });
+            })
+    }
+
+    static removeBadgeForUser($memberId, $badgeId){
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
+            'DELETE rel ' +
+            'RETURN badge,rel',
+            {
+                googleId: $memberId,
+                badgeId: $badgeId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            if($dbResult.records.length === 1) {
+                console.log('Removed Link to Badge: ', $dbResult);
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    reject('Expected 1 badge record, received: ', $dbResult.records.length);
+                });
+            }
+        })
+        .catch(($error) => {
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        })
+    }
+
     static saveBadgeToDB($senderId, $recipientId, $badge){
         let session = db.session();
         return session
@@ -41,14 +108,15 @@ class BadgeManager {
         )
         .then(($dbResult) => {
             session.close();
-            if($dbResult.records.length > 0) {
-                console.log('Num Badges Returned, (should be 1): ', $dbResult.records.length);
+            let numRecords = $dbResult.records.length;
+            if(numRecords === 1) {
+                console.log('Num Badges Returned, (should be 1): ', numRecords);
                 return new Promise((resolve, reject) => {
                     resolve($dbResult);
                 });
             } else {
                 return new Promise((resolve, reject) => {
-                    reject('No Badges Created');
+                    reject('Expected 1 badge record created, but received: ', numRecords);
                 });
             }
         })

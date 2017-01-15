@@ -27,7 +27,6 @@ class Badge {
         badge.createdTime = $dbRecord.properties.createdTime;
         return Badge;
     }
-
 }
 
 module.exports = Badge;
