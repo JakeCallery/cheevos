@@ -62,11 +62,16 @@ const removeBadgeForUserBadgeIdField = document.getElementById('removeBadgeForUs
 const removeBadgeForUserButton = document.getElementById('removeBadgeForUserButton');
 const removeBadgeCompletelyBadgeIdField = document.getElementById('removeBadgeCompletelyBadgeIdField');
 const removeBadgeCompletelyButton = document.getElementById('removeBadgeCompletelyButton');
+const badgeTeamIdField = document.getElementById('badgeTeamIdField');
+const badgeTeamNameField = document.getElementById('badgeTeamNameField');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
 badgeNameField.value = 'Test Badge ' + new Date();
 badgeDescField.value = 'Sweet Test Badge description! W00t! ' + new Date();
+badgeTeamNameField.value = 'W00t';
+badgeTeamIdField.value = 'r1atrFdHx';
+
 teamNameField.value = 'TestTeam1';
 inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
 inviteTeamNameField.value = 'TestTeam1';
@@ -306,7 +311,9 @@ function initialiseUI() {
                 memberId: badgeUserIdField.value,
                 iconUrl: badgeIconUrlField.value,
                 nameText: badgeNameField.value,
-                descText: badgeDescField.value
+                descText: badgeDescField.value,
+                teamId: badgeTeamIdField.value,
+                teamName: badgeTeamNameField.value
             })
         })
         .then((response) => {

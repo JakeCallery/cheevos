@@ -64,7 +64,7 @@ class Team {
             '-[:moderated_by]->(user:User) ' +
             'return user',
             {
-                teamName:$teamName,
+        teamName:$teamName,
                 teamId:$teamId
             }
         )

@@ -78,12 +78,14 @@ class BadgeManager {
         })
     }
 
-    static saveBadgeToDB($senderId, $recipientId, $badge){
+    static saveBadgeToDB($senderId, $recipientId, $teamName, $teamId, $badge){
         let session = db.session();
         return session
         .run(
             'MATCH (sender:User {googleId:{senderId}}) ' +
             'MATCH (recipient:User {googleId:{recipientId}}) ' +
+            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (sender)-[:member_of]->(team)<-[:member_of]-(recipient) ' +
             'MERGE (' +
             'badge:Badge {' +
             'id:{badgeId},' +
@@ -95,6 +97,7 @@ class BadgeManager {
             '}) ' +
             'MERGE (badge)-[:sent_to]->(recipient) ' +
             'MERGE (badge)<-[:sent_from]-(sender) ' +
+            'MERGE (badge)-[:part_of_team]->(team) ' +
             'RETURN badge',
             {
                 senderId: $senderId,
@@ -104,25 +107,28 @@ class BadgeManager {
                 iconUrl: $badge.iconUrl,
                 titleText: $badge.titleText,
                 descText: $badge.descText,
-                createdTime: $badge.createdTime
+                createdTime: $badge.createdTime,
+                teamName: $teamName,
+                teamId: $teamId
             }
         )
         .then(($dbResult) => {
             session.close();
             let numRecords = $dbResult.records.length;
             if(numRecords === 1) {
-                console.log('Num Badges Returned, (should be 1): ', numRecords);
+                console.log('Num Badges Returned, (should be 1): ' + numRecords);
                 return new Promise((resolve, reject) => {
                     resolve($dbResult);
                 });
             } else {
                 return new Promise((resolve, reject) => {
-                    reject('Expected 1 badge record created, but received: ', numRecords);
+                    reject('Expected 1 badge record created, but received: ' + numRecords);
                 });
             }
         })
         .catch(($error) => {
             session.close();
+            console.log('Save Badge Error: ', $error);
             return new Promise((resolve, reject) => {
                 reject($error);
             });

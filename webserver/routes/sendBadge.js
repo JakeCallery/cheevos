@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
             req.body.iconUrl
         );
 
-        BadgeManager.saveBadgeToDB(user.id, req.body.memberId, badge)
+        BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamName, req.body.teamId, badge)
         .then(($dbResult) => {
             return User.findEndPointsByUserId(req.body.memberId)
         })
@@ -88,8 +88,13 @@ router.post('/', (req, res) => {
             res.status(200).json(resObj);
 
         })
-        .catch((error) => {
-            console.error('Bad Send: ', error);
+        .catch(($error) => {
+            console.error('Bad Send: ', $error);
+            let resObj = {
+                error: $error,
+                status:'ERROR'
+            };
+            res.status(400).json(resObj);
         });
     } else {
         console.log('Not logged in, can\'t send badge...');

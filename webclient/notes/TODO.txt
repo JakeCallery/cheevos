@@ -10,6 +10,7 @@ On Notification send, check if endpoint is still valid (remove if not)
 Upcoming Plan:
 Validate against google login status
 Generate user ids, don't use google id
+Save common user details in cookie / don't query DB every time!
 Clean up API responses
 Set up Test User Bots
 Test APIs against odd characters
