@@ -5,6 +5,7 @@
 
 const db = require('../config/db');
 const Team = require('../models/Team');
+
 class User {
     constructor($data) {
         this.data = $data || {};
@@ -77,6 +78,19 @@ class User {
                 });
             });
     };
+
+    //TODO: update new User() calls to use these instead
+    static newUserFromGoogleIdObj($idObj){
+        let user = new User();
+        user.updateFromGoogleIdObj($idObj);
+        return user;
+    }
+
+    static newUserFromDBRecord($userRecord){
+        let user = new User();
+        user.updateFromUserRecord($userRecord);
+        return user;
+    }
 
     updateFromGoogleIdObj($idObj) {
         console.log('FromGoogleData: ', $idObj);

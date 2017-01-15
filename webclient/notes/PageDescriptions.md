@@ -63,6 +63,7 @@
   * From a specific team?
 * Show all badges from a specific team
 * Show all badges from a specific user
+* Send badge to another user (allowing for fast badge cloning for popular badges)
 
 ##Blocked Users Page:
 * User and Team Combo that was blocked

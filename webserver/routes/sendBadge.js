@@ -8,13 +8,28 @@ const webPush = require('web-push');
 
 const User = require('../models/User');
 const authConfig = require('../keys/authConfig');
+const BadgeManager = require('../managers/BadgeManager');
+const Badge = require('../models/Badge');
 
 webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 
 router.post('/', (req, res) => {
     if(typeof(req.user) !== 'undefined'){
-        console.log('Looking Up User to send to...');
-        User.findEndPointsByUserId(req.body.memberId)
+        let user = User.newUserFromDBRecord(req.user.data);
+        //let user = new User();
+        //user.updateFromUserRecord(req.user.data);
+
+        console.log('Store badge for user');
+        let badge = new Badge(
+            req.body.nameText,
+            req.body.descText,
+            req.body.iconUrl
+        );
+
+        BadgeManager.saveBadgeToDB(user.id, req.body.memberId, badge)
+        .then(($dbResult) => {
+            return User.findEndPointsByUserId(req.body.memberId)
+        })
         .then((result) => {
             console.log('Have Endpoints: ', result.records.length);
             const options = {
@@ -23,8 +38,8 @@ router.post('/', (req, res) => {
                     publicKey: authConfig.pushAuth.publicKey,
                     privateKey: authConfig.pushAuth.privateKey
                 },
-                // 1 hour in seconds.
-                TTL: 60 * 60
+                // 24 hours in seconds.
+                TTL: 24 * 60 * 60
             };
 
             //TODO: Green thread this maybe? / Hand off to another process?
@@ -40,6 +55,7 @@ router.post('/', (req, res) => {
                     }
                 };
 
+                //TODO: Flatten these promises
                 webPush.sendNotification(
                     subscription,
                     JSON.stringify(
@@ -76,7 +92,7 @@ router.post('/', (req, res) => {
             console.error('Bad Send: ', error);
         });
     } else {
-        console.log('Not logged in, can\'t send cheevo...');
+        console.log('Not logged in, can\'t send badge...');
         let resObj = {
             error:'NOT_LOGGED_IN',
             status:'ERROR'

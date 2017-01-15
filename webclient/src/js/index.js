@@ -252,7 +252,7 @@ function initialiseUI() {
 
     badgeSendButton.addEventListener('click', ($event) => {
         l.debug('Caught Send Click');
-        fetch('/api/sendCheevo', {
+        fetch('/api/sendBadge', {
             method: 'POST',
             credentials: 'include',
             headers: new Headers({

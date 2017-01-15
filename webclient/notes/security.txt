@@ -5,4 +5,6 @@ Disable the detailed 500 response codes to the client
 
 Send an id with page serve to use as a "key" for the api
 This will help prevent people from using the api when not from the page
+(probably not needed, as we have cookies)
+
 
