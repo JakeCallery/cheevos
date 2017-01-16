@@ -84,8 +84,27 @@ class User {
             })
     }
 
-    listBlockedUser() {
-
+    getBlockedUsers() {
+        console.log('getting blocked users');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '-[:is_blocking]->(blockedUser:User) ' +
+            'RETURN blockedUser',
+            {
+                googleId: this.id
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+        })
     }
 
     getAllMyBadges() {

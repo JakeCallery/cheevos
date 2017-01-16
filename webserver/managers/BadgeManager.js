@@ -8,6 +8,7 @@ const uuid = require('node-uuid');
 class BadgeManager {
     constructor(){
         //nothing yet
+        //All static, could be a singleton
     }
 
     static removeBadgeCompletely($memberId, $badgeId){

@@ -71,6 +71,7 @@ const blockUserButton = document.getElementById('blockUserButton');
 const blockUserIdField = document.getElementById('blockUserIdField');
 const unblockUserIdField = document.getElementById('unblockUserIdField');
 const unblockUserButton = document.getElementById('unblockUserButton');
+const listBlockedUsersButton = document.getElementById('listBlockedUsersButton');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -105,6 +106,20 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    listBlockedUsersButton.addEventListener('click', ($event) =>{
+        l.debug('Caught list blocked users click');
+        fetch('/api/listBlockedUsers', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('List Blocked Users Error: ', $error);
+        });
+    });
+
     unblockUserButton.addEventListener('click', ($event) => {
         l.debug('Caught Unblock user click');
         fetch('/api/unblockUser', {
