@@ -11,6 +11,50 @@ class User {
         this.data = $data || {};
     }
 
+    blockUser($userIdToBlock) {
+        console.log('Blocking user: ', $userIdToBlock);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (userToBlock:User {googleId:{userToBlockId}}) ' +
+            'MERGE (user)-[rel:is_blocking]->(userToBlock) ' +
+            'RETURN rel',
+            {
+                googleId:this.id,
+                userToBlockId:$userIdToBlock
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            if($dbResult.records.length === 1) {
+                console.log('Blocked User: ', $dbResult);
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else {
+                return new Promise((resolve, reject) => {
+                    reject('User not found, thus not blocked');
+                });
+            }
+
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        })
+    }
+
+    unblockUser() {
+
+    }
+
+    listBlockedUser() {
+
+    }
+
     getAllMyBadges() {
         console.log('Getting ALL badges...');
         let session = db.session();

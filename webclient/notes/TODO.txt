@@ -5,6 +5,7 @@ User Preferences (get team notifications?)
 When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
 ---------------------------------------
+
 Upcoming Plan:
 Validate against google login status
 Generate user ids, don't use google id
@@ -14,8 +15,10 @@ Set up Test User Bots
 Test APIs against odd characters
 ---------------------------------------
 
-
+Before Release:
+upgrade logging to log to files / better control
 ----------------------------------------
+
 Possibilities:
 Send an id with page serve to use as a "key" for the api
 This will help prevent people from using the api when not from the page

@@ -67,6 +67,8 @@ const badgeTeamNameField = document.getElementById('badgeTeamNameField');
 const getBadgesTeamName = document.getElementById('getBadgesTeamName');
 const getBadgesTeamId = document.getElementById('getBadgesTeamId');
 const getBadgesButton = document.getElementById('getBadgesButton');
+const blockUserButton = document.getElementById('blockUserButton');
+const blockUserIdField = document.getElementById('blockUserIdField');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -101,6 +103,26 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    blockUserButton.addEventListener('click', ($event) => {
+        l.debug('Caught Block User Click');
+        fetch('/api/blockUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                userIdToBlock:blockUserIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Block User Response: ' + $response);
+        })
+        .catch(($error) => {
+            l.error('Block User Error: ', $error);
+        })
+    });
+
     getBadgesButton.addEventListener('click', ($event) => {
         l.debug('Caught Get Badges Click');
         fetch('/api/listMyBadges', {
