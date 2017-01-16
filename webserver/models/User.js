@@ -147,6 +147,32 @@ class User {
         })
     }
 
+    getAllSentBadges() {
+        console.log('Get All Sent Badges...');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '-[:sent_from]->(badge:Badge) ' +
+            'RETURN badge',
+            {
+                googleId:this.id
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
     getAllMyBadges() {
         console.log('Getting ALL badges...');
         let session = db.session();
