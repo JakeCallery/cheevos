@@ -47,8 +47,41 @@ class User {
         })
     }
 
-    unblockUser() {
+    unblockUser($userIdToUnblock) {
+        console.log('Unblock User');
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (user:User {googleId:{googleId}}) ' +
+                'MATCH (userToBlock:User {googleId:{userIdToUnblock}}) ' +
+                'MATCH (user)-[rel:is_blocking]->(userToBlock) ' +
+                'DELETE rel ' +
+                'RETURN rel',
+                {
+                    googleId:this.id,
+                    userIdToUnblock:$userIdToUnblock
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                if($dbResult.records.length === 1) {
+                    console.log('Unblocked User: ', $dbResult);
+                    return new Promise((resolve, reject) => {
+                        resolve($dbResult);
+                    });
+                } else {
+                    return new Promise((resolve, reject) => {
+                        reject('User not found or not blocked');
+                    });
+                }
 
+            })
+            .catch(($error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    reject($error);
+                });
+            })
     }
 
     listBlockedUser() {

@@ -10,6 +10,7 @@ const Badge = require('../models/Badge');
 
 router.post('/', (req, res) => {
     console.log('Caught listMyBadges request');
+    //TODO: Implement limints on number of records to return
     if(typeof(req.user) !== 'undefined') {
         let user = User.newUserFromDBRecord(req.user.data);
 

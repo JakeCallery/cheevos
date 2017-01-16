@@ -69,6 +69,8 @@ const getBadgesTeamId = document.getElementById('getBadgesTeamId');
 const getBadgesButton = document.getElementById('getBadgesButton');
 const blockUserButton = document.getElementById('blockUserButton');
 const blockUserIdField = document.getElementById('blockUserIdField');
+const unblockUserIdField = document.getElementById('unblockUserIdField');
+const unblockUserButton = document.getElementById('unblockUserButton');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -103,6 +105,25 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    unblockUserButton.addEventListener('click', ($event) => {
+        l.debug('Caught Unblock user click');
+        fetch('/api/unblockUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                userIdToUnblock:unblockUserIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('unblock error: ', $error);
+        });
+    });
     blockUserButton.addEventListener('click', ($event) => {
         l.debug('Caught Block User Click');
         fetch('/api/blockUser', {
