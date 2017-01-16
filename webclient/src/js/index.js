@@ -73,6 +73,8 @@ const unblockUserIdField = document.getElementById('unblockUserIdField');
 const unblockUserButton = document.getElementById('unblockUserButton');
 const listBlockedUsersButton = document.getElementById('listBlockedUsersButton');
 const getAllSentBadgesButton = document.getElementById('getAllSentBadgesButton');
+const listSentBadgesUserIdField = document.getElementById('listSentBadgesUserIdField');
+const listSentBadgesUserButton = document.getElementById('listSentBadgesUserButton');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -107,6 +109,26 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    listSentBadgesUserButton.addEventListener('click', ($event) => {
+        l.debug('Caught List Badges to user click');
+        fetch('/api/listBadgesSentToUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                recipientId: listSentBadgesUserIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('List Sent Badges To User Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('List badges sent to user error: ', $error);
+        });
+    });
+
     getAllSentBadgesButton.addEventListener('click', ($event) => {
         l.debug('Caught get all sent badges click');
         fetch('/api/listAllSentBadges', {

@@ -44,6 +44,7 @@ const blockUser = require('./routes/blockUser');
 const unblockUser = require('./routes/unblockUser');
 const listBlockedUsers = require('./routes/listBlockedUsers');
 const listAllSentBadges = require('./routes/listAllSentBadges');
+const listBadgesSentToUser = require('./routes/listBadgesSentToUser');
 
 //Set up express
 const app = express();
@@ -105,6 +106,7 @@ app.use('/api/blockUser', blockUser);
 app.use('/api/unblockUser', unblockUser);
 app.use('/api/listBlockedUsers', listBlockedUsers);
 app.use('/api/listAllSentBadges', listAllSentBadges);
+app.use('/api/listBadgesSentToUser', listBadgesSentToUser);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup
