@@ -4,7 +4,8 @@
 
 const db = require('../config/db');
 const uuid = require('node-uuid');
-
+const User = require('../models/User');
+const Badge = require('../models/Badge');
 class BadgeManager {
     constructor(){
         //nothing yet
@@ -94,9 +95,9 @@ class BadgeManager {
             'iconUrl:{iconUrl},' +
             'titleText:{titleText},' +
             'descText:{descText},' +
-            'createdTime:{createdTime}' +
+            'createdTime:{createdTime},' +
+            'recipientId:{recipientId}' +
             '}) ' +
-            'MERGE (badge)-[:sent_to]->(recipient) ' +
             'MERGE (badge)<-[:sent_from]-(sender) ' +
             'MERGE (badge)-[:part_of_team]->(team) ' +
             'RETURN badge',
@@ -118,12 +119,56 @@ class BadgeManager {
             let numRecords = $dbResult.records.length;
             if(numRecords === 1) {
                 console.log('Num Badges Returned, (should be 1): ' + numRecords);
-                return new Promise((resolve, reject) => {
-                    resolve($dbResult);
-                });
+                return User.isUserBlocked($recipientId, $senderId);
             } else {
                 return new Promise((resolve, reject) => {
                     reject('Expected 1 badge record created, but received: ' + numRecords);
+                });
+            }
+        })
+        .then(($isBlocked) => {
+
+            if(!$isBlocked) {
+                let session = db.session();
+                return session
+                .run(
+                    'MATCH (badge:Badge {id:{badgeId}}) ' +
+                    'MATCH (recipient:User {googleId:{recipientId}}) ' +
+                    'MERGE (badge)-[rel:sent_to]->(recipient) ' +
+                    'RETURN badge, rel',
+                    {
+                        badgeId: $badge.id,
+                        recipientId: $recipientId
+                    }
+                )
+                .then(($dbResult) => {
+                    session.close();
+                    let numRecords = $dbResult.records.length;
+                    if(numRecords === 1){
+                        return new Promise((resolve, reject) => {
+                            resolve($isBlocked);
+                        });
+                    } else if(numRecords > 1) {
+                        return new Promise((resolve, reject) => {
+                            reject('Expected 1 record, got: ' + numRecords);
+                        });
+                    } else {
+                        return new Promise((resolve, reject) => {
+                            reject('Expected 1 badge returned, got: ' + numRecords);
+                        });
+                    }
+                })
+                .catch(($error) => {
+                    session.close();
+                    return new Promise((resolve, reject) => {
+                        reject($error);
+                    });
+                });
+
+            } else {
+                //user is blocked, don't hook badge up to recipient
+                return new Promise((resolve, reject) => {
+                    resolve($isBlocked);
                 });
             }
         })

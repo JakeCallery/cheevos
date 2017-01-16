@@ -8,13 +8,14 @@ const shortId = require('shortid');
 //Look up private data via WeakMaps
 
 class Badge {
-    constructor($title, $desc, $iconUrl, $badgeUrl) {
+    constructor($recipientId, $title, $desc, $iconUrl, $badgeUrl) {
         this.id = shortId.generate();
         this.createdTime = new Date().getTime();
         this.badgeUrl = $badgeUrl || 'badge.png';
         this.iconUrl = $iconUrl || null;
         this.titleText = $title || null;
         this.descText = $desc || null;
+        this.recipientId = $recipientId || null;
     }
 
     json(){
@@ -24,7 +25,8 @@ class Badge {
             badgeUrl: this.badgeUrl,
             iconUrl: this.iconUrl,
             titleText: this.titleText,
-            descText: this.descText
+            descText: this.descText,
+            recipientId: this.recipientId
         }
     }
 
@@ -32,10 +34,11 @@ class Badge {
         let badge = new Badge();
         badge.id = $dbRecord.properties.id;
         badge.badgeUrl = $dbRecord.properties.badgeUrl;
-        badge.iconUrl = $dbRecord.properties.badgeUrl;
+        badge.iconUrl = $dbRecord.properties.iconUrl;
         badge.titleText = $dbRecord.properties.titleText;
         badge.descText = $dbRecord.properties.descText;
         badge.createdTime = $dbRecord.properties.createdTime;
+        badge.recipientId = $dbRecord.properties.recipientId;
         return badge;
     }
 }

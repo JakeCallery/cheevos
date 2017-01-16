@@ -1,5 +1,8 @@
 Plan:
 Block/Unblock user
+List sent badges to specific user
+List sent badges by team
+List All Sent Badges
 Send Team based notifications
 User Preferences (get team notifications?)
 When user unsubscribes, remove endpoint
@@ -20,9 +23,7 @@ upgrade logging to log to files / better control
 ----------------------------------------
 
 Possibilities:
-Send an id with page serve to use as a "key" for the api
-This will help prevent people from using the api when not from the page
-(probably not needed as we have cookies)
+Send an id with page serve to use as a "key" for the api This will help prevent people from using the api when not from the page(probably not needed as we have cookies)
 -----------------------------------------
 
 DONE:

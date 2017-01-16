@@ -11,6 +11,46 @@ class User {
         this.data = $data || {};
     }
 
+    static isUserBlocked($userId, $userIdToCheck) {
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '-[rel:is_blocking]->' +
+            '(userToCheck:User {googleId:{userIdToCheck}}) ' +
+            'RETURN rel',
+            {
+                googleId:$userId,
+                userIdToCheck: $userIdToCheck
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('Blocked User: ' + $dbResult.records.length);
+
+            if($dbResult.records.length === 1){
+                return new Promise((resolve, reject) => {
+                    resolve(true);
+                });
+            } else if($dbResult.records.length > 1){
+                return new Promise((resolve, reject) => {
+                    reject('expected 1 or zero records returned, got: ' + $dbResult.records.length);
+                });
+
+            } else {
+                return new Promise((resolve, reject) => {
+                    resolve(false);
+                });
+            }
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
     blockUser($userIdToBlock) {
         console.log('Blocking user: ', $userIdToBlock);
         let session = db.session();
@@ -411,7 +451,7 @@ class User {
     }
 
     static findById($userId) {
-        console.log('Find By ID: ', $userId);
+        //console.log('Find By ID: ', $userId);
         let session = db.session();
         return session
             .run(
@@ -420,7 +460,7 @@ class User {
             .then(result => {
                 session.close();
                 if (result.records.length > 0) {
-                    console.log('FindByID: Creating Memory User from DB: ', $userId);
+                    //console.log('FindByID: Creating Memory User from DB: ', $userId);
                     return new Promise((resolve, reject) => {
                         resolve(new User(result.records[0].get('user')));
                     });
