@@ -147,6 +147,36 @@ class User {
         })
     }
 
+    getAllBadgesSentToUserOnTeam($recipientId, $teamName, $teamId){
+        console.log('Get All badges sent to user on team');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {googleId:{googleId}})' +
+            '-[:sent_from]->(badge:Badge {recipientId:{recipientId}})' +
+            '-[:part_of_team]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'RETURN badge',
+            {
+                googleId:this.id,
+                recipientId: $recipientId,
+                teamName: $teamName,
+                teamId: $teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        })
+    }
+
     getAllBadgesSentToUser($recipientId){
         console.log('Get All Sent Badges...');
         let session = db.session();

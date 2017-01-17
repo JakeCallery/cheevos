@@ -75,6 +75,10 @@ const listBlockedUsersButton = document.getElementById('listBlockedUsersButton')
 const getAllSentBadgesButton = document.getElementById('getAllSentBadgesButton');
 const listSentBadgesUserIdField = document.getElementById('listSentBadgesUserIdField');
 const listSentBadgesUserButton = document.getElementById('listSentBadgesUserButton');
+const listSentBadgesUserIdOnTeamIdField = document.getElementById('listSentBadgesUserIdOnTeamIdField');
+const listSentBadgesUserOnTeamIdField = document.getElementById('listSentBadgesUserOnTeamIdField');
+const listSentBadgesUserOnTeamButton = document.getElementById('listSentBadgesUserOnTeamButton');
+const listSentBadgesUserOnTeamNameField = document.getElementById('listSentBadgesUserOnTeamNameField');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
@@ -109,6 +113,28 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    listSentBadgesUserOnTeamButton.addEventListener('click', ($event) => {
+        l.debug('Caught List badges to user on team click');
+        fetch('/api/listBadgesSentToUserOnTeam', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                recipientId: listSentBadgesUserIdOnTeamIdField.value,
+                teamName: listSentBadgesUserOnTeamNameField.value,
+                teamId: listSentBadgesUserOnTeamIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('List Badges to User on team Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('List badges to user on team Error: ', $error);
+        });
+    });
+
     listSentBadgesUserButton.addEventListener('click', ($event) => {
         l.debug('Caught List Badges to user click');
         fetch('/api/listBadgesSentToUser', {
