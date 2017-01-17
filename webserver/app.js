@@ -46,6 +46,7 @@ const listBlockedUsers = require('./routes/listBlockedUsers');
 const listAllSentBadges = require('./routes/listAllSentBadges');
 const listBadgesSentToUser = require('./routes/listBadgesSentToUser');
 const listBadgesSentToUserOnTeam = require('./routes/listBadgesSentToUserOnTeam');
+const checkLoggedIn = require('./routes/checkLoggedIn');
 
 //Set up express
 const app = express();
@@ -81,19 +82,22 @@ app.use(passport.session());
 
 //Assign routes
 app.use('/', index);
-app.use('/api/sendNotification', sendNotification);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
+app.use('/login', login);
 app.use('/logout', logout);
+app.use('/invited', invited);
+
+//Api Routes
+app.use('/api/*', checkLoggedIn);
+app.use('/api/sendNotification', sendNotification);
 app.use('/api/registerSubscription', registerSubscription);
 app.use('/api/sendBadge', sendBadge);
 app.use('/api/createTeam', createTeam);
 app.use('/api/inviteMember', inviteMember);
 app.use('/api/acceptInvite', acceptInvite);
-app.use('/invited', invited);
 app.use('/api/listMembers', listMembers);
 app.use('/api/listMyTeams', listMyTeams);
-app.use('/login', login);
 app.use('/api/removeMeFromTeam', removeMeFromTeam);
 app.use('/api/isModerator', isModerator);
 app.use('/api/isOnlyModerator', isOnlyModerator);
