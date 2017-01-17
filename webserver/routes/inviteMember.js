@@ -11,67 +11,55 @@ const EmailManager = require('../managers/EmailManager');
 router.post('/', (req, res) => {
     console.log('Caught Invite Member Request: ', req.body);
 
-    if(typeof (req.user) !== 'undefined'){
-        let user = new User();
-        user.updateFromUserRecord(req.user.data);
+    let user = req.cheevosData.loggedInUser;
 
-        //TODO: Sanitize req.body?
-        Team.inviteMember(user.id, req.body.email, req.body.teamName, req.body.teamId)
-        .then(($dbResult) => {
+    //TODO: Sanitize req.body?
+    Team.inviteMember(user.id, req.body.email, req.body.teamName, req.body.teamId)
+    .then(($dbResult) => {
 
-            console.log('Invite Result: ', $dbResult);
+        console.log('Invite Result: ', $dbResult);
 
-            if($dbResult.records.length === 1) {
-                let inviteRecord = $dbResult.records[0].get('invite');
+        if($dbResult.records.length === 1) {
+            let inviteRecord = $dbResult.records[0].get('invite');
 
-                return new Promise((resolve, reject) => {
-                    resolve(inviteRecord);
-                });
-            } else if($dbResult.records.length > 1) {
-                return new Promise((resolve, reject) => {
-                    reject('Multiple invites matched, something went wrong');
-                });
-            } else {
-                return new Promise((resolve, reject) => {
-                    reject('Could not find user or team to invite to');
-                });
-            }
-        })
-        .then(($inviteRecord) => {
-            return EmailManager.sendInviteEmail($inviteRecord, user.id);
-        })
-        .then(($emailResult) => {
-            //TODO: For now just assuming that all went well
-            //handle email failure here
-            let resObj = {
-                data:{
-                    inviteCode: $emailResult.inviteCode
-                },
-                status:'SUCCESS'
-            };
-            res.status(200).json(resObj);
-        })
-        .catch(($error) => {
-            console.log('Invite Member Error: ', $error);
-            if($error.hasOwnProperty('error')){
-                //we generated the error
-                let resObj = {
-                    error:$error.error,
-                    status:'ERROR'
-                };
-                res.status(400).json(resObj);
-            }
-        });
-
-    } else {
-        console.log('Not logged in, can\'t invite member');
+            return new Promise((resolve, reject) => {
+                resolve(inviteRecord);
+            });
+        } else if($dbResult.records.length > 1) {
+            return new Promise((resolve, reject) => {
+                reject('Multiple invites matched, something went wrong');
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                reject('Could not find user or team to invite to');
+            });
+        }
+    })
+    .then(($inviteRecord) => {
+        return EmailManager.sendInviteEmail($inviteRecord, user.id);
+    })
+    .then(($emailResult) => {
+        //TODO: For now just assuming that all went well
+        //handle email failure here
         let resObj = {
-            error:'NOT_LOGGED_IN',
-            status:'ERROR'
+            data:{
+                inviteCode: $emailResult.inviteCode
+            },
+            status:'SUCCESS'
         };
-        res.status(401).json(resObj);
-    }
-
+        res.status(200).json(resObj);
+    })
+    .catch(($error) => {
+        console.log('Invite Member Error: ', $error);
+        if($error.hasOwnProperty('error')){
+            //we generated the error
+            let resObj = {
+                error:$error.error,
+                status:'ERROR'
+            };
+            res.status(400).json(resObj);
+        }
+    });
 });
 
 module.exports = router;
