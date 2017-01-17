@@ -153,8 +153,7 @@ class User {
         return session
             .run(
                 'MATCH (user:User {googleId:{googleId}})' +
-                '-[:sent_from]->(badge:Badge)-[:sent_to]->' +
-                '(recipient:User {googleId:{recipientId}}) ' +
+                '-[:sent_from]->(badge:Badge {recipientId:{recipientId}}) ' +
                 'RETURN badge',
                 {
                     googleId:this.id,
