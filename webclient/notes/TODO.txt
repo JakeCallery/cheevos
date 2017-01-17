@@ -1,14 +1,13 @@
 Plan:
-List badges sent to specific user in a team
 Send Team based notifications
-User Preferences (get team notifications?)
+Generate user ids, don't use google id
 When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
+User Preferences (get team notifications?)
 ---------------------------------------
 
 Upcoming Plan:
 Validate against google login status
-Generate user ids, don't use google id
 Save common user details in cookie / don't query DB every time!
 Clean up API responses
 Set up Test User Bots
@@ -24,6 +23,7 @@ Send an id with page serve to use as a "key" for the api This will help prevent 
 -----------------------------------------
 
 DONE:
+List badges sent to specific user in a team
 List badges sent to specific user
 List All Sent Badges
 Block/Unblock user
