@@ -1,8 +1,7 @@
 Plan:
-Add check logged in middleware
+Generate user ids, don't use google id
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 Send Team based notifications
-Generate user ids, don't use google id
 When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
 User Preferences (get team notifications?)
@@ -25,6 +24,7 @@ Send an id with page serve to use as a "key" for the api This will help prevent 
 -----------------------------------------
 
 DONE:
+Add check logged in middleware
 List badges sent to specific user in a team
 List badges sent to specific user
 List All Sent Badges
