@@ -9,7 +9,6 @@ User Preferences (get team notifications?)
 
 Upcoming Plan:
 Validate against google login status
-Save common user details in cookie / don't query DB every time!
 Clean up API responses
 Set up Test User Bots
 Test APIs against odd characters
@@ -24,6 +23,7 @@ Send an id with page serve to use as a "key" for the api This will help prevent 
 -----------------------------------------
 
 DONE:
+Save common user details in cookie / don't query DB every time!
 Add check logged in middleware
 List badges sent to specific user in a team
 List badges sent to specific user
