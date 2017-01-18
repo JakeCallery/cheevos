@@ -1,4 +1,6 @@
 Plan:
+Add check logged in middleware
+Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 Send Team based notifications
 Generate user ids, don't use google id
 When user unsubscribes, remove endpoint

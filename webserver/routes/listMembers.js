@@ -10,51 +10,38 @@ const Team = require('../models/Team');
 router.post('/', (req, res) => {
     console.log('Caught List Members Request: ', req.body);
 
-    if(typeof (req.user) !== 'undefined'){
-        let user = new User();
-        user.updateFromUserRecord(req.user.data);
-
-        Team.getMembers(req.body.teamName, req.body.teamId)
-        .then(($dbResult => {
-            console.log('List Memebers DB Result: ', $dbResult);
-            let resObj = {
-                data:{
-                    members:[]
-                },
-                status:'SUCCESS'
-            };
-
-            for(let i = 0; i < $dbResult.records.length; i++) {
-                let member = $dbResult.records[i].get('member');
-                resObj.data.members.push({
-                    id: member.properties.googleId,
-                    name: member.properties.googleName
-                });
-            }
-
-            res.status(200).json(resObj);
-        }))
-        .catch(($error) => {
-            console.log('List Members Error: ', $error);
-            if($error.hasOwnProperty('error')){
-                //we generated the error
-                let resObj = {
-                    error:$error.error,
-                    status:'ERROR'
-                };
-                res.status(400).json(resObj);
-            }
-        });
-
-    } else {
-        console.log('Not logged in, can\'t invite member');
+    let user = req.cheevosData.loggedInUser;
+    Team.getMembers(req.body.teamName, req.body.teamId)
+    .then(($dbResult => {
+        console.log('List Memebers DB Result: ', $dbResult);
         let resObj = {
-            error:'NOT_LOGGED_IN',
-            status:'ERROR'
+            data:{
+                members:[]
+            },
+            status:'SUCCESS'
         };
-        res.status(401).json(resObj);
-    }
 
+        for(let i = 0; i < $dbResult.records.length; i++) {
+            let member = $dbResult.records[i].get('member');
+            resObj.data.members.push({
+                id: member.properties.googleId,
+                name: member.properties.googleName
+            });
+        }
+
+        res.status(200).json(resObj);
+    }))
+    .catch(($error) => {
+        console.log('List Members Error: ', $error);
+        if($error.hasOwnProperty('error')){
+            //we generated the error
+            let resObj = {
+                error:$error.error,
+                status:'ERROR'
+            };
+            res.status(400).json(resObj);
+        }
+    });
 });
 
 module.exports = router;

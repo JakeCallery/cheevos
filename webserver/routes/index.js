@@ -3,6 +3,7 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function (req, res) {
+    //TODO: Proper user check if the user check code changed or something
     let isLoggedIn = (typeof(req.user) !== 'undefined');
     let isSubscribed = false;
 

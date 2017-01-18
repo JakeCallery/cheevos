@@ -23,9 +23,15 @@ class InviteManager {
         )
         .then(($dbResult) => {
             session.close();
+            return new Promise((resolve, reject) => {
+                resolve();
+            });
         })
         .catch(($error) => {
             console.error('Remove Invite Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
         });
     }
 

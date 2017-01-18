@@ -11,7 +11,7 @@ const Badge = require('../models/Badge');
 router.post('/', (req, res) => {
     console.log('Caught listMyBadges request');
     let user = req.cheevosData.loggedInUser;
-    console.log('User: ', user);
+
     //TODO: Implement limits on number of records to return
     if(
         typeof(req.body.teamId) === 'undefined' || req.body.teamId === '' ||

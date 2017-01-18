@@ -7,7 +7,7 @@ const router = express.Router();
 const User = require('../models/User');
 
 router.get('/:code', (req, res) => {
-
+    //TODO: Proper user check, just in case this changes
     if(typeof(req.user) !== 'undefined'){
         console.log('Caught Invited Request: ', req.params.code);
         res.render('dist/invited', {
@@ -18,7 +18,6 @@ router.get('/:code', (req, res) => {
         req.session.initialPath = "/invited" + req.path;
         res.redirect('/login');
     }
-
 });
 
 module.exports = router;
