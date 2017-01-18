@@ -367,6 +367,15 @@ class User {
         return user;
     }
 
+    static newUserFromSessionUser($sessionUser){
+        if($sessionUser.authType === 'google'){
+            return User.newUserFromGoogleIdObj($sessionUser.data.google);
+        } else {
+            console.error('Unknown Auth Type: ' + $sessionUser.authType);
+            return null;
+        }
+    }
+
     updateFromGoogleIdObj($idObj) {
         console.log('FromGoogleData: ', $idObj);
 

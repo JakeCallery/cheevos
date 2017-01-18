@@ -10,7 +10,7 @@ const User = require('../models/User');
 
 router.post('/', (req, res) => {
     console.log('Caught Create Team Request');
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
 
     //TODO: Sanitize team name from request?
     console.log('Requesting with googleID: ' + user.id);

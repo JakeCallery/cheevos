@@ -9,7 +9,7 @@ const BadgeManager = require('../managers/BadgeManager');
 const Badge = require('../models/Badge');
 
 router.delete('/', (req, res) => {
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     BadgeManager.removeBadgeForUser(user.id, req.body.badgeId)
     .then(($dbResult) => {
         console.log('Badge Removed For user');

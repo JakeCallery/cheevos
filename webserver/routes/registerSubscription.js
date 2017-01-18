@@ -8,7 +8,7 @@ const User = require('../models/User');
 router.post('/', (req, res) => {
     console.log('Caught Register Subscription request: ', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     user.registerSubscription(req.body)
     .then((result) => {
         //Notify client, its all good

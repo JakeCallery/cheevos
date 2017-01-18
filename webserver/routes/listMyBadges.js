@@ -10,7 +10,7 @@ const Badge = require('../models/Badge');
 
 router.post('/', (req, res) => {
     console.log('Caught listMyBadges request');
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
 
     //TODO: Implement limits on number of records to return
     if(

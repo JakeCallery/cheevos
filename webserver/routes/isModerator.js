@@ -10,7 +10,7 @@ const Team = require('../models/Team');
 router.post('/', (req, res) => {
     console.log('Caught isModerator request: ', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
 
     Team.isMemberModerator(user.id, req.body.teamName, req.body.teamId)
     .then(($result) => {

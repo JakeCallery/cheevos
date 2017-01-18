@@ -10,7 +10,7 @@ const Team = require('../models/Team');
 router.post('/', (req, res) => {
     console.log('Caught List Teams Request: ', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     let resObj = {
         data:{
             teams:[],

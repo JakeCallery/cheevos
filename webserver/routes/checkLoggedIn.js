@@ -17,7 +17,7 @@ router.all('/', (req, res, next) => {
         };
         res.status(401).json(resObj);
     } else {
-        req.cheevosData.loggedInUser = User.newUserFromDBRecord(req.user.data);
+        req.cheevosData.sessionUser = User.newUserFromSessionUser(req.user);
         next();
     }
 

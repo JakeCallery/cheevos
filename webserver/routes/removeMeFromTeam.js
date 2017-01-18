@@ -10,7 +10,7 @@ const Team = require('../models/Team');
 router.delete('/', (req, res) => {
     console.log('Caught Remove Me Request', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     Team.isMemberOnlyModerator(user.id, req.body.teamName, req.body.teamId)
     .then(($isOnlyModerator) => {
         if($isOnlyModerator === false){

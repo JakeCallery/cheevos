@@ -14,28 +14,20 @@ module.exports = function(passport){
         //Store only user ID in session, look up user from DB when needed
         //Might be worth storing whole user or something for less DB access
         //TODO: Look into optimization here
-        done(null, user.id);
+
+        let sessionUser = {
+            id: user.id,
+            name: user.name
+        };
+        done(null, user);
     });
 
-    passport.deserializeUser((id, done) => {
+    passport.deserializeUser((sessionUser, done) => {
         //TODO: Optimize by NOT going to the DB to build the user.
         //Build user from session info only:
         //https://www.airpair.com/express/posts/expressjs-and-passportjs-sessions-deep-dive
         //console.log('DeserializeUser Called: ', id);
-        User.findById(id)
-            .then(($user) => {
-                if($user){
-                    //console.log('deserializeUser Found User');
-                    done(null, $user);
-                } else {
-                    console.log('deserializeUser did NOT find user');
-                    done(null,false);
-                }
-            })
-            .catch((error) => {
-                console.error('Deserialize Error: ', error);
-
-            });
+        done(null,sessionUser);
     });
 
     passport.use(new GoogleStrategy(
@@ -53,7 +45,7 @@ module.exports = function(passport){
                 };
                 User.findOrCreate(idObj)
                     .then((user) => {
-                        console.log('Find or Create User: ', user.id);
+                        console.log('******** Find or Create User: ', user.id);
                         done(null, user);
                     })
                     .catch((error) => {

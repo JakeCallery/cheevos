@@ -11,7 +11,7 @@ const EmailManager = require('../managers/EmailManager');
 router.post('/', (req, res) => {
     console.log('Caught Invite Member Request: ', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
 
     //TODO: Sanitize req.body?
     Team.inviteMember(user.id, req.body.email, req.body.teamName, req.body.teamId)

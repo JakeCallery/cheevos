@@ -9,7 +9,7 @@ const User = require('../models/User');
 router.get('/', (req, res) => {
     console.log('List blocked users request...');
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     user.getBlockedUsers()
     .then(($dbResult) => {
         console.log('Blocked Users: ' + $dbResult.records.length);

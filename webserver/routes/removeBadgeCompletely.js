@@ -10,7 +10,7 @@ const Badge = require('../models/Badge');
 
 //TODO: Maybe only give team moderators the ability to do this?
 router.delete('/', (req, res) => {
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     BadgeManager.removeBadgeCompletely(user.id, req.body.badgeId)
     .then(($dbResult) => {
         console.log('Badge Removed Completely');

@@ -9,7 +9,7 @@ const BadgeManager = require('../managers/BadgeManager');
 const Badge = require('../models/Badge');
 
 router.get('/', (req,res) => {
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     user.getAllSentBadges()
     .then(($dbResult) => {
         let resObj = {

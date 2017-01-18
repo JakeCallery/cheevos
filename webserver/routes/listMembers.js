@@ -10,7 +10,7 @@ const Team = require('../models/Team');
 router.post('/', (req, res) => {
     console.log('Caught List Members Request: ', req.body);
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     Team.getMembers(req.body.teamName, req.body.teamId)
     .then(($dbResult => {
         console.log('List Memebers DB Result: ', $dbResult);

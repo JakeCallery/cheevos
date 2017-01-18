@@ -9,7 +9,7 @@ const InviteManager = require('../managers/InviteManager');
 router.post('/', (req, res) => {
      console.log('Caught request to accept an invite');
 
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     console.log('Invite Code: ', req.body.inviteCode);
     user.acceptInvite(req.body.inviteCode)
     .then(($dbResult) => {

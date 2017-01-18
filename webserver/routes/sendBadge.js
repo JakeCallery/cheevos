@@ -14,7 +14,7 @@ const Badge = require('../models/Badge');
 webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 
 router.post('/', (req, res) => {
-    let user = req.cheevosData.loggedInUser;
+    let user = req.cheevosData.sessionUser;
     console.log('Store badge for user');
     let badge = new Badge(
         req.body.memberId,
