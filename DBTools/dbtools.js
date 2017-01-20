@@ -8,12 +8,74 @@ const opt = require('node-getopt');
 const promiseRetry = require('promise-retry');
 const shortId = require('shortid');
 
-//Setup args
+///////// FUNCTIONS ////////////
+let createUser = function($name, $forcedId){
+    $forcedId = $forcedId || shortId.generate();
+    let session = db.session();
+    return session
+        .run
+        (
+            'CREATE (user:User {testName:{testName}, userId:{userId}}) RETURN user',
+            {
+                testName: $name,
+                userId: $forcedId
+            }
+        )
+        .then(($dbResults) => {
+            session.close();
+            console.log('Created: ' + $dbResults.records.length);
+        })
+        .catch(($error) => {
+            session.close();
+            console.error('Create user Error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+};
+
+let emptyDB = function(){
+    console.log('Empty DB Called');
+    prompt('Are you really really sure you want to remove all nodes in the DB[y/n]: ', ($response) => {
+        if($response === 'y'){
+            console.log('Bye Bye Nodes...');
+            let session = db.session();
+            session.run(
+                'MATCH (n) DETACH DELETE n'
+            )
+                .then(($dbResult) => {
+                    session.close();
+                    console.log('EmptyDB result: ', $dbResult);
+                })
+                .catch(($error) => {
+                    session.close();
+                    console.error('EmptyDB Error: ', $error);
+                })
+        } else {
+            console.log('Whew, that was a close one!');
+        }
+    });
+
+};
+
+let prompt = function(question, callback) {
+    let stdin = process.stdin,
+        stdout = process.stdout;
+
+    stdin.resume();
+    stdout.write(question);
+
+    stdin.once('data', function (data) {
+        callback(data.toString().trim());
+    });
+};
+
+////////////// Setup args /////////////
 let args = opt.create([
 ['', 'init'                             , 'init totally blank db'],
 ['', 'apply-constraints'                , 'setup up constraints on db'],
 ['', 'test-userid-constraint[=userId]'  , 'test duplicate ID constraint'],
-['', 'empty'                            , 'delete all nodes in db'],
+['', 'empty-db'                         , 'delete all nodes in db'],
 ['h', 'help'                            , 'display this help'],
 ['v', 'version'                         , 'show version']
 ])
@@ -21,7 +83,6 @@ let args = opt.create([
 .parseSystem();
 
 console.log(args.options);
-//return;
 
 if(args.options['apply-constraints']){
     console.log('Applying Constraints');
@@ -70,27 +131,8 @@ if(typeof(args.options['test-userid-constraint']) !== 'undefined'){
     });
 }
 
-let createUser = function($name, $forcedId){
-    $forcedId = $forcedId || shortId.generate();
-    let session = db.session();
-    return session
-    .run
-    (
-        'CREATE (user:User {testName:{testName}, userId:{userId}}) RETURN user',
-        {
-            testName: $name,
-            userId: $forcedId
-        }
-    )
-    .then(($dbResults) => {
-        session.close();
-        console.log('Created: ' + $dbResults.records.length);
-    })
-    .catch(($error) => {
-        session.close();
-        console.error('Create user Error: ', $error);
-        return new Promise((resolve, reject) => {
-            reject($error);
-        });
-    });
-};
+if(typeof(args.options['empty-db']) !== 'undefined'){
+    emptyDB();
+}
+
+
