@@ -5,6 +5,7 @@
 
 const db = require('../config/db');
 const Team = require('../models/Team');
+const shortId = require('shortid');
 
 class User {
     constructor($data) {
@@ -390,6 +391,9 @@ class User {
 
     updateFromUserRecord($userRecord) {
         this.authType = $userRecord.properties.authType;
+        this.data.userId = $userRecord.properties.userId;
+        this.data.firstName = $userRecord.properties.firstName;
+        this.data.lastName = $userRecord.properties.lastName;
 
         switch(this.authType) {
             case 'google':
@@ -497,14 +501,20 @@ class User {
                         return session.run(
                             'CREATE (user:User ' +
                             '{' +
+                            'userId:{userId},' +
+                            'firstName:{firstName},' +
+                            'lastName:{lastName},' +
                             'authType:{authType},' +
-                            'googleId:{id}, ' +
+                            'googleId:{googleId}, ' +
                             'googleName:{name},' +
                             'googleEmail:{email}' +
                             '})',
                             {
+                                userId: shortId.generate(),
+                                firstName: newUser.firstName,
+                                lastName: newUser.lastName,
                                 authType: 'google',
-                                id: newUser.id,
+                                googleId: newUser.id,
                                 name: newUser.name,
                                 email: newUser.email
                             }
