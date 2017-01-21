@@ -1,5 +1,6 @@
 Plan:
 Send Team based notifications
+send invite emails
 set up api test page
 rough layout index page
 ---------------------------------------
