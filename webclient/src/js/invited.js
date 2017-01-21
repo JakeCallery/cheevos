@@ -36,6 +36,18 @@ acceptInviteButton.addEventListener('click', ($event) => {
     })
     .then(($response) => {
         l.debug('Resposne: ', $response);
+        $response.json()
+        .then(($res) => {
+            if($res.status === 'SUCCESS'){
+                window.location = '/';
+            } else {
+                l.error('Something isn\'t right: ', $res);
+            }
+        })
+        .catch(($error) => {
+           l.error('JSON Error: ', $error);
+        });
+
     })
     .catch(($error) => {
         l.error('Error: ', $error);

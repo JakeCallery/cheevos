@@ -8,6 +8,9 @@ const User = require('../models/User');
 const BadgeManager = require('../managers/BadgeManager');
 const Badge = require('../models/Badge');
 
+//TODO: Figure out how to remove it completely if it was removed from only the recipient
+//Maybe never remove it? not sure.
+
 router.delete('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
     BadgeManager.removeBadgeForUser(user.id, req.body.badgeId)

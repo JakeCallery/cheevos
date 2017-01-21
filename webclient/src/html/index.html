@@ -6,6 +6,7 @@
         <title><%= title %></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="manifest" href="manifest.json">
+        <script src="../js/invited.js"></script>
     </head>
     <body>
         <p>
@@ -21,6 +22,35 @@
 
         </p>
         <textarea id="endpointTextArea" rows="8" cols="50"></textarea>
+
+        <p>
+            Team Name: <br>
+            <input type="text" id="teamNameField"><br>
+            <button id="createTeamButton" class="simpleButton">Create</button>
+        </p>
+
+        <p>
+            Invite to team <br>
+            Email Address: <br>
+            <input type="text" id="inviteEmailAddressField"><br><br>
+
+            Team Name: <br>
+            <input type="text" id="inviteTeamNameField"><br><br>
+
+            Team Id: <br>
+            <input type="text" id="inviteTeamIdField"><br>
+
+            <button id="inviteMemberButton" class="simpleButton">Invite</button>
+        </p>
+
+        <p>
+            List Members <br>
+            Team Name: <br>
+            <input type="text" id="listMembersTeamNameField"> <br>
+            Team Id: <br>
+            <input type="text" id="listMembersTeamIdField"> <br>
+            <button id="listMembersButton" class="simpleButton">List Members</button>
+        </p>
 
         <p>
             Send Badge: <br>
@@ -84,35 +114,6 @@
             Badge Id: <br>
             <input type="text" id="removeBadgeCompletelyBadgeIdField"> <br>
             <button id="removeBadgeCompletelyButton" class="simpleButton">Remove Badge Completely</button> <br> <br>
-        </p>
-
-        <p>
-            Team Name: <br>
-            <input type="text" id="teamNameField"><br>
-            <button id="createTeamButton" class="simpleButton">Create</button>
-        </p>
-
-        <p>
-            Invite to team <br>
-            Email Address: <br>
-            <input type="text" id="inviteEmailAddressField"><br><br>
-
-            Team Name: <br>
-            <input type="text" id="inviteTeamNameField"><br><br>
-
-            Team Id: <br>
-            <input type="text" id="inviteTeamIdField"><br>
-
-            <button id="inviteMemberButton" class="simpleButton">Invite</button>
-        </p>
-
-        <p>
-            List Members <br>
-            Team Name: <br>
-            <input type="text" id="listMembersTeamNameField"> <br>
-            Team Id: <br>
-            <input type="text" id="listMembersTeamIdField"> <br>
-            <button id="listMembersButton" class="simpleButton">List Members</button>
         </p>
 
         <p>

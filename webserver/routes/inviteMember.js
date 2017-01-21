@@ -51,14 +51,11 @@ router.post('/', (req, res) => {
     })
     .catch(($error) => {
         console.log('Invite Member Error: ', $error);
-        if($error.hasOwnProperty('error')){
-            //we generated the error
-            let resObj = {
-                error:$error.error,
-                status:'ERROR'
-            };
-            res.status(400).json(resObj);
-        }
+        let resObj = {
+            error:$error.error,
+            status:'ERROR'
+        };
+        res.status(400).json(resObj);
     });
 });
 
