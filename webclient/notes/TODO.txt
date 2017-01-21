@@ -20,6 +20,7 @@ Known Bugs
 ---------------------------------------
 
 Before Release:
+DB Transaction rollback on failed calls?
 upgrade logging to log to files / better control
 ----------------------------------------
 

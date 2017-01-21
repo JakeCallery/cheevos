@@ -34,28 +34,21 @@ const teamNameField = document.getElementById('teamNameField');
 const createTeamButton = document.getElementById('createTeamButton');
 const listTeamsButton = document.getElementById('listTeamsButton');
 const inviteEmailAddressField = document.getElementById('inviteEmailAddressField');
-const inviteTeamNameField = document.getElementById('inviteTeamNameField');
 const inviteTeamIdField = document.getElementById('inviteTeamIdField');
 const inviteMemberButton = document.getElementById('inviteMemberButton');
-const listMembersTeamNameField = document.getElementById('listMembersTeamNameField');
 const listMembersTeamIdField = document.getElementById('listMembersTeamIdField');
 const listMembersButton = document.getElementById('listMembersButton');
 const removeMeButton = document.getElementById('removeMeButton');
-const removeMeTeamNameField = document.getElementById('removeMeTeamNameField');
 const removeMeTeamIdField = document.getElementById('removeMeTeamIdField');
-const isModeratorTeamNameField = document.getElementById('isModeratorTeamNameField');
 const isModeratorTeamIdField = document.getElementById('isModeratorTeamIdField');
 const isModeratorButton = document.getElementById('isModeratorButton');
 const isOnlyModeratorButton = document.getElementById('isOnlyModeratorButton');
 const removeMemberMemberIdField = document.getElementById('removeMemberMemberIdField');
-const removeMemberTeamNameField = document.getElementById('removeMemberTeamNameField');
 const removeMemberTeamIdField = document.getElementById('removeMemberTeamIdField');
 const removeMemberButton = document.getElementById('removeMemberButton');
 const addModUserIdField = document.getElementById('addModUserIdField');
-const addModTeamNameField = document.getElementById('addModTeamNameField');
 const addModTeamIdField = document.getElementById('addModTeamIdField');
 const addModButton = document.getElementById('addModButton');
-const removeTeamTeamNameField = document.getElementById('removeTeamTeamNameField');
 const removeTeamTeamIdField = document.getElementById('removeTeamTeamIdField');
 const removeTeamButton = document.getElementById('removeTeamButton');
 const removeBadgeForUserBadgeIdField = document.getElementById('removeBadgeForUserBadgeIdField');
@@ -63,8 +56,6 @@ const removeBadgeForUserButton = document.getElementById('removeBadgeForUserButt
 const removeBadgeCompletelyBadgeIdField = document.getElementById('removeBadgeCompletelyBadgeIdField');
 const removeBadgeCompletelyButton = document.getElementById('removeBadgeCompletelyButton');
 const badgeTeamIdField = document.getElementById('badgeTeamIdField');
-const badgeTeamNameField = document.getElementById('badgeTeamNameField');
-const getBadgesTeamName = document.getElementById('getBadgesTeamName');
 const getBadgesTeamId = document.getElementById('getBadgesTeamId');
 const getBadgesButton = document.getElementById('getBadgesButton');
 const blockUserButton = document.getElementById('blockUserButton');
@@ -78,20 +69,16 @@ const listSentBadgesUserButton = document.getElementById('listSentBadgesUserButt
 const listSentBadgesUserIdOnTeamIdField = document.getElementById('listSentBadgesUserIdOnTeamIdField');
 const listSentBadgesUserOnTeamIdField = document.getElementById('listSentBadgesUserOnTeamIdField');
 const listSentBadgesUserOnTeamButton = document.getElementById('listSentBadgesUserOnTeamButton');
-const listSentBadgesUserOnTeamNameField = document.getElementById('listSentBadgesUserOnTeamNameField');
 
 badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
 badgeNameField.value = 'Test Badge ' + new Date();
 badgeDescField.value = 'Sweet Test Badge description! W00t! ' + new Date();
-badgeTeamNameField.value = 'W00t';
 badgeTeamIdField.value = 'r1atrFdHx';
 
 teamNameField.value = 'TestTeam1';
 inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
-inviteTeamNameField.value = 'TestTeam1';
 inviteTeamIdField.value = 'rJXKvXPSx';
-listMembersTeamNameField.value = 'W00t';
 listMembersTeamIdField.value = 'r1atrFdHx';
 
 
@@ -123,7 +110,6 @@ function initialiseUI() {
             }),
             body:JSON.stringify({
                 recipientId: listSentBadgesUserIdOnTeamIdField.value,
-                teamName: listSentBadgesUserOnTeamNameField.value,
                 teamId: listSentBadgesUserOnTeamIdField.value
             })
         })
@@ -231,7 +217,6 @@ function initialiseUI() {
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify({
-                teamName: getBadgesTeamName.value,
                 teamId: getBadgesTeamId.value
             })
         })
@@ -292,7 +277,6 @@ function initialiseUI() {
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify({
-                teamName:removeTeamTeamNameField.value,
                 teamId:removeTeamTeamIdField.value
             })
         })
@@ -314,7 +298,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 memberId: addModUserIdField.value,
-                teamName: addModTeamNameField.value,
                 teamId: addModTeamIdField.value
             })
         })
@@ -336,7 +319,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 memberId: removeMemberMemberIdField.value,
-                teamName: removeMemberTeamNameField.value,
                 teamId: removeMemberTeamIdField.value
             })
         })
@@ -358,7 +340,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 teamId: isModeratorTeamIdField.value,
-                teamName: isModeratorTeamNameField.value
             })
         })
         .then(($response) => {
@@ -385,7 +366,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 teamId: isModeratorTeamIdField.value,
-                teamName: isModeratorTeamNameField.value
             })
         })
         .then(($response) => {
@@ -412,7 +392,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 teamId: listMembersTeamIdField.value,
-                teamName: listMembersTeamNameField.value
             })
         })
         .then(($response) => {
@@ -433,7 +412,6 @@ function initialiseUI() {
              }),
              body: JSON.stringify({
                  teamId: removeMeTeamIdField.value,
-                 teamName: removeMeTeamNameField.value
              })
          })
          .then(($response) => {
@@ -458,7 +436,6 @@ function initialiseUI() {
                 nameText: badgeNameField.value,
                 descText: badgeDescField.value,
                 teamId: badgeTeamIdField.value,
-                teamName: badgeTeamNameField.value
             })
         })
         .then((response) => {
@@ -519,7 +496,6 @@ function initialiseUI() {
             }),
             body: JSON.stringify({
                 email: inviteEmailAddressField.value,
-                teamName: inviteTeamNameField.value,
                 teamId: inviteTeamIdField.value
             })
         })

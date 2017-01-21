@@ -13,9 +13,7 @@ router.post('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
 
     //TODO: Implement limits on number of records to return
-    if(
-        typeof(req.body.teamId) === 'undefined' || req.body.teamId === '' ||
-        typeof (req.body.teamName) === 'undefined' || req.body.teamName === ''){
+    if(typeof(req.body.teamId) === 'undefined' || req.body.teamId === ''){
         //List ALL badges
         user.getAllMyBadges()
         .then(($dbResult) => {
@@ -43,7 +41,7 @@ router.post('/', (req, res) => {
         });
     } else {
         //List all badges from team
-        user.getMyBadgesOnTeam(req.body.teamName, req.body.teamId)
+        user.getMyBadgesOnTeam(req.body.teamId)
         .then(($dbResult) => {
             let resObj = {
                 data:{

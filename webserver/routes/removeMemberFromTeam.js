@@ -13,10 +13,10 @@ router.delete('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
     if(user.id === req.body.memberId){
         //Remove myself from team:
-        Team.isMemberOnlyModerator(user.id, req.body.teamName, req.body.teamId)
+        Team.isMemberOnlyModerator(user.id, req.body.teamId)
             .then(($isOnlyModerator) => {
                 if($isOnlyModerator === false){
-                    Team.removeMember(user.id, req.body.teamName, req.body.teamId)
+                    Team.removeMember(user.id, req.body.teamId)
                         .then(($dbResult) => {
                             console.log('Num Results: ', $dbResult.records.length);
                             //TODO: Proper return if no records were found
@@ -46,10 +46,10 @@ router.delete('/', (req, res) => {
             });
     } else {
         //Check if moderator and then remove member
-        Team.isMemberModerator(user.id, req.body.teamName, req.body.teamId)
+        Team.isMemberModerator(user.id, req.body.teamId)
         .then(($isModerator) => {
             if($isModerator === true){
-                Team.removeMember(req.body.memberId, req.body.teamName, req.body.teamId)
+                Team.removeMember(req.body.memberId, req.body.teamId)
                 .then(($dbResult) => {
                     if($dbResult.records.length > 0) {
                         console.log('Num Results: ', $dbResult.records.length);

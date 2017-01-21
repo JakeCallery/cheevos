@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
     //needs better error handling if those don't exist
     promiseRetry((retry, attempt) => {
         console.log('saveBadgeToDB attempt: ' + attempt);
-        return BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamName, req.body.teamId, badge)
+        return BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamId, badge)
         .then(($isBlocked) => {
             console.log('IsBlocked: ' + $isBlocked);
             if(!$isBlocked){

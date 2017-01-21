@@ -14,17 +14,16 @@ class Team {
         //this.id = null;
     }
 
-    static removeTeam($teamName, $teamId){
-        console.log('removeTeam Called: ', $teamName, $teamId);
+    static removeTeam($teamId){
+        console.log('removeTeam Called: ', $teamId);
 
         let session = db.session();
         return session
         .run(
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             'DETACH DELETE team ' +
             'RETURN team',
             {
-                teamName:$teamName,
                 teamId:$teamId
             }
         )
@@ -57,15 +56,14 @@ class Team {
         })
     }
 
-    static isMemberOnlyModerator($memberId, $teamName, $teamId){
+    static isMemberOnlyModerator($memberId, $teamId){
         let session = db.session();
         return session
         .run(
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             '-[:moderated_by]->(user:User) ' +
             'return user',
             {
-        teamName:$teamName,
                 teamId:$teamId
             }
         )
@@ -92,17 +90,16 @@ class Team {
         });
     }
 
-    static isMemberModerator($memberId, $teamName, $teamId){
+    static isMemberModerator($memberId, $teamId){
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}}) ' +
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (user)-[rel:moderates]->(team) ' +
             'RETURN rel',
             {
                 userId: $memberId,
-                teamName: $teamName,
                 teamId: $teamId
             }
 
@@ -130,20 +127,19 @@ class Team {
         });
     }
 
-    static removeMember($memberId, $teamName, $teamId){
-        console.log('Removing member from team: ', $memberId, $teamName);
+    static removeMember($memberId, $teamId){
+        console.log('Removing member from team: ', $memberId);
         //TODO: Remove moderated_by and moderates relationships as well
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}}) ' +
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}})' +
+            'MATCH (team:Team {teamId:{teamId}})' +
             'MATCH (user)-[rels]-(team) ' +
             'DELETE rels ' +
             'RETURN rels',
             {
                 userId: $memberId,
-                teamName: $teamName,
                 teamId: $teamId
             }
         )
@@ -171,17 +167,16 @@ class Team {
 
     }
 
-    static getMembers($teamName, $teamId) {
+    static getMembers($teamId) {
         console.log('Getting Team Memebers');
 
         let session = db.session();
         return session
         .run(
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (team)-[:has_member]->(member) ' +
             'RETURN member',
             {
-                teamName: $teamName,
                 teamId: $teamId
             }
         )
@@ -207,19 +202,18 @@ class Team {
         })
     }
 
-    static addModerator($memberId, $teamName, $teamId) {
+    static addModerator($memberId, $teamId) {
         console.log('Adding Team Moderator...', $memberId);
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}}) ' +
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             'MERGE (user)-[rel:moderates]->(team) ' +
             'MERGE (team)-[rel1:moderated_by]->(user)' +
             'RETURN rel, rel1',
             {
                 userId:$memberId,
-                teamName:$teamName,
                 teamId:$teamId
             }
         )
@@ -252,17 +246,16 @@ class Team {
 
     }
 
-    static isMember($memberId, $teamName, $teamId){
-        console.log('Checking if is member: ', $memberId, $teamName, $teamId);
+    static isMember($memberId, $teamId){
+        console.log('Checking if is member: ', $memberId, $teamId);
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}})-[rel:member_of]->' +
-            '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            '(team:Team {teamId:{teamId}}) ' +
             'RETURN rel',
             {
                 userId:$memberId,
-                teamName:$teamName,
                 teamId:$teamId
             }
         )
@@ -288,20 +281,19 @@ class Team {
         });
     }
 
-    static addMember($teamName, $teamId, $memberId) {
+    static addMember($teamId, $memberId) {
         //TODO: Actually notify the user if they are already on the team.
 
         console.log('Adding Team Member...');
         let session = db.session();
         return session
             .run(
-                'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+                'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MATCH (member:User {userId:{userId}}) ' +
                 'MERGE (member)-[:member_of]->(team) ' +
                 'MERGE (team)-[:has_member]->(member) ' +
                 'RETURN member, team',
                 {
-                    teamName:$teamName,
                     teamId:$teamId,
                     userId:$memberId
                 }
@@ -339,7 +331,7 @@ class Team {
         return session
             .run(
                 'MATCH (user:User {userId:{userId}}) ' +
-                'MERGE (user)-[rel:member_of]->(team:Team {teamId:{teamId},teamName:{teamName}}) ' +
+                'MERGE (user)-[rel:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
                 'MERGE (team)-[rel1:has_member]->(user) ' +
                 'MERGE (team)-[rel2:moderated_by]->(user)' +
                 'MERGE (user)-[rel3:moderates]->(team) ' +
@@ -366,24 +358,22 @@ class Team {
             })
     }
 
-    static inviteMember($invitorId, $email, $teamName, $teamId) {
+    static inviteMember($invitorId, $email, $teamId) {
         console.log('InviteMember:');
         console.log($invitorId);
         console.log($email);
-        console.log($teamName);
         console.log($teamId);
-        return InviteManager.createInvite($invitorId, $email, $teamName, $teamId);
+        return InviteManager.createInvite($invitorId, $email, $teamId);
     }
 
-    static findTeam($name, $id) {
+    static findTeam($teamId) {
         let session = db.session();
 
         return session
             .run(
-                'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) RETURN team',
+                'MATCH (team:Team {teamId:{teamId}}) RETURN team',
                 {
-                    teamName: $name,
-                    teamId: $id
+                    teamId: $teamId
                 }
             )
             .then(($result) => {

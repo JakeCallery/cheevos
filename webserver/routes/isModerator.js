@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
 
     let user = req.cheevosData.sessionUser;
 
-    Team.isMemberModerator(user.id, req.body.teamName, req.body.teamId)
+    Team.isMemberModerator(user.id, req.body.teamId)
     .then(($result) => {
         console.log('isModerator: ', $result);
         let resObj = {

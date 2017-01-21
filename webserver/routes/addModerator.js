@@ -11,10 +11,10 @@ router.post('/', (req, res) => {
     console.log('Caught add moderator request: ', req.body);
 
     let user = req.cheevosData.sessionUser;
-    Team.isMemberModerator(user.id, req.body.teamName, req.body.teamId)
+    Team.isMemberModerator(user.id, req.body.teamId)
     .then(($isModerator) => {
         if($isModerator){
-            return Team.isMember(req.body.memberId, req.body.teamName, req.body.teamId);
+            return Team.isMember(req.body.memberId, req.body.teamId);
         } else {
             return new Promise((resolve, reject) => {
                 reject('must be moderator of team to add moderators');
@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
     })
     .then(($isMember) => {
         if($isMember) {
-            return Team.addModerator(req.body.memberId, req.body.teamName, req.body.teamId);
+            return Team.addModerator(req.body.memberId,req.body.teamId);
         } else {
             return new Promise((resolve, reject) => {
                 reject('can\'t add non-team members as moderators, must be on team first');

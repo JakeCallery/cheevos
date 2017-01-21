@@ -14,7 +14,7 @@ router.post('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
 
     //TODO: Sanitize req.body?
-    Team.inviteMember(user.id, req.body.email, req.body.teamName, req.body.teamId)
+    Team.inviteMember(user.id, req.body.email, req.body.teamId)
     .then(($dbResult) => {
 
         console.log('Invite Result: ', $dbResult);

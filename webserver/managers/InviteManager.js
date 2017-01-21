@@ -35,7 +35,7 @@ class InviteManager {
         });
     }
 
-    static createInvite($invitorId, $email, $teamName, $teamId){
+    static createInvite($invitorId, $email, $teamId){
         let inviteCode = md5($invitorId + $teamId + uuid.v4());
         console.log('InviteCode: ' + inviteCode);
 
@@ -43,13 +43,12 @@ class InviteManager {
         return session
             .run(
                 'MATCH (user:User {userId:{userId}}) ' +
-                'MATCH (team:Team {teamId:{teamId},teamName:{teamName}}) ' +
+                'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MERGE (user)-[rel:sent_invite]->(invite:Invite {code:{inviteCode},email:{email}}) ' +
                 'MERGE (invite)-[rel1:invited_to]->(team) ' +
                 'RETURN invite',{
                     userId: $invitorId,
                     teamId: $teamId,
-                    teamName: $teamName,
                     email: $email,
                     inviteCode: inviteCode
                 }

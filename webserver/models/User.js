@@ -148,19 +148,18 @@ class User {
         })
     }
 
-    getAllBadgesSentToUserOnTeam($recipientId, $teamName, $teamId){
+    getAllBadgesSentToUserOnTeam($recipientId, $teamId){
         console.log('Get All badges sent to user on team');
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}})' +
             '-[:sent_from]->(badge:Badge {recipientId:{recipientId}})' +
-            '-[:part_of_team]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            '-[:part_of_team]->(team:Team {teamId:{teamId}}) ' +
             'RETURN badge',
             {
                 userId:this.id,
                 recipientId: $recipientId,
-                teamName: $teamName,
                 teamId: $teamId
             }
         )
@@ -257,18 +256,17 @@ class User {
         });
     }
 
-    getMyBadgesOnTeam($teamName, $teamId) {
+    getMyBadgesOnTeam($teamId) {
         console.log('Getting my badges on team...');
         let session = db.session();
         return session
             .run(
                 'MATCH (user:User {userId:{userId}})' +
                 '<-[:sent_to]-(badge:Badge)-[:part_of_team]->' +
-                '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+                '(team:Team {teamId:{teamId}}) ' +
                 'RETURN badge',
                 {
                     userId:this.id,
-                    teamName:$teamName,
                     teamId:$teamId
                 }
             )
@@ -458,7 +456,6 @@ class User {
                 if($dbResult.records.length === 1) {
                     console.log('Accept invite returned records: ' + $dbResult.records.length);
                     return Team.addMember(
-                        $dbResult.records[0].get('team').properties.teamName,
                         $dbResult.records[0].get('team').properties.teamId,
                         $dbResult.records[0].get('invitee').properties.userId
                     );

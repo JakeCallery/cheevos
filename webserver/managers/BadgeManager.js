@@ -22,7 +22,7 @@ class BadgeManager {
         return session
             .run(
                 'MATCH (user:User {userId:{userId}})' +
-                '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
+                '<-[rel:sent_to]-(badge:Badge {badgeId:{badgeId}}) ' +
                 'DETACH DELETE badge ' +
                 'RETURN badge',
                 {
@@ -55,7 +55,7 @@ class BadgeManager {
         return session
         .run(
             'MATCH (user:User {userId:{userId}})' +
-            '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
+            '<-[rel:sent_to]-(badge:Badge {badgeId:{badgeId}}) ' +
             'DELETE rel ' +
             'RETURN badge,rel',
             {
@@ -83,14 +83,14 @@ class BadgeManager {
         })
     }
 
-    static saveBadgeToDB($senderId, $recipientId, $teamName, $teamId, $badge){
+    static saveBadgeToDB($senderId, $recipientId, $teamId, $badge){
         let session = db.session();
         $badge.badgeId = shortId.generate();
         return session
         .run(
             'MATCH (sender:User {userId:{senderId}}) ' +
             'MATCH (recipient:User {userId:{recipientId}}) ' +
-            'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (sender)-[:member_of]->(team)<-[:member_of]-(recipient) ' +
             'MERGE (' +
             'badge:Badge {' +
@@ -114,7 +114,6 @@ class BadgeManager {
                 titleText: $badge.titleText,
                 descText: $badge.descText,
                 createdTime: $badge.createdTime,
-                teamName: $teamName,
                 teamId: $teamId
             }
         )

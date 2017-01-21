@@ -10,10 +10,10 @@ router.delete('/', (req, res) => {
     console.log('Caught Remove Team Request');
 
     let user = req.cheevosData.sessionUser;
-    Team.isMemberModerator(user.id, req.body.teamName, req.body.teamId)
+    Team.isMemberModerator(user.id, req.body.teamId)
     .then(($isModerator) => {
         if($isModerator) {
-            return Team.removeTeam(req.body.teamName, req.body.teamId);
+            return Team.removeTeam(req.body.teamId);
         } else {
             return new Promise((resolve, reject) => {
                 reject('Only team moderators may remove a team');

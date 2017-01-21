@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     console.log('Caught isOnlyModerator request: ', req.body);
 
     let user = req.cheevosData.sessionUser;
-    Team.isMemberOnlyModerator(user.id, req.body.teamName, req.body.teamId)
+    Team.isMemberOnlyModerator(user.id, req.body.teamId)
     .then(($result) => {
         console.log('isOnlyModerator: ', $result);
         let resObj = {

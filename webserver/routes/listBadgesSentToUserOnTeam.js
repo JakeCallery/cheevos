@@ -10,7 +10,7 @@ const Badge = require('../models/Badge');
 
 router.post('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
-    user.getAllBadgesSentToUserOnTeam(req.body.recipientId, req.body.teamName, req.body.teamId)
+    user.getAllBadgesSentToUserOnTeam(req.body.recipientId, req.body.teamId)
     .then(($dbResult) => {
         let resObj = {
             data:{

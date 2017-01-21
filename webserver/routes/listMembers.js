@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     console.log('Caught List Members Request: ', req.body);
 
     let user = req.cheevosData.sessionUser;
-    Team.getMembers(req.body.teamName, req.body.teamId)
+    Team.getMembers(req.body.teamId)
     .then(($dbResult => {
         console.log('List Memebers DB Result: ', $dbResult);
         let resObj = {
