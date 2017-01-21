@@ -1,13 +1,15 @@
 Plan:
 switch teams to not require a teamId AND teamName (drop the need for name)
+set up api test page
+rough layout index page
+---------------------------------------
+
+Upcoming Plan:
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 Send Team based notifications
 When user unsubscribes, remove endpoint
 On Notification send, check if endpoint is still valid (remove if not)
 User Preferences (get team notifications?)
----------------------------------------
-
-Upcoming Plan:
 Validate against google login status
 Clean up API responses
 Set up Test User Bots
