@@ -6,6 +6,9 @@ const db = require('../config/db');
 const uuid = require('node-uuid');
 const User = require('../models/User');
 const Badge = require('../models/Badge');
+const shortId = require('shortid');
+const promiseRetry = require('promise-retry');
+
 class BadgeManager {
     constructor(){
         //nothing yet
@@ -82,6 +85,7 @@ class BadgeManager {
 
     static saveBadgeToDB($senderId, $recipientId, $teamName, $teamId, $badge){
         let session = db.session();
+        $badge.badgeId = shortId.generate();
         return session
         .run(
             'MATCH (sender:User {userId:{senderId}}) ' +
@@ -90,7 +94,7 @@ class BadgeManager {
             'MATCH (sender)-[:member_of]->(team)<-[:member_of]-(recipient) ' +
             'MERGE (' +
             'badge:Badge {' +
-            'id:{badgeId},' +
+            'badgeId:{badgeId},' +
             'badgeUrl:{badgeUrl},' +
             'iconUrl:{iconUrl},' +
             'titleText:{titleText},' +
@@ -104,7 +108,7 @@ class BadgeManager {
             {
                 senderId: $senderId,
                 recipientId: $recipientId,
-                badgeId: $badge.id,
+                badgeId: $badge.badgeId,
                 badgeUrl: $badge.badgeUrl,
                 iconUrl: $badge.iconUrl,
                 titleText: $badge.titleText,
@@ -132,12 +136,12 @@ class BadgeManager {
                 let session = db.session();
                 return session
                 .run(
-                    'MATCH (badge:Badge {id:{badgeId}}) ' +
+                    'MATCH (badge:Badge {badgeId:{badgeId}}) ' +
                     'MATCH (recipient:User {userId:{recipientId}}) ' +
                     'MERGE (badge)-[rel:sent_to]->(recipient) ' +
                     'RETURN badge, rel',
                     {
-                        badgeId: $badge.id,
+                        badgeId: $badge.badgeId,
                         recipientId: $recipientId
                     }
                 )

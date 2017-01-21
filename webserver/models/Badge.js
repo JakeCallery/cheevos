@@ -9,7 +9,7 @@ const shortId = require('shortid');
 
 class Badge {
     constructor($recipientId, $title, $desc, $iconUrl, $badgeUrl) {
-        this.id = shortId.generate();
+        //this.badgeId = shortId.generate();
         this.createdTime = new Date().getTime();
         this.badgeUrl = $badgeUrl || 'badge.png';
         this.iconUrl = $iconUrl || null;
@@ -20,7 +20,7 @@ class Badge {
 
     json(){
         return {
-            id: this.id,
+            badgeId: this.badgeId,
             createdTime: this.createdTime,
             badgeUrl: this.badgeUrl,
             iconUrl: this.iconUrl,
@@ -32,7 +32,7 @@ class Badge {
 
     static newBadgeFromDB($dbRecord){
         let badge = new Badge();
-        badge.id = $dbRecord.properties.id;
+        badge.badgeId = $dbRecord.properties.badgeId;
         badge.badgeUrl = $dbRecord.properties.badgeUrl;
         badge.iconUrl = $dbRecord.properties.iconUrl;
         badge.titleText = $dbRecord.properties.titleText;

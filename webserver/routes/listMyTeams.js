@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
         for(let i = 0; i < $dbResult.records.length; i++) {
             let team = $dbResult.records[i].get('team');
             resObj.data.teams.push({
-                id: team.properties.teamId,
+                teamId: team.properties.teamId,
                 name: team.properties.teamName
             });
         }
@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
         for(let i = 0; i < $dbResult.records.length; i++) {
             let team = $dbResult.records[i].get('moderatedteam');
             resObj.data.moderatedTeams.push({
-                id: team.properties.teamId,
+                teamId: team.properties.teamId,
                 name: team.properties.teamName
             });
         }

@@ -88,10 +88,19 @@ if(args.options['apply-constraints']){
     console.log('Applying Constraints');
 
     let session = db.session();
+    console.log('Creating UNIQUE constraint for userId');
     session
         .run(
             'CREATE CONSTRAINT ON (user:User) ASSERT user.userId IS UNIQUE'
         )
+        .then(() => {
+            console.log('Creating UNIQUE constraint for teamId');
+            return session.run('CREATE CONSTRAINT ON (team:Team) ASSERT team.teamId IS UNIQUE')
+        })
+        .then(() => {
+            console.log('Creating UNIQUE constraint for badgeId');
+            return session.run('CREATE CONSTRAINT ON (badge:Badge) ASSERT badge.badgeId IS UNIQUE');
+        })
         .then(($dbResponse) => {
             session.close();
             console.log('DB Response: ', $dbResponse);

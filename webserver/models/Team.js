@@ -9,8 +9,8 @@ class Team {
     constructor() {
         //TODO: Maybe find a way to determine who called the constructor,
         //if not from the "Team" class then throw an error?
-        this.name = null;
-        this.id = null;
+        //this.name = null;
+        //this.id = null;
     }
 
     static removeTeam($teamName, $teamId){
