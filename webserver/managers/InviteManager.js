@@ -2,9 +2,11 @@
  * Created by Jake on 1/1/2017.
  */
 
-const db = require('../config/db');
 const uuid = require('node-uuid');
 const md5 = require('md5');
+
+const db = require('../config/db');
+const EmailManager = require('../managers/EmailManager');
 
 class InviteManager {
     constructor(){
@@ -59,6 +61,10 @@ class InviteManager {
                 return new Promise((resolve, reject) => {
                     resolve($dbResult);
                 });
+            })
+            .then(($ebResult) => {
+                console.log('Send Email');
+                EmailManager.sendTestEmail('jake.a.callery@gmail.com');
             })
             .catch(($error) => {
                 session.close();

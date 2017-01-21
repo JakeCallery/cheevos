@@ -61,5 +61,8 @@ if(content !== null) {
     }
 }
 
-module.exports = gmailClient;
+module.exports = {
+    client:gmailClient,
+    auth:oauth2Client
+};
 
