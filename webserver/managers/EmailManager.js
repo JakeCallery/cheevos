@@ -4,9 +4,16 @@
 
 const db = require('../config/db');
 
+
 class EmailManager {
     constructor(){
         //Nothing to construct
+        //TODO: Make this a singleton?
+    }
+
+    static sendTestEmail($emailAddress){
+        console.log('Sending Test Email...');
+
     }
 
     static sendInviteEmail($inviteRecord, $invitorId){
