@@ -11,22 +11,17 @@ const User = require('../models/User');
 module.exports = function(passport){
     passport.serializeUser((user, done) => {
         console.log('Serialize User Called: ', user.id);
-        //Store only user ID in session, look up user from DB when needed
-        //Might be worth storing whole user or something for less DB access
-        //TODO: Look into optimization here
-
         let sessionUser = {
             id: user.id,
-            name: user.name
+            firstName: user.firstName,
+            lastName: user.lastName,
+            authType: user.authType,
+            profileImg: user.profileImg
         };
-        done(null, user);
+        done(null, sessionUser);
     });
 
     passport.deserializeUser((sessionUser, done) => {
-        //TODO: Optimize by NOT going to the DB to build the user.
-        //Build user from session info only:
-        //https://www.airpair.com/express/posts/expressjs-and-passportjs-sessions-deep-dive
-        //console.log('DeserializeUser Called: ', id);
         done(null,sessionUser);
     });
 
@@ -38,9 +33,13 @@ module.exports = function(passport){
                     google: {
                         id: profile.id,
                         name: profile.displayName,
+                        firstName: profile.name.givenName,
+                        lastName: profile.name.familyName,
                         email: profile.emails[0].value,
                         accessToken: accessToken,
-                        refreshToken:  refreshToken
+                        refreshToken:  refreshToken,
+                        profileImg: profile.photos[0].value,
+                        provider: profile.provider
                     }
                 };
                 User.findOrCreate(idObj)

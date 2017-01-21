@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
             message:error,
             status:'ERROR'
         };
-        res.status(401).json(resObj);
+        res.status(400).json(resObj);
     });
 });
 
