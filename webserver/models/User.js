@@ -294,8 +294,7 @@ class User {
         .run(
             'MATCH (user:User {userId:{userId}}) ' +
             'MATCH (user)-[:member_of]->(team) ' +
-            'MATCH (user)-[:moderates]->(moderatedteam) ' +
-            'RETURN team, moderatedteam',
+            'RETURN team',
             {
                 userId: this.id
             }
@@ -305,15 +304,40 @@ class User {
             return new Promise((resolve, reject) => {
                 if($dbResult.records.length > 0){
                     resolve($dbResult);
-                } else {
-                    reject('List My Teams error, no records returned');
                 }
-
             });
         })
         .catch(($error) => {
             session.close();
             console.log('List My Teams error: ', $error);
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
+    getTeamsIModerate() {
+        console.log('Getting Teams I Moderate...');
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (user)-[:moderates]->(moderatedteam) ' +
+            'RETURN moderatedteam',
+            {
+                userId: this.id
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('Num Moderated Teams: ' + $dbResult.records.length);
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            console.error('get my moderated teams error: ', $error);
             return new Promise((resolve, reject) => {
                 reject($error);
             });
