@@ -124,11 +124,14 @@ router.post('/', (req, res) => {
                 }
             });
     }, {retries:3})
-    .then(() => {
-
-    })
     .catch(($error) => {
         console.error('saveBadgeToDB Failed on retries: ', $error);
+        console.error('Bad Send, uniqueIdFailed: ', $error);
+        let resObj = {
+            error: 'saveBadgeToDB failed on retries',
+            status: 'ERROR'
+        };
+        res.status(400).json(resObj);
     });
 
 });

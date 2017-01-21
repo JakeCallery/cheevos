@@ -4,6 +4,7 @@
 
 const db = require('../config/db');
 const InviteManager = require('../managers/InviteManager');
+const shortId = require('shortid');
 
 class Team {
     constructor() {
@@ -327,56 +328,42 @@ class Team {
             });
     }
 
-    static createTeam($teamName, $teamId, $initialTeamMemeberId){
+    static createTeam($teamName, $initialTeamMemeberId){
         console.log('Saving Team To DB...');
-        console.log('Searching for existing team: ', $teamName, $teamId);
-        return Team.findTeam($teamName, $teamId)
-        .then(($records) => {
-            if($records === null){
-                //create a new team
-                console.log('Creating new team...');
-                let session = db.session();
-                //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
-                return session
-                    .run(
-                        'MATCH (user:User {userId:{userId}}) ' +
-                        'MERGE (user)-[rel:member_of]->(team:Team {teamId:{teamId},teamName:{teamName}}) ' +
-                        'MERGE (team)-[rel1:has_member]->(user) ' +
-                        'MERGE (team)-[rel2:moderated_by]->(user)' +
-                        'MERGE (user)-[rel3:moderates]->(team) ' +
-                        'RETURN user, team',
-                        {
-                            userId: $initialTeamMemeberId,
-                            teamId: $teamId,
-                            teamName: $teamName
-                        }
-                    )
-                    .then(($dbResult) => {
-                        session.close();
-                        console.log('Create Team Result: ' + $dbResult);
-                        return new Promise((resolve, reject) => {
-                             resolve($dbResult);
-                        });
-                    })
-                    .catch(($error) => {
-                        session.close();
-                        return new Promise((resolve, reject) => {
-                            console.log('Create Team Error: ', $error);
-                            reject($error);
-                        });
-                    })
+        let newTeamId = shortId.generate();
 
-            } else {
-                //team already exists
+        //create a new team
+        console.log('Creating new team...');
+        let session = db.session();
+        //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
+        return session
+            .run(
+                'MATCH (user:User {userId:{userId}}) ' +
+                'MERGE (user)-[rel:member_of]->(team:Team {teamId:{teamId},teamName:{teamName}}) ' +
+                'MERGE (team)-[rel1:has_member]->(user) ' +
+                'MERGE (team)-[rel2:moderated_by]->(user)' +
+                'MERGE (user)-[rel3:moderates]->(team) ' +
+                'RETURN user, team',
+                {
+                    userId: $initialTeamMemeberId,
+                    teamId: newTeamId,
+                    teamName: $teamName
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                console.log('Create Team Result: ' + $dbResult);
                 return new Promise((resolve, reject) => {
-                    console.log('Team Already Exists');
-                    reject({'error':'ALREADY_EXISTS', 'message':'Team Already Exists'});
+                     resolve($dbResult);
                 });
-            }
-        })
-        .catch(($error) => {
-            console.log('Error: ', $error);
-        });
+            })
+            .catch(($error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    console.log('Create Team Error: ', $error);
+                    reject($error);
+                });
+            })
     }
 
     static inviteMember($invitorId, $email, $teamName, $teamId) {
