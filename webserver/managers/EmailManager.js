@@ -3,7 +3,7 @@
  */
 
 const db = require('../config/db');
-
+const gmail = require('../config/gmail');
 
 class EmailManager {
     constructor(){

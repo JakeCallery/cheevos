@@ -11,6 +11,7 @@ const User = require('../models/User');
 const authConfig = require('../keys/authConfig');
 const BadgeManager = require('../managers/BadgeManager');
 const Badge = require('../models/Badge');
+const EmailManager = require('../managers/EmailManager');
 
 webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 
