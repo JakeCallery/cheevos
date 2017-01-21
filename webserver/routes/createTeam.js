@@ -18,7 +18,7 @@ router.post('/', (req, res) => {
     console.log('Requesting with ID: ' + user.id);
     promiseRetry((retry, attempt) => {
         console.log('CreateTeam attempt: ' + attempt);
-        Team.createTeam(req.body.teamName, user.id)
+        return Team.createTeam(req.body.teamName, user.id)
         .then(($dbResult) => {
             console.log('Create Team Result: ', $dbResult);
 
@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
         .catch(($error) => {
             if ($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
                 console.log('duplicate team id, retrying: ' + attempt);
-                retry();
+                retry('create team duplicate id');
             } else {
                 console.error('Team Creation Failed: ', $error);
                 let resObj = {
@@ -43,10 +43,9 @@ router.post('/', (req, res) => {
         });
     },{retries:3})
     .catch(($error) => {
-        //TODO: Smarter error handling, this will catch everything
-        console.error('createTeam Failed on retries: ', $error);
+        console.error('createTeam Failed: ', $error);
         let resObj = {
-            error: 'createTeam failed on retries',
+            error: $error,
             status: 'ERROR'
         };
         res.status(400).json(resObj);

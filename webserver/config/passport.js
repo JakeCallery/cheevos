@@ -3,7 +3,7 @@
  */
 
 'use strict';
-
+const promiseRetry = require('promise-retry');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const authConfig = require('../keys/authConfig.js');
 const User = require('../models/User');
@@ -42,15 +42,27 @@ module.exports = function(passport){
                         provider: profile.provider
                     }
                 };
-                User.findOrCreate(idObj)
+                promiseRetry((retry, attempt) => {
+                    console.log('findOrCreate Attempt: ' + attempt);
+                    User.findOrCreate(idObj)
                     .then((user) => {
                         console.log('******** Find or Create User: ', user.id);
                         done(null, user);
                     })
-                    .catch((error) => {
-                        console.error('Error: ', error);
-                        done(null,false);
+                    .catch(($error) => {
+                        if($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed'){
+                            console.log('Will retry');
+                            retry('Create User Duplicate Id');
+                        } else {
+                            console.error('Error: ', $error);
+                            done(null,false);
+                        }
                     });
+                },{retries:3})
+                .catch(($error) => {
+                    console.error('FindOrCreate User Error: ', $error);
+                    done(null,false);
+                });
             });
         }
     ));

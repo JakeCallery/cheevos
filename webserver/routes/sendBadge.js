@@ -28,107 +28,106 @@ router.post('/', (req, res) => {
     //needs better error handling if those don't exist
     promiseRetry((retry, attempt) => {
         console.log('saveBadgeToDB attempt: ' + attempt);
-        BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamName, req.body.teamId, badge)
-            .then(($isBlocked) => {
-                console.log('IsBlocked: ' + $isBlocked);
-                if(!$isBlocked){
-                    return User.findEndPointsByUserId(req.body.memberId)
-                } else {
-                    return new Promise((resolve, reject) => {
-                        //user is blocked, stop here.
-                        resolve(null);
+        return BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamName, req.body.teamId, badge)
+        .then(($isBlocked) => {
+            console.log('IsBlocked: ' + $isBlocked);
+            if(!$isBlocked){
+                return User.findEndPointsByUserId(req.body.memberId)
+            } else {
+                return new Promise((resolve, reject) => {
+                    //user is blocked, stop here.
+                    resolve(null);
+                });
+            }
+        })
+        .then(($dbResult) => {
+            if($dbResult !== null) {
+                console.log('Have Endpoints: ', $dbResult.records.length);
+                const options = {
+                    vapidDetails: {
+                        subject: 'http://subvoicestudios.com',
+                        publicKey: authConfig.pushAuth.publicKey,
+                        privateKey: authConfig.pushAuth.privateKey
+                    },
+                    // 24 hours in seconds.
+                    TTL: 24 * 60 * 60
+                };
+
+                //TODO: Green thread this maybe? / Hand off to another process?
+                //Hand off to queue process of some kind?
+                //Might be a good place to play with "yield", or "async"
+                for (let i = 0; i < $dbResult.records.length; i++) {
+                    let sub = $dbResult.records[i].get('subscription');
+                    let subscription = {
+                        endpoint: sub.properties.endpoint,
+                        keys: {
+                            p256dh: sub.properties.p256dh,
+                            auth: sub.properties.auth
+                        }
+                    };
+
+                    //TODO: Flatten these promises
+                    webPush.sendNotification(
+                        subscription,
+                        JSON.stringify(
+                            {
+                                iconUrl: req.body.iconUrl,
+                                nameText: req.body.nameText,
+                                descText: req.body.descText
+                            }
+                        ),
+                        options
+                    )
+                    .then(($result) => {
+                        console.log('Push Return Code: ', $result.statusCode);
+                        console.log('Push Return Body: ', $result.body);
+                    })
+                    .catch(($error) => {
+                        console.log('Push Error: ', $error.message);
+                        //Don't kill the whole thing, just move on
+                        //TODO: check for bad endpoints and remove them
+                        // return new Promise((resolve, reject) => {
+                        //     reject($error);
+                        // });
                     });
                 }
-            })
-            .then(($dbResult) => {
-                if($dbResult !== null) {
-                    console.log('Have Endpoints: ', $dbResult.records.length);
-                    const options = {
-                        vapidDetails: {
-                            subject: 'http://subvoicestudios.com',
-                            publicKey: authConfig.pushAuth.publicKey,
-                            privateKey: authConfig.pushAuth.privateKey
-                        },
-                        // 24 hours in seconds.
-                        TTL: 24 * 60 * 60
-                    };
 
-                    //TODO: Green thread this maybe? / Hand off to another process?
-                    //Hand off to queue process of some kind?
-                    //Might be a good place to play with "yield", or "async"
-                    for (let i = 0; i < $dbResult.records.length; i++) {
-                        let sub = $dbResult.records[i].get('subscription');
-                        let subscription = {
-                            endpoint: sub.properties.endpoint,
-                            keys: {
-                                p256dh: sub.properties.p256dh,
-                                auth: sub.properties.auth
-                            }
-                        };
+                //TODO: Decide if we need to wait for all endpoint sends or just return "ok"
+                //after the first
 
-                        //TODO: Flatten these promises
-                        webPush.sendNotification(
-                            subscription,
-                            JSON.stringify(
-                                {
-                                    iconUrl: req.body.iconUrl,
-                                    nameText: req.body.nameText,
-                                    descText: req.body.descText
-                                }
-                            ),
-                            options
-                        )
-                        .then(($result) => {
-                            console.log('Push Return Code: ', $result.statusCode);
-                            console.log('Push Return Body: ', $result.body);
-                        })
-                        .catch(($error) => {
-                            console.log('Push Error: ', $error.message);
-                            //Don't kill the whole thing, just move on
-                            //TODO: check for bad endpoints and remove them
-                            // return new Promise((resolve, reject) => {
-                            //     reject($error);
-                            // });
-                        });
-                    }
-
-                    //TODO: Decide if we need to wait for all endpoint sends or just return "ok"
-                    //after the first
-
-                    //Return Success (always for now)
-                    let resObj = {
-                        status: 'SUCCESS'
-                    };
-                    res.status(200).json(resObj);
-                } else {
-                    //Skipping notification because user is blocked,
-                    //just return success to caller
-                    console.log('User is blocked, not sending notification...');
-                    let resObj = {
-                        status: 'SUCCESS'
-                    };
-                    res.status(200).json(resObj);
-                }
-            })
-            .catch(($error) => {
-                if ($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
-                    console.log('duplicate badge id, retrying: ' + attempt);
-                    retry();
-                } else {
-                    console.error('Bad Send: ', $error);
-                    let resObj = {
-                        error: $error,
-                        status: 'ERROR'
-                    };
-                    res.status(400).json(resObj);
-                }
-            });
+                //Return Success (always for now)
+                let resObj = {
+                    status: 'SUCCESS'
+                };
+                res.status(200).json(resObj);
+            } else {
+                //Skipping notification because user is blocked,
+                //just return success to caller
+                console.log('User is blocked, not sending notification...');
+                let resObj = {
+                    status: 'SUCCESS'
+                };
+                res.status(200).json(resObj);
+            }
+        })
+        .catch(($error) => {
+            if ($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
+                console.log('duplicate badge id, retrying: ' + attempt);
+                retry('create badge duplicate id');
+            } else {
+                console.error('Bad Send: ', $error);
+                let resObj = {
+                    error: $error,
+                    status: 'ERROR'
+                };
+                res.status(400).json(resObj);
+            }
+        });
     }, {retries:3})
     .catch(($error) => {
-        console.error('saveBadgeToDB Failed on retries: ', $error);
-        console.error('Bad Send, uniqueIdFailed: ', $error);
+        console.error('saveBadgeToDB Failed: ', $error);
         let resObj = {
-            error: 'saveBadgeToDB failed on retries',
+            error: $error,
             status: 'ERROR'
         };
         res.status(400).json(resObj);
