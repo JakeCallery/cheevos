@@ -23,8 +23,8 @@ router.get('/', (req, res) => {
         for(let i = 0; i < $dbResult.records.length; i++){
             let blockedUser = $dbResult.records[i].get('blockedUser');
             resObj.data.blockedUsers.push({
-                id: blockedUser.properties.googleId,
-                name: blockedUser.properties.googleName
+                id: blockedUser.properties.userId,
+                name: blockedUser.properties.firstName + ' ' + blockedUser.properties.lastName
             });
         }
 

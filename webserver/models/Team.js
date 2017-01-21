@@ -72,7 +72,7 @@ class Team {
             session.close();
             console.log('isMemberOnlyModerator Results: ', $dbResult);
             if($dbResult.records.length === 1 &&
-                $dbResult.records[0].get('user').properties.googleId === $memberId){
+                $dbResult.records[0].get('user').properties.userId === $memberId){
                 return new Promise((resolve, reject) => {
                     resolve(true);
                 });
@@ -95,12 +95,12 @@ class Team {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (user:User {userId:{userId}}) ' +
             'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
             'MATCH (user)-[rel:moderates]->(team) ' +
             'RETURN rel',
             {
-                googleId: $memberId,
+                userId: $memberId,
                 teamName: $teamName,
                 teamId: $teamId
             }
@@ -135,13 +135,13 @@ class Team {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (user:User {userId:{userId}}) ' +
             'MATCH (team:Team {teamName:{teamName},teamId:{teamId}})' +
             'MATCH (user)-[rels]-(team) ' +
             'DELETE rels ' +
             'RETURN rels',
             {
-                googleId: $memberId,
+                userId: $memberId,
                 teamName: $teamName,
                 teamId: $teamId
             }
@@ -211,13 +211,13 @@ class Team {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (user:User {userId:{userId}}) ' +
             'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
             'MERGE (user)-[rel:moderates]->(team) ' +
             'MERGE (team)-[rel1:moderated_by]->(user)' +
             'RETURN rel, rel1',
             {
-                googleId:$memberId,
+                userId:$memberId,
                 teamName:$teamName,
                 teamId:$teamId
             }
@@ -256,11 +256,11 @@ class Team {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})-[rel:member_of]->' +
+            'MATCH (user:User {userId:{userId}})-[rel:member_of]->' +
             '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
             'RETURN rel',
             {
-                googleId:$memberId,
+                userId:$memberId,
                 teamName:$teamName,
                 teamId:$teamId
             }
@@ -295,14 +295,14 @@ class Team {
         return session
             .run(
                 'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
-                'MATCH (member:User {googleId:{googleId}}) ' +
+                'MATCH (member:User {userId:{userId}}) ' +
                 'MERGE (member)-[:member_of]->(team) ' +
                 'MERGE (team)-[:has_member]->(member) ' +
                 'RETURN member, team',
                 {
                     teamName:$teamName,
                     teamId:$teamId,
-                    googleId:$memberId
+                    userId:$memberId
                 }
             )
             .then(($dbResult) => {
@@ -339,14 +339,14 @@ class Team {
                 //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
                 return session
                     .run(
-                        'MATCH (user:User {googleId:{googleId}}) ' +
+                        'MATCH (user:User {userId:{userId}}) ' +
                         'MERGE (user)-[rel:member_of]->(team:Team {teamId:{teamId},teamName:{teamName}}) ' +
                         'MERGE (team)-[rel1:has_member]->(user) ' +
                         'MERGE (team)-[rel2:moderated_by]->(user)' +
                         'MERGE (user)-[rel3:moderates]->(team) ' +
                         'RETURN user, team',
                         {
-                            googleId: $initialTeamMemeberId,
+                            userId: $initialTeamMemeberId,
                             teamId: $teamId,
                             teamName: $teamName
                         }

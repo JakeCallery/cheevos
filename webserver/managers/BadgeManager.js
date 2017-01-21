@@ -18,12 +18,12 @@ class BadgeManager {
         //TODO: make sure only owner of badge can remove it
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}})' +
+                'MATCH (user:User {userId:{userId}})' +
                 '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
                 'DETACH DELETE badge ' +
                 'RETURN badge',
                 {
-                    googleId: $memberId,
+                    userId: $memberId,
                     badgeId: $badgeId
                 }
             )
@@ -51,12 +51,12 @@ class BadgeManager {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '<-[rel:sent_to]-(badge:Badge {id:{badgeId}}) ' +
             'DELETE rel ' +
             'RETURN badge,rel',
             {
-                googleId: $memberId,
+                userId: $memberId,
                 badgeId: $badgeId
             }
         )
@@ -84,8 +84,8 @@ class BadgeManager {
         let session = db.session();
         return session
         .run(
-            'MATCH (sender:User {googleId:{senderId}}) ' +
-            'MATCH (recipient:User {googleId:{recipientId}}) ' +
+            'MATCH (sender:User {userId:{senderId}}) ' +
+            'MATCH (recipient:User {userId:{recipientId}}) ' +
             'MATCH (team:Team {teamName:{teamName},teamId:{teamId}}) ' +
             'MATCH (sender)-[:member_of]->(team)<-[:member_of]-(recipient) ' +
             'MERGE (' +
@@ -133,7 +133,7 @@ class BadgeManager {
                 return session
                 .run(
                     'MATCH (badge:Badge {id:{badgeId}}) ' +
-                    'MATCH (recipient:User {googleId:{recipientId}}) ' +
+                    'MATCH (recipient:User {userId:{recipientId}}) ' +
                     'MERGE (badge)-[rel:sent_to]->(recipient) ' +
                     'RETURN badge, rel',
                     {

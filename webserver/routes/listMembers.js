@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
         for(let i = 0; i < $dbResult.records.length; i++) {
             let member = $dbResult.records[i].get('member');
             resObj.data.members.push({
-                id: member.properties.googleId,
+                id: member.properties.userId,
                 name: member.properties.googleName
             });
         }

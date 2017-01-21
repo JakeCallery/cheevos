@@ -16,12 +16,12 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '-[rel:is_blocking]->' +
-            '(userToCheck:User {googleId:{userIdToCheck}}) ' +
+            '(userToCheck:User {userId:{userIdToCheck}}) ' +
             'RETURN rel',
             {
-                googleId:$userId,
+                userId:$userId,
                 userIdToCheck: $userIdToCheck
             }
         )
@@ -57,12 +57,12 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}}) ' +
-            'MATCH (userToBlock:User {googleId:{userToBlockId}}) ' +
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (userToBlock:User {userId:{userToBlockId}}) ' +
             'MERGE (user)-[rel:is_blocking]->(userToBlock) ' +
             'RETURN rel',
             {
-                googleId:this.id,
+                userId:this.id,
                 userToBlockId:$userIdToBlock
             }
         )
@@ -93,13 +93,13 @@ class User {
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}}) ' +
-                'MATCH (userToBlock:User {googleId:{userIdToUnblock}}) ' +
+                'MATCH (user:User {userId:{userId}}) ' +
+                'MATCH (userToBlock:User {userId:{userIdToUnblock}}) ' +
                 'MATCH (user)-[rel:is_blocking]->(userToBlock) ' +
                 'DELETE rel ' +
                 'RETURN rel',
                 {
-                    googleId:this.id,
+                    userId:this.id,
                     userIdToUnblock:$userIdToUnblock
                 }
             )
@@ -130,11 +130,11 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '-[:is_blocking]->(blockedUser:User) ' +
             'RETURN blockedUser',
             {
-                googleId: this.id
+                userId: this.id
             }
         )
         .then(($dbResult) => {
@@ -153,12 +153,12 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '-[:sent_from]->(badge:Badge {recipientId:{recipientId}})' +
             '-[:part_of_team]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
             'RETURN badge',
             {
-                googleId:this.id,
+                userId:this.id,
                 recipientId: $recipientId,
                 teamName: $teamName,
                 teamId: $teamId
@@ -183,11 +183,11 @@ class User {
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}})' +
+                'MATCH (user:User {userId:{userId}})' +
                 '-[:sent_from]->(badge:Badge {recipientId:{recipientId}}) ' +
                 'RETURN badge',
                 {
-                    googleId:this.id,
+                    userId:this.id,
                     recipientId: $recipientId
                 }
             )
@@ -210,11 +210,11 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '-[:sent_from]->(badge:Badge) ' +
             'RETURN badge',
             {
-                googleId:this.id
+                userId:this.id
             }
         )
         .then(($dbResult) => {
@@ -236,11 +236,11 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}})' +
+            'MATCH (user:User {userId:{userId}})' +
             '<-[:sent_to]-(badge:Badge) ' +
             'RETURN badge',
             {
-                googleId:this.id
+                userId:this.id
             }
         )
         .then(($dbResult) => {
@@ -262,12 +262,12 @@ class User {
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}})' +
+                'MATCH (user:User {userId:{userId}})' +
                 '<-[:sent_to]-(badge:Badge)-[:part_of_team]->' +
                 '(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
                 'RETURN badge',
                 {
-                    googleId:this.id,
+                    userId:this.id,
                     teamName:$teamName,
                     teamId:$teamId
                 }
@@ -292,12 +292,12 @@ class User {
         let session = db.session();
         return session
         .run(
-            'MATCH (user:User {googleId:{googleId}}) ' +
+            'MATCH (user:User {userId:{userId}}) ' +
             'MATCH (user)-[:member_of]->(team) ' +
             'MATCH (user)-[:moderates]->(moderatedteam) ' +
             'RETURN team, moderatedteam',
             {
-                googleId: this.id
+                userId: this.id
             }
         )
         .then(($dbResult) => {
@@ -323,9 +323,6 @@ class User {
     registerSubscription($subscription) {
         console.log('Registering Subscription to user: ', this.id);
         console.log('Sub: ', $subscription);
-
-        //TODO: Maintain custom internal ID and Name, so we don't have to give out googleId
-        //during API calls
 
         //TODO: Support for multiple account validations (google, facebook, twitter, etc..)
         let session = db.session();
@@ -425,7 +422,7 @@ class User {
         return session
             .run(
                 'MATCH (invite:Invite {code:{inviteCode}})-[:invited_to]->(team) ' +
-                'MATCH (invitee:User {googleId:{inviteeId}}) ' +
+                'MATCH (invitee:User {userId:{inviteeId}}) ' +
                 'RETURN invitee,team',
                 {
                     inviteCode:$inviteCode,
@@ -439,7 +436,7 @@ class User {
                     return Team.addMember(
                         $dbResult.records[0].get('team').properties.teamName,
                         $dbResult.records[0].get('team').properties.teamId,
-                        $dbResult.records[0].get('invitee').properties.googleId
+                        $dbResult.records[0].get('invitee').properties.userId
                     );
                 } else if($dbResult.records.length > 1){
                     //Too many, duplicate invites?  Should not happen
@@ -508,6 +505,7 @@ class User {
             console.log('Finding By Google ID: ', $idObj.google.id);
             let session = db.session();
 
+            //TODO: Promise retry just incase we end up with a duplicate id
             return session
                 .run(
                     'MATCH (user:User {googleId:{googleId}}) RETURN user', {googleId: $idObj.google.id}
@@ -529,6 +527,7 @@ class User {
 
                         let newUser = new User();
                         newUser.updateFromGoogleIdObj($idObj.google);
+                        newUser.data.userId = shortId.generate();
 
                         let session = db.session();
                         return session.run(
@@ -545,7 +544,7 @@ class User {
                             '}) ' +
                             'RETURN user',
                             {
-                                userId: shortId.generate(),
+                                userId: newUser.id,
                                 firstName: newUser.firstName,
                                 lastName: newUser.lastName,
                                 authType: 'google',
@@ -597,7 +596,7 @@ class User {
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}}) RETURN user', {googleId: $userId}
+                'MATCH (user:User {userId:{userId}}) RETURN user', {userId: $userId}
             )
             .then(result => {
                 session.close();
@@ -626,10 +625,10 @@ class User {
         console.log('Find Endpoints by user id: ', $userId);
         let session = db.session();
         return session.run (
-            'MATCH (user:User {googleId:{googleId}})-[:subscribed_by]->(subscription) ' +
+            'MATCH (user:User {userId:{userId}})-[:subscribed_by]->(subscription) ' +
             'RETURN user, subscription',
             {
-                googleId: $userId
+                userId: $userId
             }
         )
         .then((result) => {

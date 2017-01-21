@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
 
     //TODO: Sanitize team name from request?
-    console.log('Requesting with googleID: ' + user.id);
+    console.log('Requesting with ID: ' + user.id);
     Team.createTeam(req.body.teamName, shortId.generate(), user.id)
     .then(($dbResult) => {
         console.log('Create Team Result: ', $dbResult);

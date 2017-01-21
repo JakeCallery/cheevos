@@ -42,12 +42,12 @@ class InviteManager {
         let session = db.session();
         return session
             .run(
-                'MATCH (user:User {googleId:{googleId}}) ' +
+                'MATCH (user:User {userId:{userId}}) ' +
                 'MATCH (team:Team {teamId:{teamId},teamName:{teamName}}) ' +
                 'MERGE (user)-[rel:sent_invite]->(invite:Invite {code:{inviteCode},email:{email}}) ' +
                 'MERGE (invite)-[rel1:invited_to]->(team) ' +
                 'RETURN invite',{
-                    googleId: $invitorId,
+                    userId: $invitorId,
                     teamId: $teamId,
                     teamName: $teamName,
                     email: $email,

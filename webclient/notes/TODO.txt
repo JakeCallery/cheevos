@@ -1,5 +1,6 @@
 Plan:
 Generate user ids, don't use google id
+switch teams to not require a teamId AND teamName (drop the need for name)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 Send Team based notifications
 When user unsubscribes, remove endpoint
