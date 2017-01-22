@@ -69,17 +69,17 @@ const listSentBadgesUserButton = document.getElementById('listSentBadgesUserButt
 const listSentBadgesUserIdOnTeamIdField = document.getElementById('listSentBadgesUserIdOnTeamIdField');
 const listSentBadgesUserOnTeamIdField = document.getElementById('listSentBadgesUserOnTeamIdField');
 const listSentBadgesUserOnTeamButton = document.getElementById('listSentBadgesUserOnTeamButton');
+const teamNotificationsTeamIdField = document.getElementById('teamNotificationsTeamIdField');
+const enableTeamNotificationsButton = document.getElementById('enableTeamNotificationsButton');
+const disableTeamNotificationsButton = document.getElementById('disableTeamNotificationsButton');
+const getTeamNotificationsEnabledButton = document.getElementById('getTeamNotificationsEnabledButton');
 
-badgeUserIdField.value = '101328274856075903430';
 badgeIconUrlField.value = '/testBadgeIcon.png';
 badgeNameField.value = 'Test Badge ' + new Date();
 badgeDescField.value = 'Sweet Test Badge description! W00t! ' + new Date();
 badgeTeamIdField.value = 'r1atrFdHx';
 
-teamNameField.value = 'TestTeam1';
 inviteEmailAddressField.value = 'jake.a.callery@gmail.com';
-inviteTeamIdField.value = 'rJXKvXPSx';
-listMembersTeamIdField.value = 'r1atrFdHx';
 
 
 function updateBtn() {
@@ -100,6 +100,66 @@ function updateBtn() {
 }
 
 function initialiseUI() {
+    enableTeamNotificationsButton.addEventListener('click', ($event) => {
+        l.debug('Caught Enable Team Note click');
+        fetch('/api/enableTeamNotifications', {
+            method:'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                teamId: teamNotificationsTeamIdField.value
+            })
+        })
+        .then(($response) => {
+            l.debug('Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Error: ', $error);
+        });
+    });
+
+    disableTeamNotificationsButton.addEventListener('click', ($event) => {
+        l.debug('Caught Disable Team Note click');
+        fetch('/api/disableTeamNotifications', {
+            method:'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                teamId: teamNotificationsTeamIdField.value
+            })
+        })
+            .then(($response) => {
+                l.debug('Response: ', $response);
+            })
+            .catch(($error) => {
+                l.error('Error: ', $error);
+            });
+    });
+
+    getTeamNotificationsEnabledButton.addEventListener('click', ($event) => {
+        l.debug('Caught Check Team Note enabled status click');
+        fetch('/api/getTeamNotificationsEnabled', {
+            method:'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                teamId: teamNotificationsTeamIdField.value
+            })
+        })
+            .then(($response) => {
+                l.debug('Response: ', $response);
+            })
+            .catch(($error) => {
+                l.error('Error: ', $error);
+            });
+    });
+
     listSentBadgesUserOnTeamButton.addEventListener('click', ($event) => {
         l.debug('Caught List badges to user on team click');
         fetch('/api/listBadgesSentToUserOnTeam', {
