@@ -30,9 +30,13 @@ router.post('/', (req, res) => {
         console.log('saveBadgeToDB attempt: ' + attempt);
         return BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamId, badge)
         .then(($badgeDBResult) => {
+            let senderUser = User.newUserFromDBRecord($badgeDBResult.records[0].get('sender'));
+            let recipientUser = User.newUserFromDBRecord($badgeDBResult.records[0].get('recipient'));
             return BadgeManager.sendBadgeNotifications(
-                user.id,
-                req.body.memberId,
+                senderUser.id,
+                senderUser.fullName,
+                recipientUser.id,
+                recipientUser.fullName,
                 req.body.teamId,
                 Badge.newBadgeFromDB($badgeDBResult.records[0].get('badge')));
         })

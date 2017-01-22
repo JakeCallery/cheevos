@@ -493,6 +493,9 @@ class User {
         return this.data[this.authType].name;
     }
 
+    get fullName() {
+        return (this.firstName + ' ' + this.lastName);
+    }
     get firstName() {
         return this.data.firstName;
     }

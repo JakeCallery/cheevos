@@ -6,6 +6,7 @@ const uuid = require('node-uuid');
 const shortId = require('shortid');
 const promiseRetry = require('promise-retry');
 const webPush = require('web-push');
+const util = require('util');
 
 const db = require('../config/db');
 const User = require('../models/User');
@@ -153,11 +154,13 @@ class BadgeManager {
                 let session = db.session();
                 return session
                 .run(
+                    'MATCH (sender:User {userId:{senderId}}) ' +
                     'MATCH (badge:Badge {badgeId:{badgeId}}) ' +
                     'MATCH (recipient:User {userId:{recipientId}}) ' +
                     'MERGE (badge)-[rel:sent_to]->(recipient) ' +
-                    'RETURN badge, rel',
+                    'RETURN badge,recipient,sender',
                     {
+                        senderId: $senderId,
                         badgeId: $badge.badgeId,
                         recipientId: $recipientId
                     }
@@ -192,9 +195,13 @@ class BadgeManager {
                 let session = db.session();
                 return session
                 .run(
+                    'MATCH (sender:User {userId:{senderId}}) ' +
+                    'MATCH (recipient:User {userId:{recipientId}}) ' +
                     'MATCH (badge:Badge {badgeId:{badgeId}}) ' +
                     'RETURN badge',
                     {
+                        senderId: $senderId,
+                        recipientId: $recipientId,
                         badgeId: $badge.badgeId
                     }
                 )
@@ -220,7 +227,9 @@ class BadgeManager {
         });
     }
 
-    static sendBadgeNotifications($senderId, $recipientId, $teamId, $badge){
+    static sendBadgeNotifications($senderId, $senderName,
+                                  $recipientId, $recipientName,
+                                  $teamId, $badge){
         //Get user list
         return Team.getMembers($teamId)
         .then(($dbResult) => {
@@ -268,23 +277,23 @@ class BadgeManager {
                             if(currentMemberId === $recipientId){
                                 //Get full badge notification
                                 notificationDescObj = {
-                                    iconUrl: $badge.iconUrl,
-                                    nameText: $badge.titleText,
-                                    descText: $badge.descText
+                                    iconUrl: util.format("%s",$badge.iconUrl),
+                                    nameText: util.format("%s (%s)",$badge.titleText, $senderName),
+                                    descText: util.format("%s", $badge.descText)
                                 };
                             } else if(currentMemberId === $senderId){
                                 //Get sent status
                                 notificationDescObj = {
-                                    iconUrl: $badge.iconUrl,
-                                    nameText: "Sent Badge!",
-                                    descText: ""
+                                    iconUrl: util.format("%s",$badge.iconUrl),
+                                    nameText: util.format("Sent Badge to: %s",$recipientName),
+                                    descText: util.format("%s", $badge.titleText)
                                 };
                             } else {
                                 //Team notification
                                 notificationDescObj = {
-                                    iconUrl: $badge.iconUrl,
-                                    nameText: "User just earned a badge!",
-                                    descText: $badge.titleText
+                                    iconUrl: util.format("%s",$badge.iconUrl),
+                                    nameText: util.format("%s just earned a badge from %s !",$recipientName,$senderName),
+                                    descText: util.format("%s", $badge.titleText)
                                 };
                             }
 
