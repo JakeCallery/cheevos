@@ -1,18 +1,18 @@
 Plan:
 Send Team based notifications
 User Preferences (get team notifications?)
-When user unsubscribes, remove endpoint
-On Notification send, check if endpoint is still valid (remove if not)
+ssl cert from let's encrypt
+nGrok over https setup
 ---------------------------------------
 
 Upcoming Plan:
 *set up api test page (start by Feb 1)*
 *rough layout index page (start by Feb 1)*
 
-ssl cert from let's encrypt
-nGrok over https setup
 Validate against google login status (https://developers.google.com/identity/sign-in/web/listeners)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
+When user unsubscribes, remove endpoint
+On Notification send, check if endpoint is still valid (remove if not)
 Clean up API responses
 Set up Test User Bots
 Test APIs against odd characters
