@@ -20,10 +20,8 @@ router.post('/', (req, res) => {
         console.log('Invite Result: ', $dbResult);
 
         if($dbResult.records.length === 1) {
-            let inviteRecord = $dbResult.records[0].get('invite');
-
             return new Promise((resolve, reject) => {
-                resolve(inviteRecord);
+                resolve($dbResult);
             });
         } else if($dbResult.records.length > 1) {
             return new Promise((resolve, reject) => {
@@ -35,16 +33,18 @@ router.post('/', (req, res) => {
             });
         }
     })
-    .then(($inviteRecord) => {
-        return EmailManager.sendInviteEmail($inviteRecord, user.id);
+    .then(($dbResult) => {
+        console.log('Send Email');
+        return EmailManager.sendInviteEmail(
+            $dbResult.records[0].get('invite'),
+            $dbResult.records[0].get('user').properties.userId,
+            $dbResult.records[0].get('user').properties.name,
+            $dbResult.records[0].get('team').properties.firstName
+        )
     })
-    .then(($emailResult) => {
-        //TODO: For now just assuming that all went well
-        //handle email failure here
+    .then(($emailResponse) => {
+        console.log('Email Response: ', $emailResponse);
         let resObj = {
-            data:{
-                inviteCode: $emailResult.inviteCode
-            },
             status:'SUCCESS'
         };
         res.status(200).json(resObj);
