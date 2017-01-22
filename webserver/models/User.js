@@ -657,7 +657,7 @@ class User {
         )
         .then((result) => {
             session.close();
-            console.log('Results: ', result);
+            //console.log('Results: ', result);
             return new Promise((resolve, reject) => {
                 resolve(result);
             });

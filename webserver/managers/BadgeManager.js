@@ -303,6 +303,7 @@ class BadgeManager {
                                 VAPID_OPTIONS
                             )
                             .then(($result) => {
+                                //StatusCode 201 is "good", means it was put in the queue
                                 console.log('Push Return Code: ', $result.statusCode);
                                 console.log('Push Return Body: ', $result.body);
                                 return new Promise((resolve, reject) => {
@@ -310,7 +311,14 @@ class BadgeManager {
                                 });
                             })
                             .catch(($error) => {
-                                console.error('Push Error: ', $error.message);
+                                console.error('Push Error Message: ', $error.message);
+                                console.error('Push Error Code: ', $error.statusCode);
+
+                                if($error.statusCode == 410){
+                                    //TODO: error code 410 is "Not Registered", should remove endpoint from db
+                                    console.log('Will need to remove endpoint from user');
+                                }
+
                                 //Don't kill the whole thing, just move on
                                 //TODO: check for bad endpoints and remove them
                                 // return new Promise((resolve, reject) => {
