@@ -226,9 +226,11 @@ class BadgeManager {
         .then(($dbResult) => {
             for(let i = 0; i < $dbResult.records.length; i++){
                 let memberRecord = $dbResult.records[i].get('member');
+                let currentMemberId = memberRecord.properties.userId;
+
                 //TODO: Check for allow team notifications per team (save on relationship?)
                 //Check each user if sender is blocked
-                User.isUserBlocked(memberRecord.properties.userId, $senderId)
+                User.isUserBlocked(currentMemberId, $senderId)
                 .then(($isBlocked) => {
                     if(!$isBlocked) {
                         //Collect endpoints for each user
@@ -261,15 +263,34 @@ class BadgeManager {
                             //TODO: Different notification for team than to the recipient
                             //if this user's id === recipient id, send badge, otherwise send notification
                             //about the badge (title, who it was to, who it was from)
+                            let notificationDescObj = null;
+
+                            if(currentMemberId === $recipientId){
+                                //Get full badge notification
+                                notificationDescObj = {
+                                    iconUrl: $badge.iconUrl,
+                                    nameText: $badge.titleText,
+                                    descText: $badge.descText
+                                };
+                            } else if(currentMemberId === $senderId){
+                                //Get sent status
+                                notificationDescObj = {
+                                    iconUrl: $badge.iconUrl,
+                                    nameText: "Sent Badge!",
+                                    descText: ""
+                                };
+                            } else {
+                                //Team notification
+                                notificationDescObj = {
+                                    iconUrl: $badge.iconUrl,
+                                    nameText: "User just earned a badge!",
+                                    descText: $badge.titleText
+                                };
+                            }
+
                             webPush.sendNotification(
                                 subscription,
-                                JSON.stringify(
-                                    {
-                                        iconUrl: $badge.iconUrl,
-                                        nameText: $badge.titleText,
-                                        descText: $badge.descText
-                                    }
-                                ),
+                                JSON.stringify(notificationDescObj),
                                 VAPID_OPTIONS
                             )
                             .then(($result) => {
