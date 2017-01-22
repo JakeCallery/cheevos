@@ -62,7 +62,7 @@ class InviteManager {
                 if($dbResult.records.length === 1){
                     resolve($dbResult);
                 } else {
-                    reject('Expected 1 invite record, got: ' + $dbResult);
+                    reject('Expected 1 invite record, got: ' + $dbResult.records.length);
                 }
             });
         })

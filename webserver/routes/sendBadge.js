@@ -4,16 +4,13 @@
 
 const express = require('express');
 const router = express.Router();
-const webPush = require('web-push');
+
 const promiseRetry = require('promise-retry');
 
 const User = require('../models/User');
-const authConfig = require('../keys/authConfig');
 const BadgeManager = require('../managers/BadgeManager');
 const Badge = require('../models/Badge');
 const EmailManager = require('../managers/EmailManager');
-
-webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
 
 router.post('/', (req, res) => {
     let user = req.cheevosData.sessionUser;
@@ -27,92 +24,27 @@ router.post('/', (req, res) => {
 
     //TODO: Check for Team and User existence first
     //needs better error handling if those don't exist
+    //TODO: make sure that the send notification stuff doesn't run
+    //if db save fails
     promiseRetry((retry, attempt) => {
         console.log('saveBadgeToDB attempt: ' + attempt);
         return BadgeManager.saveBadgeToDB(user.id, req.body.memberId, req.body.teamId, badge)
-        .then(($isBlocked) => {
-            console.log('IsBlocked: ' + $isBlocked);
-            if(!$isBlocked){
-                return User.findEndPointsByUserId(req.body.memberId)
-            } else {
-                return new Promise((resolve, reject) => {
-                    //user is blocked, stop here.
-                    resolve(null);
-                });
-            }
+        .then(($badgeDBResult) => {
+            return BadgeManager.sendBadgeNotifications(
+                user.id,
+                req.body.memberId,
+                req.body.teamId,
+                Badge.newBadgeFromDB($badgeDBResult.records[0].get('badge')));
         })
-        .then(($dbResult) => {
-            if($dbResult !== null) {
-                console.log('Have Endpoints: ', $dbResult.records.length);
-                const options = {
-                    vapidDetails: {
-                        subject: 'http://subvoicestudios.com',
-                        publicKey: authConfig.pushAuth.publicKey,
-                        privateKey: authConfig.pushAuth.privateKey
-                    },
-                    // 24 hours in seconds.
-                    TTL: 24 * 60 * 60
-                };
-
-                //TODO: Green thread this maybe? / Hand off to another process?
-                //Hand off to queue process of some kind?
-                //Might be a good place to play with "yield", or "async"
-                for (let i = 0; i < $dbResult.records.length; i++) {
-                    let sub = $dbResult.records[i].get('subscription');
-                    let subscription = {
-                        endpoint: sub.properties.endpoint,
-                        keys: {
-                            p256dh: sub.properties.p256dh,
-                            auth: sub.properties.auth
-                        }
-                    };
-
-                    //TODO: Flatten these promises
-                    webPush.sendNotification(
-                        subscription,
-                        JSON.stringify(
-                            {
-                                iconUrl: req.body.iconUrl,
-                                nameText: req.body.nameText,
-                                descText: req.body.descText
-                            }
-                        ),
-                        options
-                    )
-                    .then(($result) => {
-                        console.log('Push Return Code: ', $result.statusCode);
-                        console.log('Push Return Body: ', $result.body);
-                    })
-                    .catch(($error) => {
-                        console.log('Push Error: ', $error.message);
-                        //Don't kill the whole thing, just move on
-                        //TODO: check for bad endpoints and remove them
-                        // return new Promise((resolve, reject) => {
-                        //     reject($error);
-                        // });
-                    });
-                }
-
-                //TODO: Decide if we need to wait for all endpoint sends or just return "ok"
-                //after the first
-
-                //Return Success (always for now)
-                let resObj = {
-                    status: 'SUCCESS'
-                };
-                res.status(200).json(resObj);
-            } else {
-                //Skipping notification because user is blocked,
-                //just return success to caller
-                console.log('User is blocked, not sending notification...');
-                let resObj = {
-                    status: 'SUCCESS'
-                };
-                res.status(200).json(resObj);
-            }
+        .then(($pushResult) => {
+            console.log('Message Pushed: ', $pushResult);
+            let resObj = {
+                status: 'SUCCESS'
+            };
+            res.status(200).json(resObj);
         })
         .catch(($error) => {
-            if ($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
+            if ($error.hasOwnProperty('fields') && $error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
                 console.log('duplicate badge id, retrying: ' + attempt);
                 retry('create badge duplicate id');
             } else {

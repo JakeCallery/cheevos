@@ -2,12 +2,30 @@
  * Created by Jake on 1/15/2017.
  */
 
-const db = require('../config/db');
 const uuid = require('node-uuid');
-const User = require('../models/User');
-const Badge = require('../models/Badge');
 const shortId = require('shortid');
 const promiseRetry = require('promise-retry');
+const webPush = require('web-push');
+
+const db = require('../config/db');
+const User = require('../models/User');
+const Badge = require('../models/Badge');
+const Team = require('../models/Team');
+const authConfig = require('../keys/authConfig');
+
+//TODO: this might not be needed with firebase
+webPush.setGCMAPIKey(authConfig.gcmAuth.apiKey);
+
+//TODO: Externalize Vapid options
+const VAPID_OPTIONS =   {
+    vapidDetails: {
+        subject: 'http://subvoicestudios.com',
+        publicKey: authConfig.pushAuth.publicKey,
+        privateKey: authConfig.pushAuth.privateKey
+    },
+    // 24 hours in seconds.
+    TTL: 24 * 60 * 60
+};
 
 class BadgeManager {
     constructor(){
@@ -149,7 +167,7 @@ class BadgeManager {
                     let numRecords = $dbResult.records.length;
                     if(numRecords === 1){
                         return new Promise((resolve, reject) => {
-                            resolve($isBlocked);
+                            resolve($dbResult);
                         });
                     } else if(numRecords > 1) {
                         return new Promise((resolve, reject) => {
@@ -170,8 +188,26 @@ class BadgeManager {
 
             } else {
                 //user is blocked, don't hook badge up to recipient
-                return new Promise((resolve, reject) => {
-                    resolve($isBlocked);
+                //just pass along new badge from db
+                let session = db.session();
+                return session
+                .run(
+                    'MATCH (badge:Badge {badgeId:{badgeId}}) ' +
+                    'RETURN badge',
+                    {
+                        badgeId: $badge.badgeId
+                    }
+                )
+                .then(($dbResult) => {
+                    return new Promise((resolve, reject) => {
+                        resolve($dbResult);
+                    });
+                })
+                .catch(($error) => {
+                    return new Promise((resolve, reject) => {
+                        console.error('get badge inside of save badge failed: ', $error);
+                        reject($error);
+                    });
                 });
             }
         })
@@ -183,6 +219,89 @@ class BadgeManager {
             });
         });
     }
+
+    static sendBadgeNotifications($senderId, $recipientId, $teamId, $badge){
+        //Get user list
+        return Team.getMembers($teamId)
+        .then(($dbResult) => {
+            for(let i = 0; i < $dbResult.records.length; i++){
+                let memberRecord = $dbResult.records[i].get('member');
+                //TODO: Check for allow team notifications per team (save on relationship?)
+                //Check each user if sender is blocked
+                User.isUserBlocked(memberRecord.properties.userId, $senderId)
+                .then(($isBlocked) => {
+                    if(!$isBlocked) {
+                        //Collect endpoints for each user
+                        return User.findEndPointsByUserId(memberRecord.properties.userId);
+                    } else {
+                        //User is blocked, skip...
+                        return new Promise((resolve, reject) => {
+                            resolve(null);
+                        });
+                    }
+                })
+                .then(($endpointDBResult) => {
+                    if($endpointDBResult !== null) {
+                        //Submit badge notification to webpush
+
+                        //TODO: Green thread this maybe? / Hand off to another process?
+                        //Hand off to queue process of some kind?
+                        //Might be a good place to play with "yield", or "async"
+                        for (let i = 0; i < $endpointDBResult.records.length; i++) {
+                            let sub = $endpointDBResult.records[i].get('subscription');
+                            let subscription = {
+                                endpoint: sub.properties.endpoint,
+                                keys: {
+                                    p256dh: sub.properties.p256dh,
+                                    auth: sub.properties.auth
+                                }
+                            };
+
+                            //Do Push
+                            //TODO: Different notification for team than to the recipient
+                            //if this user's id === recipient id, send badge, otherwise send notification
+                            //about the badge (title, who it was to, who it was from)
+                            webPush.sendNotification(
+                                subscription,
+                                JSON.stringify(
+                                    {
+                                        iconUrl: $badge.iconUrl,
+                                        nameText: $badge.titleText,
+                                        descText: $badge.descText
+                                    }
+                                ),
+                                VAPID_OPTIONS
+                            )
+                            .then(($result) => {
+                                console.log('Push Return Code: ', $result.statusCode);
+                                console.log('Push Return Body: ', $result.body);
+                                return new Promise((resolve, reject) => {
+                                    resolve($result);
+                                });
+                            })
+                            .catch(($error) => {
+                                console.error('Push Error: ', $error.message);
+                                //Don't kill the whole thing, just move on
+                                //TODO: check for bad endpoints and remove them
+                                // return new Promise((resolve, reject) => {
+                                //     reject($error);
+                                // });
+                            });
+                        }
+                    } else {
+                        console.log('Skipping notification, user is blocked...');
+                    }
+                })
+                .catch(($error) => {
+                    console.error('Send Badge Error: ', $error);
+                });
+            }
+        })
+        .catch(($error) => {
+            console.error('sendBadgeNotification Error: ', $error);
+        });
+    }
+
 }
 
 module.exports = BadgeManager;

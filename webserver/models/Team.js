@@ -168,7 +168,7 @@ class Team {
     }
 
     static getMembers($teamId) {
-        console.log('Getting Team Memebers');
+        console.log('Getting Team Members');
 
         let session = db.session();
         return session

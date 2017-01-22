@@ -1,14 +1,17 @@
 Plan:
 Send Team based notifications
-set up api test page
-rough layout index page
+User Preferences (get team notifications?)
+When user unsubscribes, remove endpoint
+On Notification send, check if endpoint is still valid (remove if not)
 ---------------------------------------
 
 Upcoming Plan:
-When user unsubscribes, remove endpoint
-On Notification send, check if endpoint is still valid (remove if not)
-User Preferences (get team notifications?)
-Validate against google login status
+*set up api test page (start by Feb 1)*
+*rough layout index page (start by Feb 1)*
+
+ssl cert from let's encrypt
+nGrok over https setup
+Validate against google login status (https://developers.google.com/identity/sign-in/web/listeners)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 Clean up API responses
 Set up Test User Bots
@@ -21,6 +24,10 @@ Known Bugs
 Before Release:
 DB Transaction rollback on failed calls?
 upgrade logging to log to files / better control
+Better gmail/email system token checking and error logging
+log collection and analysis
+externalize domain (replace all localhost references)
+proper domain for vapidDetails
 ----------------------------------------
 
 Possibilities:
