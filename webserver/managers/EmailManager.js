@@ -4,8 +4,8 @@
 
 const db = require('../config/db');
 const gmail = require('../config/gmail');
-const client = gmail.client;
-const auth = gmail.auth;
+const client = gmail.getClient();
+const auth = gmail.getAuth();
 
 class EmailManager {
     constructor(){
@@ -24,6 +24,7 @@ class EmailManager {
         emailLines.push('Subject: Sweet Cheevos Test Email');
         emailLines.push('');
         emailLines.push('Sweet Cheevos test body text, and <b> BOLD! </b>');
+        emailLines.push('Sent At: ' + new Date());
 
         let email = emailLines.join('\r\n').trim();
 
@@ -40,13 +41,44 @@ class EmailManager {
 
     }
 
-    static sendInviteEmail($inviteRecord, $invitorId){
-        //TODO: Implement email sending
+    //TODO: Split out actual email send
+    //TODO: Send invitor name in email
+    static sendInviteEmail($inviteRecord, $invitorId, $teamName){
         return new Promise((resolve, reject) => {
-            console.log('Would send email to: ' + $inviteRecord.properties.email);
-            resolve({
-                inviteCode:$inviteRecord.properties.code
-            });
+            console.log('Emailing: ' + $inviteRecord.properties.email);
+            let emailLines = [];
+            emailLines.push('From: "Cheevos" <jcallery@subvoicestudios.com>');
+            emailLines.push('To: ' + $inviteRecord.properties.email);
+            emailLines.push('Content-type: text/html;charset=iso-8859-1');
+            emailLines.push('MIME-Version: 1.0');
+            emailLines.push('Subject: You have been invited to a Cheevos Team!');
+            emailLines.push('');
+            emailLines.push('Please click the link below to join the ' + $teamName + ' team.');
+            emailLines.push(
+                'Link: <a href="http://subvoicestudios.com/invited/' + $inviteRecord.properties.code + '">' +
+                'Accept Invite</a>');
+
+            let email = emailLines.join('\r\n').trim();
+
+            let base64EncodedEmail = new Buffer(email).toString('base64');
+            base64EncodedEmail = base64EncodedEmail.replace(/\+/g, '-').replace(/\//g, '_');
+
+            let cb = function($error, $response){
+                console.log('-- CB CALLED --');
+                if($error){
+                    reject($error);
+                } else {
+                    resolve($response);
+                }
+            };
+
+            client.users.messages.send({
+                auth: auth,
+                userId: 'me',
+                resource: {
+                    raw: base64EncodedEmail
+                }
+            },cb);
         })
     }
 }

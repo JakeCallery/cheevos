@@ -37,6 +37,7 @@ class InviteManager {
         });
     }
 
+    //TODO: Add Invitor Name to email
     static createInvite($invitorId, $email, $teamId){
         let inviteCode = md5($invitorId + $teamId + uuid.v4());
         console.log('InviteCode: ' + inviteCode);
@@ -48,7 +49,7 @@ class InviteManager {
                 'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MERGE (user)-[rel:sent_invite]->(invite:Invite {code:{inviteCode},email:{email}}) ' +
                 'MERGE (invite)-[rel1:invited_to]->(team) ' +
-                'RETURN invite',{
+                'RETURN invite, team, user',{
                     userId: $invitorId,
                     teamId: $teamId,
                     email: $email,
@@ -57,14 +58,38 @@ class InviteManager {
             )
             .then(($dbResult) => {
                 session.close();
-                //TODO: Check for zero records returned
+                return new Promise((resolve, reject) => {
+                    if($dbResult.records.length === 1){
+                        resolve($dbResult);
+                    } else {
+                        reject('Expected 1 invite record, got: ' + $dbResult);
+                    }
+                });
+            })
+            .then(($dbResult) => {
+                console.log('Send Email');
+                return EmailManager.sendInviteEmail(
+                    $dbResult.records[0].get('invite'),
+                    $invitorId,
+                    $dbResult.records[0].get('user').properties.name,
+                    $dbResult.records[0].get('team').properties.firstName
+                )
+                .then(($emailResponse) => {
+                    console.log('Email Response: ', $emailResponse);
+                    return new Promise((resolve, reject) => {
+                        resolve($dbResult);
+                    });
+                })
+                .catch(($error) => {
+                    return new Promise((resolve, reject) => {
+                        reject($error);
+                    });
+                });
+            })
+            .then(($dbResult) => {
                 return new Promise((resolve, reject) => {
                     resolve($dbResult);
                 });
-            })
-            .then(($ebResult) => {
-                console.log('Send Email');
-                EmailManager.sendTestEmail('jake.a.callery@gmail.com');
             })
             .catch(($error) => {
                 session.close();

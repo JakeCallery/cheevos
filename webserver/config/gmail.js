@@ -12,7 +12,7 @@ const SCOPES = [
 const TOKEN_DIR = './keys/.credentials/';
 const TOKEN_PATH = TOKEN_DIR + 'cheevos-gmail.json';
 
-let oauth2Client = null;
+let authClient = null;
 let gmailClient = null;
 
 function getOAuth2Client($credentials) {
@@ -21,17 +21,22 @@ function getOAuth2Client($credentials) {
     let redirectUrl = $credentials.installed.redirect_uris[0];
     let auth = new googleAuth();
     let oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
+    let tokenContents = null;
 
     // Check if we have previously stored a token.
-    fs.readFile(TOKEN_PATH, function(err, token) {
-        if (err) {
-            console.error('Bad GMail Token, run webServerTools to generate a new one!');
-            return null;
-        } else {
-            oauth2Client.credentials = JSON.parse(token);
-            return oauth2Client;
-        }
-    });
+    try {
+        tokenContents = fs.readFileSync(TOKEN_PATH);
+
+    } catch ($error) {
+        console.error('Token read error: ', $error);
+        return null;
+    }
+
+    if(tokenContents !== null) {
+        console.log('Good gmail token...');
+        oauth2Client.credentials = JSON.parse(tokenContents);
+        return oauth2Client;
+    }
 }
 
 console.log('***** Authorizing Gmail *****');
@@ -50,9 +55,9 @@ if(content !== null) {
     // Authorize a client with the loaded credentials, then call the
     // Gmail API.
     //authorize(JSON.parse(content), listLabels);
-    oauth2Client = getOAuth2Client(JSON.parse(content));
+    authClient = getOAuth2Client(JSON.parse(content));
 
-    if(oauth2Client !== null) {
+    if(authClient !== null && typeof(authClient) !== 'undefined') {
         //create gmail client
         gmailClient = google.gmail('v1');
         console.log('***** Gmail Client Created *****');
@@ -61,8 +66,16 @@ if(content !== null) {
     }
 }
 
+function getClient() {
+    return gmailClient
+}
+
 module.exports = {
-    client:gmailClient,
-    auth:oauth2Client
+    getClient: function(){
+        return gmailClient;
+    },
+    getAuth: function(){
+        return authClient;
+    }
 };
 
