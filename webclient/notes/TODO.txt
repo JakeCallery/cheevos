@@ -1,6 +1,5 @@
 Plan:
 Send Team based notifications
-send invite emails
 set up api test page
 rough layout index page
 ---------------------------------------
@@ -29,6 +28,7 @@ Send an id with page serve to use as a "key" for the api This will help prevent 
 -----------------------------------------
 
 DONE:
+send invite emails
 switch teams to not require a teamId AND teamName (drop the need for name)
 retry promises during creation that end up with non-unique ids
 Generate user ids, don't use google id
