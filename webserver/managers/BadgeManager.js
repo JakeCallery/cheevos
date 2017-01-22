@@ -198,7 +198,7 @@ class BadgeManager {
                     'MATCH (sender:User {userId:{senderId}}) ' +
                     'MATCH (recipient:User {userId:{recipientId}}) ' +
                     'MATCH (badge:Badge {badgeId:{badgeId}}) ' +
-                    'RETURN badge',
+                    'RETURN badge, sender, recipient',
                     {
                         senderId: $senderId,
                         recipientId: $recipientId,
