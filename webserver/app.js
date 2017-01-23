@@ -46,6 +46,8 @@ const listAllSentBadges = require('./routes/listAllSentBadges');
 const listBadgesSentToUser = require('./routes/listBadgesSentToUser');
 const listBadgesSentToUserOnTeam = require('./routes/listBadgesSentToUserOnTeam');
 const checkLoggedIn = require('./routes/checkLoggedIn');
+const enableTeamNotifications = require('./routes/enableTeamNotifications');
+const disableTeamNotifications = require('./routes/disableTeamNotifications');
 
 //Set up express
 const app = express();
@@ -111,6 +113,8 @@ app.use('/api/listBlockedUsers', listBlockedUsers);
 app.use('/api/listAllSentBadges', listAllSentBadges);
 app.use('/api/listBadgesSentToUser', listBadgesSentToUser);
 app.use('/api/listBadgesSentToUserOnTeam', listBadgesSentToUserOnTeam);
+app.use('/api/enableTeamNotifications', enableTeamNotifications);
+app.use('/api/disableTeamNotifications', disableTeamNotifications);
 
 //TODO: Fix up static serving so that index.html is not static served when
 //express.static is above the session setup

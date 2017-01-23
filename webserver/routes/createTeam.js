@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
         console.log('CreateTeam attempt: ' + attempt);
         return Team.createTeam(req.body.teamName, user.id)
         .then(($dbResult) => {
-            console.log('Create Team Result: ', $dbResult);
+            //console.log('Create Team Result: ', $dbResult);
 
             //TODO: return JSON result here
             let resObj = {

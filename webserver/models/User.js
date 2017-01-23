@@ -477,6 +477,49 @@ class User {
             });
     }
 
+    setTeamNotifications($teamId, $isEnabled){
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
+            'MATCH (user)-[rel:member_of]->(team) ' +
+            'SET rel.notificationsEnabled = {isEnabled} ' +
+            'RETURN rel',
+            {
+                userId:this.id,
+                isEnabled: $isEnabled,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
+    enableTeamNotifications($teamId){
+        console.log('Enabling Team Notifications: ', $teamId);
+        return this.setTeamNotifications($teamId, true);
+    }
+
+    disableTeamNotifications($teamId){
+        console.log('Disabling Team Notifications: ', $teamId);
+        return this.setTeamNotifications($teamId, false);
+    }
+
+    isTeamNotificationsEnabled($teamId){
+
+    }
+
     get id() {
         return this.data.userId;
     }

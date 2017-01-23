@@ -290,7 +290,7 @@ class Team {
             .run(
                 'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MATCH (member:User {userId:{userId}}) ' +
-                'MERGE (member)-[:member_of]->(team) ' +
+                'MERGE (member)-[:member_of{notificationsEnabled:true}]->(team) ' +
                 'MERGE (team)-[:has_member]->(member) ' +
                 'RETURN member, team',
                 {
@@ -331,7 +331,7 @@ class Team {
         return session
             .run(
                 'MATCH (user:User {userId:{userId}}) ' +
-                'MERGE (user)-[rel:member_of]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
+                'MERGE (user)-[rel:member_of{notificationsEnabled:true}]->(team:Team {teamName:{teamName},teamId:{teamId}}) ' +
                 'MERGE (team)-[rel1:has_member]->(user) ' +
                 'MERGE (team)-[rel2:moderated_by]->(user)' +
                 'MERGE (user)-[rel3:moderates]->(team) ' +

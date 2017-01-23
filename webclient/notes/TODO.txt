@@ -22,6 +22,7 @@ Known Bugs
 ---------------------------------------
 
 Before Release:
+Query Performance: https://neo4j.com/docs/cypher-refcard/current/ (see bottom right of page)
 DB Transaction rollback on failed calls?
 upgrade logging to log to files / better control
 Better gmail/email system token checking and error logging
