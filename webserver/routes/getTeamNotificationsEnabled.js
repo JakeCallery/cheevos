@@ -10,7 +10,7 @@ const Team = require('../models/Team');
 router.post('/', (req, res) => {
     console.log('Caught getTeamNotificationsEnabled: ', req.body.teamId);
     let user = req.cheevosData.sessionUser;
-    user.getTeamNotificationsEnabled(req.body.teamId)
+    user.getMyTeamNotificationsEnabled(req.body.teamId)
     .then(($dbResult) => {
         let resObj = {};
 

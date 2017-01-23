@@ -506,44 +506,19 @@ class User {
         });
     }
 
-    enableTeamNotifications($teamId){
+    enableMyTeamNotifications($teamId){
         console.log('Enabling Team Notifications: ', $teamId);
         return this.setTeamNotifications($teamId, true);
     }
 
-    disableTeamNotifications($teamId){
+    disableMyTeamNotifications($teamId){
         console.log('Disabling Team Notifications: ', $teamId);
         return this.setTeamNotifications($teamId, false);
     }
 
-    getTeamNotificationsEnabled($teamId){
-        console.log('Getting Team Notifications Enabled State', $teamId);
-        let session = db.session();
-        return session
-        .run(
-            'MATCH (user:User {userId:{userId}}) ' +
-            'MATCH (team:Team {teamId:{teamId}}) ' +
-            'MATCH (user)-[rel:member_of]->(team) ' +
-            'RETURN rel',
-            {
-                userId:this.id,
-                teamId:$teamId
-            }
-        )
-        .then(($dbResult) => {
-            session.close();
-            console.log('Are notifications enabled: ', $dbResult.records[0].get('rel').properties.notificationsEnabled);
-            return new Promise((resolve, reject) => {
-                resolve($dbResult);
-            });
-        })
-        .catch(($error) => {
-            session.close();
-            return new Promise((resolve, reject) => {
-                reject($error);
-            });
-        });
-
+    getMyTeamNotificationsEnabled($teamId){
+        console.log('Get My Team Notifications Enabled: ', $teamId);
+        return User.getTeamNotificationsEnabled(this.id, $teamId);
     }
 
     get id() {
@@ -591,6 +566,35 @@ class User {
 
     get accessToken() {
         return this.data[this.authType].accessToken;
+    }
+
+    static getTeamNotificationsEnabled($userId, $teamId){
+        console.log('Getting Team Notifications Enabled State', $teamId);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
+            'MATCH (user)-[rel:member_of]->(team) ' +
+            'RETURN rel',
+            {
+                userId:$userId,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('Are notifications enabled: ', $dbResult.records[0].get('rel').properties.notificationsEnabled);
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
     }
 
     static findOrCreate($idObj) {

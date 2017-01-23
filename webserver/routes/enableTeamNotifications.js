@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
     console.log('Caught Enable Team Notifications Request: ', req.body.teamId);
 
     let user = req.cheevosData.sessionUser;
-    user.enableTeamNotifications(req.body.teamId)
+    user.enableMyTeamNotifications(req.body.teamId)
     .then(($dbResult) => {
 
         let resObj = {};
@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
         }
     })
     .catch(($error) => {
-        console.error('enableTeamNotifications Error: ', $error);
+        console.error('enableMyTeamNotifications Error: ', $error);
         let errorResObj = {};
         errorResObj.status = 'ERROR';
         errorResObj.error = $error;

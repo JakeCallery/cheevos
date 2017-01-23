@@ -229,7 +229,8 @@ class BadgeManager {
 
     static sendBadgeNotifications($senderId, $senderName,
                                   $recipientId, $recipientName,
-                                  $teamId, $badge){
+                                  $teamId, $badge)
+    {
         //Get user list
         return Team.getMembers($teamId)
         .then(($dbResult) => {
@@ -237,19 +238,40 @@ class BadgeManager {
                 let memberRecord = $dbResult.records[i].get('member');
                 let currentMemberId = memberRecord.properties.userId;
 
-                //TODO: Check for allow team notifications per team (save on relationship?)
                 //Check each user if sender is blocked
                 User.isUserBlocked(currentMemberId, $senderId)
                 .then(($isBlocked) => {
                     if(!$isBlocked) {
-                        //Collect endpoints for each user
-                        return User.findEndPointsByUserId(memberRecord.properties.userId);
+                        //Check to see if team notifications are enabled
+                        return User.getTeamNotificationsEnabled(currentMemberId, $teamId);
                     } else {
-                        //User is blocked, skip...
+                        //User is blocked, just stop here
                         return new Promise((resolve, reject) => {
                             resolve(null);
                         });
                     }
+                })
+                .then(($dbResult) => {
+                    if($dbResult === null) {
+                        //blocked, skip this one
+                        console.log('Skipping, blocked: ', currentMemberId);
+                        return new Promise((resolve, reject) => {
+                            resolve(null);
+                        });
+                    }
+                    else if($dbResult.records[0].get('rel').properties.notificationsEnabled === true ||
+                        currentMemberId === $recipientId ||
+                        currentMemberId === $senderId)
+                    {
+                        //Collect endpoints for each user
+                        return User.findEndPointsByUserId(memberRecord.properties.userId);
+                    } else {
+                        //notifications disabled, skip this one
+                        return new Promise((resolve, reject) => {
+                            resolve(null);
+                        });
+                    }
+
                 })
                 .then(($endpointDBResult) => {
                     if($endpointDBResult !== null) {
