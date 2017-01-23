@@ -31,8 +31,6 @@ router.post('/', (req, res) => {
         errorResObj.error = $error;
         res.status(400).json(errorResObj);
     });
-
-
 });
 
 module.exports = router;
