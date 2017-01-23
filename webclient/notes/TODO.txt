@@ -1,6 +1,4 @@
 Plan:
-Send Team based notifications
-User Preferences (get team notifications?)
 ssl cert from let's encrypt
 nGrok over https setup
 ---------------------------------------
@@ -42,6 +40,8 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Send Team based notifications
+User Preferences (get team notifications?)
 send invite emails
 switch teams to not require a teamId AND teamName (drop the need for name)
 retry promises during creation that end up with non-unique ids
