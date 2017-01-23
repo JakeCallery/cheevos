@@ -25,7 +25,7 @@ router.post('/', (req, res) => {
         }
     })
     .catch(($error) => {
-        console.log('getTeamNotificationsEnabled error: ', $erro);
+        console.log('getTeamNotificationsEnabled error: ', $error);
         let errorResObj = {};
         errorResObj.status = 'ERROR';
         errorResObj.error = $error;
