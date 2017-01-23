@@ -516,7 +516,33 @@ class User {
         return this.setTeamNotifications($teamId, false);
     }
 
-    isTeamNotificationsEnabled($teamId){
+    getTeamNotificationsEnabled($teamId){
+        console.log('Getting Team Notifications Enabled State', $teamId);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
+            'MATCH (user)-[rel:member_of]->(team) ' +
+            'RETURN rel',
+            {
+                userId:this.id,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('Are notifications enabled: ', $dbResult.records[0].get('rel').properties.notificationsEnabled);
+            return new Promise((resolve, reject) => {
+                resolve($dbResult);
+            });
+        })
+        .catch(($error) => {
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
 
     }
 
