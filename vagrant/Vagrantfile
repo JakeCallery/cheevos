@@ -1,0 +1,60 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+	config.vm.box = "ubuntu/trusty64"
+	config.vm.box_url = "https://atlas.hashicorp.com/ubuntu/boxes/trusty64"
+	config.ssh.insert_key = false
+	
+	config.vm.provider "virtualbox" do |v|
+		v.memory = 2048
+		v.cpus = 1
+		### Change network card to PCnet-FAST III
+		# For NAT adapter
+		v.customize ["modifyvm", :id, "--nictype1", "Am79C973"]
+		# For host-only adapter
+		v.customize ["modifyvm", :id, "--nictype2", "Am79C973"]
+	end
+	
+	config.vm.define "CheevosServer" do |server|
+		#server.vm.network "forwarded_port", guest: 5252, host: 5252
+		#server.vm.network "forwarded_port", guest: 80, host: 8080
+		server.vm.network "forwarded_port", host: 4141, guest: 4040
+		#server.vm.network "private_network", ip:"192.168.10.95"
+
+    server.vm.synced_folder "../webserver", "/webserver"
+		#server.vm.synced_folder "../src/web_app", "/vagrant_web_app"
+    #server.vm.synced_folder "../src/socket_server", "/vagrant_socket_server"
+
+		server.vm.provision "file",
+		source: "./filestocopy/ngrok/ngrok.yml",
+		destination: "~/ngrok/ngrok.yml"
+
+    server.vm.provision "file",
+			source: "./filestocopy/ngrok/ngrok",
+			destination: "~/ngrok/ngrok"
+
+		server.vm.provision "file",
+			source: "./filestocopy/ngrok/startNgrok.sh",
+			destination: "~/ngrok/startNgrok.sh"
+
+		server.vm.provision "shell" do |s|
+			s.inline = "rm -rf /ngrok; mv /home/vagrant/ngrok /ngrok;"+
+									"chown -R vagrant:vagrant /ngrok;chmod 755 /ngrok/ngrok;"+
+      						"chmod 755 /ngrok/startNgrok.sh"
+			s.privileged = true
+		end
+
+		server.vm.provision "chef_solo" do |chef|
+			chef.add_recipe "hosts"
+			chef.add_recipe "aptupdate"
+			chef.add_recipe "vim"
+			chef.add_recipe "nodejs"
+			chef.add_recipe "npm"
+      chef.add_recipe "nodegyp"
+      #chef.add_recipe "ngrok"
+		end
+
+		
+	end
+end
