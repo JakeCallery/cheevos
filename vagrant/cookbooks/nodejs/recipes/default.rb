@@ -1,3 +1,3 @@
-package "nodejs"
-
-#package "nodejs-legacy"
+package "nodejs" do
+  action "install"
+end

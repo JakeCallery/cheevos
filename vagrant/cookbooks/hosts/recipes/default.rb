@@ -1,9 +1,9 @@
 execute "Change hostname" do
-	command "echo 'awslightgrid.jakecallery.com' > /etc/hostname"
+	command "echo 'badger.jakecallery.com' > /etc/hostname"
 end
 
 execute "run hostname" do
-	command "hostname awslightgrid.jakecallery.com"
+	command "hostname badger.jakecallery.com"
 end
 
 ruby_block "insert_line" do
