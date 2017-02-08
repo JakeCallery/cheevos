@@ -1,5 +1,4 @@
 Plan:
-set up api test page
 rough layout index page
 ---------------------------------------
 
@@ -39,6 +38,7 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+set up api test page
 ssl cert from let's encrypt
 nGrok over https setup
 Send Team based notifications
