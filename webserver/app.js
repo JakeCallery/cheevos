@@ -18,6 +18,7 @@ const User = require('./models/User');
 
 //TODO: Require routes in its own file
 const index = require('./routes/index');
+const apitest = require('./routes/apitest');
 const authGoogle = require('./routes/authGoogle');
 const authGoogleCallback = require('./routes/authGoogleCallback');
 const logout = require('./routes/logout');
@@ -89,6 +90,7 @@ app.use('/auth/google/callback', authGoogleCallback);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/invited', invited);
+app.use('/apitest', apitest);
 
 //Api Routes
 app.use('/api/*', checkLoggedIn);

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+
+        <title><%= title %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <p>
+            <button id="pushButton" class="simpleButton">
+                Enable Push Messaging
+            </button>
+
+            <% if (isLoggedIn) { %>
+                <a href="/logout">Google Logout</a>
+            <% } else { %>
+                <a href="/auth/google">Google LogIn</a>
+            <% } %>
+
+        </p>
+        <textarea id="endpointTextArea" rows="8" cols="50"></textarea>
+
+        <p>
+            Team Name: <br>
+            <input type="text" id="teamNameField"><br>
+            <button id="createTeamButton" class="simpleButton">Create</button>
+        </p>
+
+        <p>
+            Invite to team <br>
+            Email Address: <br>
+            <input type="text" id="inviteEmailAddressField"><br><br>
+
+            Team Id: <br>
+            <input type="text" id="inviteTeamIdField"><br>
+
+            <button id="inviteMemberButton" class="simpleButton">Invite</button>
+        </p>
+
+        <p>
+            List Members <br>
+            Team Id: <br>
+            <input type="text" id="listMembersTeamIdField"> <br>
+            <button id="listMembersButton" class="simpleButton">List Members</button>
+        </p>
+
+        <p>
+            Send Badge: <br>
+            User ID: <br>
+            <input type="text" id="badgeUserIdField"> <br>
+            Team ID: <br>
+            <input type="text" id="badgeTeamIdField"> <br> <br>
+            Badge Icon Url: <br>
+            <input type="text" id="badgeIconUrlField"> <br>
+            Badge Name: <br>
+            <input type="text" id="badgeNameField"> <br>
+            Badge Desc: <br>
+            <input type="text" id="badgeDescField"> <br>
+            <button id="badgeSendButton" class="simpleButton">Send</button>
+        </p>
+
+        <p>
+            Team Notifications: <br>
+            Team ID: <br>
+            <input type="text" id="teamNotificationsTeamIdField"> <br>
+            <button id="enableTeamNotificationsButton" class="simpleButton">Enable</button>
+            <button id="disableTeamNotificationsButton" class="simpleButton">Disable</button>
+            <button id="getTeamNotificationsEnabledButton" class="simpleButton">Is Enabled?</button>
+        </p>
+
+        <p>
+            Get My Badges: <br>
+            Team ID (optional): <br>
+            <input type="text" id="getBadgesTeamId"> <br>
+            <button id="getBadgesButton" class="simpleButton">Get Badges</button>
+
+        </p>
+
+        <p>
+            Get All Sent Badges: <br>
+            <button id="getAllSentBadgesButton" class="simpleButton">Get All Sent</button>
+        </p>
+
+        <p>
+            Get Badges Sent To User <br>
+            User Id: <br>
+            <input type="text" id="listSentBadgesUserIdField"> <br>
+            <button id="listSentBadgesUserButton" class="simpleButton">Get Sent To User</button>
+        </p>
+
+        <p>
+            Get Badges Sent To User on Team <br>
+            User Id: <br>
+            <input type="text" id="listSentBadgesUserIdOnTeamIdField"> <br>
+            Team Id: <br>
+            <input type="text" id="listSentBadgesUserOnTeamIdField"> <br>
+            <button id="listSentBadgesUserOnTeamButton" class="simpleButton">Get Sent To User</button>
+        </p>
+
+        <p>
+            Remove Badge From Me: <br>
+            Badge Id: <br>
+            <input type="text" id="removeBadgeForUserBadgeIdField"> <br>
+            <button id="removeBadgeForUserButton" class="simpleButton">Remove Badge</button>
+        </p>
+
+        <p>
+            Remove Badge Completely: <br>
+            Badge Id: <br>
+            <input type="text" id="removeBadgeCompletelyBadgeIdField"> <br>
+            <button id="removeBadgeCompletelyButton" class="simpleButton">Remove Badge Completely</button> <br> <br>
+        </p>
+
+        <p>
+            List My Teams <br>
+            <button id="listTeamsButton" class="simpleButton">List Teams</button>
+        </p>
+
+        <p>
+            Am I Moderator: <br>
+            Team Id: <br>
+            <input type="text" id="isModeratorTeamIdField"> <br>
+            <button id="isModeratorButton" class="simpleButton">Check is Mod.</button>
+            <button id="isOnlyModeratorButton" class="simpleButton">Check Only Mod.</button>
+        </p>
+
+        <p>
+            Add Moderator: <br>
+            User Id: <br>
+            <input type="text" id="addModUserIdField"> <br>
+            Team Id: <br>
+            <input type="text" id="addModTeamIdField"> <br>
+            <button id="addModButton" class="simpleButton">Add Mod</button>
+        </p>
+
+        <p>
+            Remove Me From Team: <br>
+            Team Id: <br>
+            <input type="text" id="removeMeTeamIdField"> <br>
+            <button id="removeMeButton" class="simpleButton">Remove Me</button>
+        </p>
+
+        <p>
+            Remove Member From Team: <br>
+            Member Id: <br>
+            <input type="text" id="removeMemberMemberIdField"> <br>
+            Team Id: <br>
+            <input type="text" id="removeMemberTeamIdField"> <br>
+            <button id="removeMemberButton" class="simpleButton">Remove Member</button>
+        </p>
+
+        <p>
+            Remove Team: <br>
+            Team Id: <br>
+            <input type="text" id="removeTeamTeamIdField"> <br>
+            <button id="removeTeamButton" class="simpleButton">Remove Team</button>
+        </p>
+
+        <p>
+            Block User: <br>
+            User Id To Block: <br>
+            <input type="text" id="blockUserIdField"> <br>
+            <button id="blockUserButton" class="simpleButton">Block User</button>
+        </p>
+
+        <p>
+            Unblock User: <br>
+            User Id To Unblock: <br>
+            <input type="text" id="unblockUserIdField"> <br>
+            <button id="unblockUserButton" class="simpleButton">Unblock User</button>
+        </p>
+
+        <p>
+            List Blocked Users: <br>
+            <button id="listBlockedUsersButton" class="simpleButton">List Blocked Users</button>
+        </p>
+
+    </body>
+</html>

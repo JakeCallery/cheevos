@@ -7,7 +7,8 @@ module.exports = {
     entry: {
         indexEntry:'./js/index.js',
         invitedEntry:'./js/invited.js',
-        loginEntry:'./js/login.js'
+        loginEntry:'./js/login.js',
+        apitestEntry:'./js/apitest.js'
     },
 
     output: {
@@ -51,6 +52,15 @@ module.exports = {
             hash: true,
             chunks: [
                 'indexEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'apitest.html',
+            template: 'html/apitest.html',
+            hash: true,
+            chunks: [
+                'apitestEntry'
             ]
         }),
 
