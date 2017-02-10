@@ -5,10 +5,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: {
-        indexEntry:'./js/index.js',
-        invitedEntry:'./js/invited.js',
-        loginEntry:'./js/login.js',
-        apitestEntry:'./js/apitest.js'
+        indexEntry:'./js/indexPage.js',
+        invitedEntry:'./js/invitedPage.js',
+        loginEntry:'./js/loginPage.js',
+        apitestEntry:'./js/apitestPage.js',
+        teamEntry:'./js/teamPage.js',
+        createBadgeEntry:'./js/createBadgePage.js',
+        profileEntry:'./js/profilePage.js'
     },
 
     output: {
@@ -48,6 +51,7 @@ module.exports = {
 
     plugins: [
         new HtmlWebpackPlugin({
+            filename: 'index.html',
             template: 'html/index.html',
             hash: true,
             chunks: [
@@ -79,6 +83,33 @@ module.exports = {
             hash: true,
             chunks: [
                 'loginEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'team.html',
+            template: 'html/team.html',
+            hash: true,
+            chunks: [
+                'teamEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'createBadge.html',
+            template: 'html/createBadge.html',
+            hash: true,
+            chunks: [
+                'createBadgeEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'profile.html',
+            template: 'html/profile.html',
+            hash: true,
+            chunks: [
+                'profileEntry'
             ]
         }),
 

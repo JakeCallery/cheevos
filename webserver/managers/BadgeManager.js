@@ -111,7 +111,7 @@ class BadgeManager {
             'MATCH (recipient:User {userId:{recipientId}}) ' +
             'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (sender)-[:member_of]->(team)<-[:member_of]-(recipient) ' +
-            'MERGE (' +
+            'CREATE (' +
             'badge:Badge {' +
             'badgeId:{badgeId},' +
             'badgeUrl:{badgeUrl},' +
@@ -123,7 +123,7 @@ class BadgeManager {
             '}) ' +
             'MERGE (badge)<-[:sent_from]-(sender) ' +
             'MERGE (badge)-[:part_of_team]->(team) ' +
-            'RETURN badge',
+            'RETURN badge, sender, team, recipient',
             {
                 senderId: $senderId,
                 recipientId: $recipientId,
@@ -185,6 +185,7 @@ class BadgeManager {
                 .catch(($error) => {
                     session.close();
                     return new Promise((resolve, reject) => {
+                        console.error('Save Error: ', $error);
                         reject($error);
                     });
                 });

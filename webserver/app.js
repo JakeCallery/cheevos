@@ -16,16 +16,23 @@ const db = require('./config/db');
 const User = require('./models/User');
 
 //Serially wait for DB to be ready
-
+//TODO: Still need to do this
 //////////////////////////////////
 
 
 //TODO: Require routes in its own file
-const index = require('./routes/index');
-const apitest = require('./routes/apitest');
+const indexPage = require('./routes/indexPage');
+const apitestPage = require('./routes/apitestPage');
+const teamPage = require('./routes/teamPage');
+const createBadgePage = require('./routes/createBadgePage');
+const profilePage = require('./routes/profilePage');
+
+const login = require('./routes/login');
+const logout = require('./routes/logout');
+
 const authGoogle = require('./routes/authGoogle');
 const authGoogleCallback = require('./routes/authGoogleCallback');
-const logout = require('./routes/logout');
+
 const registerSubscription = require('./routes/registerSubscription');
 const sendBadge = require('./routes/sendBadge');
 const createTeam = require('./routes/createTeam');
@@ -34,7 +41,6 @@ const invited = require('./routes/invited');
 const acceptInvite = require('./routes/acceptInvite');
 const listMembers = require('./routes/listMembers');
 const listMyTeams = require('./routes/listMyTeams');
-const login = require('./routes/login');
 const removeMeFromTeam = require('./routes/removeMeFromTeam');
 const isModerator = require('./routes/isModerator');
 const isOnlyModerator = require('./routes/isOnlyModerator');
@@ -88,13 +94,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Assign routes
-app.use('/', index);
+app.use('/', indexPage);
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/login', login);
 app.use('/logout', logout);
 app.use('/invited', invited);
-app.use('/apitest', apitest);
+app.use('/apitest', apitestPage);
+app.use('/teams', teamPage);
+app.use('/profile', profilePage);
 
 //Api Routes
 app.use('/api/*', checkLoggedIn);
@@ -124,7 +132,7 @@ app.use('/api/enableTeamNotifications', enableTeamNotifications);
 app.use('/api/disableTeamNotifications', disableTeamNotifications);
 app.use('/api/getTeamNotificationsEnabled', getTeamNotificationsEnabled);
 
-//TODO: Fix up static serving so that index.html is not static served when
+//TODO: Fix up static serving so that indexPage.html is not static served when
 //express.static is above the session setup
 
 //TODO: Put static serving BEFORE session setup:
