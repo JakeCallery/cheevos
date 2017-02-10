@@ -15,6 +15,10 @@ const helmet = require('helmet');
 const db = require('./config/db');
 const User = require('./models/User');
 
+//Serially wait for DB to be ready
+
+//////////////////////////////////
+
 
 //TODO: Require routes in its own file
 const index = require('./routes/index');

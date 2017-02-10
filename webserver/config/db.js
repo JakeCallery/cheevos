@@ -11,6 +11,14 @@ let driver = neo4j.driver('bolt://localhost', neo4j.auth.basic(authConfig.neo4jA
     trust: "TRUST_ON_FIRST_USE",
     encrypted:"ENCRYPTION_NON_LOCAL"
 });
-console.log('***** DB Connected *****');
+
+driver.onCompleted = function(){
+    console.log('DB Driver Connected');
+};
+
+driver.onError = function($err){
+    console.log('DB Driver Error: ', $err);
+};
+
 //export
 module.exports = driver;
