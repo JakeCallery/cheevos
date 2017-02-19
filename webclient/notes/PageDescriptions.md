@@ -22,9 +22,13 @@
 * List of Teams user moderates
   * Button to Invite Member To team
   * Button to Remove Team
+  * Button to add a team moderator
+  * Button to Remove a Moderator
 * List of Teams user is a member of
   * Remove Me From Team
-  
+* Create Team Button
+* Enable / Disable Team Notifications (any badge sent to anyone on the team)
+
 ##Accept Invite Page:
 * If Not Logged In:
   * Inform user they need an account and to be logged in to accept
