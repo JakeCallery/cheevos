@@ -26,4 +26,4 @@ let swRegistration = null;
 //TODO: Find a way to put this in as external (file loader)
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
 
-l.debug('New Index');
+l.debug('New App Page');

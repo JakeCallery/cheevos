@@ -21,18 +21,20 @@ const User = require('./models/User');
 
 
 //TODO: Require routes in its own file
+//Basic Pages
 const indexPage = require('./routes/indexPage');
 const apitestPage = require('./routes/apitestPage');
 const teamPage = require('./routes/teamPage');
-const createBadgePage = require('./routes/createBadgePage');
-const profilePage = require('./routes/profilePage');
 
+//Login/out
 const login = require('./routes/login');
 const logout = require('./routes/logout');
 
+//Google Auth
 const authGoogle = require('./routes/authGoogle');
 const authGoogleCallback = require('./routes/authGoogleCallback');
 
+//Api
 const registerSubscription = require('./routes/registerSubscription');
 const sendBadge = require('./routes/sendBadge');
 const createTeam = require('./routes/createTeam');
@@ -93,16 +95,18 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Assign routes
+//Page routes
 app.use('/', indexPage);
+app.use('/invited', invited);
+app.use('/apitest', apitestPage);
+app.use('/teams', teamPage);
+
+//Auth Routes
 app.use('/auth/google', authGoogle);
 app.use('/auth/google/callback', authGoogleCallback);
 app.use('/login', login);
 app.use('/logout', logout);
-app.use('/invited', invited);
-app.use('/apitest', apitestPage);
-app.use('/teams', teamPage);
-app.use('/profile', profilePage);
+
 
 //Api Routes
 app.use('/api/*', checkLoggedIn);

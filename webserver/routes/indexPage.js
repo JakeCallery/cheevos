@@ -9,11 +9,20 @@ router.get('/', function (req, res) {
 
     console.log('==============Logged In? ', isLoggedIn);
 
-    res.render('dist/index', {
-        title: 'Cheevos Title (Change Me)',
-        isLoggedIn: isLoggedIn,
-        isSubscribed: isSubscribed
-    });
+    if(isLoggedIn){
+        //App page
+        res.render('dist/app', {
+            title: 'Cheevos Title (Change Me)',
+            isLoggedIn: isLoggedIn,
+            isSubscribed: isSubscribed
+        });
+    } else {
+        //landing page
+        res.render('dist/landing', {
+            title: 'Cheevos Landing Page (Change Me)'
+        });
+    }
+
 });
 
 module.exports = router;

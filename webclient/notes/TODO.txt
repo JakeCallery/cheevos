@@ -1,10 +1,11 @@
 Plan:
 rough layout index page
+rough layout team management page
+rough in new user tutorial
+routh in new user invited tutorial
 ---------------------------------------
 
 Upcoming Plan:
-
-
 Validate against google login status (https://developers.google.com/identity/sign-in/web/listeners)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 When user unsubscribes, remove endpoint
