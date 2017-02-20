@@ -1,0 +1,27 @@
+##Tutorial:
+On first log in, that is not an invite, create team
+Show option to enable notifications
+
+##Profile Section
+Name, Picture, Logout, Notifications, Manage team button / top right on all pages
+
+##Home Page
+Create Badge on homepage (whole form)
+View last 10 badges (streamed in list of rest of badges)
+Block user from badge (Block Totally, may not use block from team)
+
+##Team Management on separate page
+Blocked users
+Teams associated with (both moderator of and member of)
+Row of team / Actions on Right
+Expand row to show members
+Add member speicific actions to right of member in list (block, unblock, make moderator, remove moderator)
+Invite user button takes to invite user / users page
+
+
+
+
+
+
+
+
