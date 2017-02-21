@@ -10,7 +10,7 @@
    <div class="headerDiv">
         <% if (isLoggedIn) { %>
             <div class="profileContainer">
-                <img src="<%=profileImageUrl%>" alt="profile image">
+                <img id="profileImg" src="<%=profileImageUrl%>" alt="profile image">
             </div>
        <% } else { %>
             <a href="/auth/google">Google Login</a>
