@@ -27,6 +27,9 @@ let swRegistration = null;
 //TODO: Find a way to put this in as external (file loader)
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
 
+//Setup UI Manager
+let uiManager = new UIManager(document);
+
 //DOM Elements
 let profileImg = document.getElementById('profileImg');
 
@@ -34,20 +37,10 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
-    if($evt.target.readyState === 'complete'){
+    if($evt.target.readyState === 'interactive'){
+        uiManager.init();
+    } else if($evt.target.readyState === 'complete'){
+        l.debug('Document Complete');
         document.removeEventListener('readystatechange', handleReadyStateChange,false);
-        enableUI();
     }
 }
-
-function enableUI(){
-    l.debug('ENABLE UI Called');
-}
-
-l.debug('New App Page');
-
-let uiManager = new UIManager();
-uiManager.addEventListener('test', ($evt) => {
-    l.debug('Caught Test');
-});
-uiManager.testEvent();

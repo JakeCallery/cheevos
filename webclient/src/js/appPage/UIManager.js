@@ -3,16 +3,30 @@
  */
 import l from 'jac/logger/Logger';
 import JACEvent from 'jac/events/JacEvent';
+import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 
 class UIManager extends EventDispatcher {
-    constructor(){
+    constructor($dom){
         super();
+
+        //DOM Elements
+        this.dom = $dom;
     }
 
-    testEvent(){
-        this.dispatchEvent(new JACEvent('test'));
+    init(){
+        l.debug('UI Manager Init');
+        //DOM ELEMENTS
+        this.profileImg = this.dom.getElementById('profileImg');
+
+        //Events
+        this.profileImg.addEventListener('click', this.handleProfileClick);
     }
+
+    handleProfileClick($evt){
+        l.debug('Profile Image click');
+    }
+
 }
 
 module.exports = UIManager;
