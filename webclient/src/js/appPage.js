@@ -8,7 +8,7 @@ import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
 
 //Import Service worker through loader
-//import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
+import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';

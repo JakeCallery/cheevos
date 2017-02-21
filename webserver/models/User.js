@@ -431,6 +431,8 @@ class User {
                 this.data.google.id = $userRecord.properties.googleId;
                 this.data.google.email = $userRecord.properties.googleEmail;
                 this.data.google.name = $userRecord.properties.googleName;
+                this.data.profileImg = $userRecord.properties.googleProfileImg;
+
                 break;
             default:
                 console.error('Bad Auth Type during updateFromUserRecord: ', this.authType);

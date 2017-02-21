@@ -14,7 +14,9 @@ router.get('/', function (req, res) {
         res.render('dist/app', {
             title: 'Cheevos Title (Change Me)',
             isLoggedIn: isLoggedIn,
-            isSubscribed: isSubscribed
+            isSubscribed: isSubscribed,
+            userName: req.user.firstName + ' ' + req.user.lastName,
+            profileImageUrl: req.user.profileImg,
         });
     } else {
         //landing page

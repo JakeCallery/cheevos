@@ -106,3 +106,14 @@ button {
     bottom: 5px;
     right: 22px;
 }
+
+/****************
+Header Div
+*****************/
+.headerDiv {
+    background-color: blue;
+}
+
+.profileContainer {
+    background-color: #0c1923;
+}
