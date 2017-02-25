@@ -71,7 +71,7 @@ class UIManager extends EventDispatcher {
             })
         })
         .catch(($error) => {
-
+            l.error('FETCH ERROR: ', $error);
         });
     }
 
