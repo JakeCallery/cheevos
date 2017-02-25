@@ -39,7 +39,11 @@ pre {
 }
 
 pre code {
-    word-break: break-word;
+    word-break: break-all;
+}
+
+.displayNone {
+    display: none;
 }
 
 .is-invisible {
@@ -116,4 +120,40 @@ Header Div
 
 .profileContainer {
     background-color: #0c1923;
+    cursor: pointer;
+}
+
+.imgContainer {
+    text-align: right;
+}
+
+.profileOverlayContainer {
+    background-color: red;
+    text-align: center;
+    position: absolute;
+}
+
+.profileOverlay {
+    background-color: #1ABC9C;
+    display: flex;
+    flex-direction: column;
+}
+
+.userNameP {
+    padding: 0;
+    margin: 0;
+}
+
+.notificationsCheckbox {
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+}
+
+.manageTeamsButton {
+
+}
+
+.logOutButton {
+
 }

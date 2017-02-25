@@ -10,7 +10,19 @@
    <div class="headerDiv">
         <% if (isLoggedIn) { %>
             <div class="profileContainer">
-                <img id="profileImg" src="<%=profileImageUrl%>" alt="profile image">
+                <div class="imgContainer">
+                    <img id="profileImg" src="<%=profileImageUrl%>" alt="profile image">
+                </div>
+                <div id="profileOverlayContainer" class="profileOverlayContainer displayNone">
+                    <div class="profileOverlay">
+                        <p class="userNameP"><%=userName%></p>
+                        <div class="notificationSwitchContainer">
+                            <label for="notificationsCheckbox">Notifications On This Device<input class="notificationsCheckbox" id="notificationsCheckbox" type="checkbox"></label>
+                        </div>
+                        <button class="manageTeamsButton">Manage Teams</button>
+                        <button class="logOutButton">Log Out</button>
+                    </div>
+                </div>
             </div>
        <% } else { %>
             <a href="/auth/google">Google Login</a>
