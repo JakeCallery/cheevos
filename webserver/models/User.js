@@ -237,8 +237,10 @@ class User {
             .run(
                 'MATCH (user:User {userId:{userId}})' +
                 '<-[:sent_to]-(badge:Badge) ' +
-                'RETURN badge ' +
-                'ORDER BY badge.createdTime ' +
+                'MATCH (badge)-[:part_of_team]->(team) ' +
+                'MATCH (badge)<-[:sent_from]->(sender) ' +
+                'RETURN badge, sender.firstName, sender.lastName, team.teamName ' +
+                'ORDER BY badge.createdTime DESC ' +
                 'LIMIT 10',
                 {
                     userId:this.id

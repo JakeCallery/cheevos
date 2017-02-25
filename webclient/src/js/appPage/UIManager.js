@@ -52,16 +52,19 @@ class UIManager extends EventDispatcher {
             $response.json()
             .then(($res) => {
                 l.debug($res);
-                this.badgesContainer.appendChild(
-                    this.badgeUIMaker.createBadge(
-                        'Test Title',
-                        'This is a super Sweet test description and stuff',
-                        'Mr. Sender',
-                        'Team Ballz',
-                        '/testBadgeIcon.png'
-                    )
-                )
-
+                let badges = $res.data.badges;
+                for(let i = 0; i < badges.length; i++){
+                    let badge = badges[i];
+                    this.badgesContainer.appendChild(
+                        this.badgeUIMaker.createBadgeDiv(
+                            badge.titleText,
+                            badge.descText,
+                            badge.senderName,
+                            badge.teamName,
+                            badge.iconUrl
+                        )
+                    );
+                }
             })
             .catch(($error) => {
                 l.error('ERROR: ', $error);

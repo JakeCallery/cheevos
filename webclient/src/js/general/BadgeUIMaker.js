@@ -15,7 +15,7 @@ class BadgeUIMaker extends EventDispatcher {
         l.debug('new BageUIMaker');
     }
 
-    createBadge($title, $desc, $senderName, $team, $iconUrl) {
+    createBadgeDiv($title, $desc, $senderName, $team, $iconUrl) {
         let badgeContainer = this.dom.createElement('div');
         DOMUtils.addClass(badgeContainer, 'badgeContainer');
 
