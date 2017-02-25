@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-   <div class="headerDiv">
+    <div class="headerDiv">
         <% if (isLoggedIn) { %>
             <div class="profileContainer">
                 <div class="imgContainer">
@@ -30,6 +30,11 @@
        <% } else { %>
             <a href="/auth/google">Google Login</a>
        <% } %>
-   </div>
+    </div>
+    <div class="recentBadgesDiv">
+        <div id="badgesContainer" class="badgesContainer">
+
+        </div>
+    </div>
 </body>
 </html>

@@ -105,7 +105,7 @@ pre code {
 
 /*************************
 *** Buttons
- */
+***************************/
 
 button {
     cursor: pointer;
@@ -196,5 +196,19 @@ Header Div
 }
 
 .logOutButton {
+
+}
+
+/*******************
+Recent Badges Div
+********************/
+.recentBadgesDiv {
+
+}
+
+/********************
+Badge
+*********************/
+.badgeContainer {
 
 }

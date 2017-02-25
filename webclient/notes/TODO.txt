@@ -20,6 +20,13 @@ Known Bugs
 
 Before Release:
 Query Performance: https://neo4j.com/docs/cypher-refcard/current/ (see bottom right of page)
+
+Optimize "recent badges" call.  Maybe keep relationships to the last 10 badges on the user node
+	then return those, and sort client side
+	On new badge creation, bump off oldest of ten on db/server side
+	Or maintain a linked list with each badge pointing to the previous badge
+	then just walk back 10 badges, and they will already be in order
+
 DB Transaction rollback on failed calls?
 upgrade logging to log to files / better control
 Better gmail/email system token checking and error logging

@@ -15,7 +15,8 @@ router.post('/', (req, res) => {
     //TODO: Implement limits on number of records to return
     if(typeof(req.body.teamId) === 'undefined' || req.body.teamId === ''){
         //List ALL badges
-        user.getAllMyBadges()
+        //user.getAllMyBadges()
+        user.getAllMyRecentBadges()
         .then(($dbResult) => {
             let resObj = {
                 data:{

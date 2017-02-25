@@ -230,6 +230,34 @@ class User {
         });
     }
 
+    getAllMyRecentBadges(){
+        console.log('Getting Recent badges...');
+        let session = db.session();
+        return session
+            .run(
+                'MATCH (user:User {userId:{userId}})' +
+                '<-[:sent_to]-(badge:Badge) ' +
+                'RETURN badge ' +
+                'ORDER BY badge.createdTime ' +
+                'LIMIT 10',
+                {
+                    userId:this.id
+                }
+            )
+            .then(($dbResult) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            })
+            .catch(($error) => {
+                session.close();
+                return new Promise((resolve, reject) => {
+                    reject($error);
+                });
+            });
+    }
+
     getAllMyBadges() {
         console.log('Getting ALL badges...');
         let session = db.session();
