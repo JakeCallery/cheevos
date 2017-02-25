@@ -63,13 +63,13 @@ pre code {
     }
 }
 
-/* Tooltip container */
+/* toolTip container */
 .toolTip {
     position: relative;
     display: inline-block;
 }
 
-/* Tooltip text */
+/* toolTip text */
 .toolTip .toolTipText {
     visibility: hidden;
     width: 120px;
@@ -85,6 +85,18 @@ pre code {
     top: 100%;
     left: 50%;
     margin-left: -60px;
+}
+
+/* toolTip Arrow */
+.toolTip .toolTipText::after {
+    content: " ";
+    position: absolute;
+    bottom: 100%;  /* At the top of the tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
 }
 
 .toolTip:hover .toolTipText {
