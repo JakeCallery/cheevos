@@ -6,10 +6,14 @@ import DOMUtils from 'jac/utils/DOMUtils';
 import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 import BadgeUIMaker from 'general/BadgeUIMaker'
+import GlobalEventBus from 'jac/events/GlobalEventBus';
 
 class UIManager extends EventDispatcher {
     constructor($dom){
         super();
+
+        //Public properties
+        this.geb = new GlobalEventBus();
 
         //DOM Elements
         this.dom = $dom;
@@ -29,12 +33,29 @@ class UIManager extends EventDispatcher {
         //Delegates
         let self = this;
         this.profileClickDelegate = EventUtils.bind(self, self.handleProfileClick);
+        this.serviceWorkerRegisteredDelegate = EventUtils.bind(self, self.handleSWRegistered);
+        this.userSubscribedDelegate = EventUtils.bind(self, self.handleUserSubscribed);
+        this.userNotSubscribedDelegate = EventUtils.bind(self, self.handleUserNotSubscribed);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
-
+        this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
+        this.geb.addEventListener('userSubscribed', self.userSubscribedDelegate);
+        this.geb.addEventListener('userNotSubscribed', self.userNotSubscribedDelegate);
         this.populateRecentBadges();
+    }
 
+    handleSWRegistered() {
+        l.debug('UI Caught SW Registered');
+        this.isSWRegistered = true;
+    }
+
+    handleUserSubscribed(){
+        l.debug('UI caught user subscribed...');
+    }
+
+    handleUserNotSubscribed(){
+        l.debug('UI caught user NOT subscribed...');
     }
 
     populateRecentBadges(){
@@ -83,4 +104,4 @@ class UIManager extends EventDispatcher {
 
 }
 
-module.exports = UIManager;
+export default UIManager;

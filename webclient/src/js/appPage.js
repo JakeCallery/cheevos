@@ -6,10 +6,10 @@ import l from 'jac/logger/Logger';
 import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
+import JacEvent from 'jac/events/JacEvent';
+import GlobalEventBus from 'jac/events/GlobalEventBus';
 import UIManager from 'appPage/UIManager';
-
-//Import Service worker through loader
-import swURL from "file-loader?name=service-worker.js!babel-loader!./service-worker";
+import ServiceWorkerManager from 'general/ServiceWorkerManager';
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
@@ -21,19 +21,25 @@ l.addLogTarget(new ConsoleTarget());
 l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL | VerboseLevel.LINE);
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
 
+let geb = new GlobalEventBus();
 let isSubscribed = false;
 let swRegistration = null;
 
 //TODO: Find a way to put this in as external (file loader)
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
 
-//Setup UI Manager
+//Setup Managers
 let uiManager = new UIManager(document);
+let swManager = new ServiceWorkerManager();
 
 //DOM Elements
 let profileImg = document.getElementById('profileImg');
 
+//Events
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
+geb.addEventListener('serviceWorkerRegistered', () => {
+    l.debug('SW Ready!');
+});
 
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
