@@ -80,8 +80,32 @@ geb.addEventListener('requestMyTeams', ($evt) => {
 });
 
 geb.addEventListener('requestTeamMembers', ($evt) => {
-    l.debug('caught request team members for team: ', $evt.data.teamName);
+    l.debug('caught request team members for team: ', $evt.data.teamName, $evt.data.teamId);
+    fetch('/api/listMembers', {
+        method: 'POST',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+            teamId: $evt.data.teamId
+        })
+    })
+    .then(($response) => {
+        l.debug('List Members API Response: ', $response);
+        $response.json()
+        .then(($res) => {
+            let data = $res.data;
+            geb.dispatchEvent(new JacEvent('requestTeamMembersResponse', data));
 
+        })
+        .catch(($error) => {
+            l.error('List Members Parsing Error: ', $error);
+        })
+    })
+    .catch(($error) => {
+        l.error('List Members API Error: ', $error);
+    })
 });
 
 function handleReadyStateChange($evt) {

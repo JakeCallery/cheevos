@@ -33,6 +33,7 @@ class UIManager extends EventDispatcher {
         this.manageTeamsButton = this.doc.getElementById('manageTeamsButton');
         this.logOutButton = this.doc.getElementById('logOutButton');
         this.teamSelectionEl = this.doc.getElementById('teamSelection');
+        this.memberSelectionEl = this.doc.getElementById('memberSelection');
 
         this.notificationsSwitch = this.doc.getElementById('notificationsCheckbox');
         this.notificationsSwitch.disabled = true;
@@ -47,6 +48,8 @@ class UIManager extends EventDispatcher {
         this.manageTeamsClickDelegate = EventUtils.bind(self, self.handleManageTeamsClick);
         this.logOutClickDelegate = EventUtils.bind(self, self.handleLogOutClick);
         this.requestMyTeamsResponseDelegate = EventUtils.bind(self, self.handleRequestMyTeamsResponse);
+        this.requestTeamMembersResponseDelegate = EventUtils.bind(self, self.handleRequestTeamMembersResponse);
+        this.teamSelectionChangeDelegate = EventUtils.bind(self, self.handleTeamSelectionChange);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
@@ -67,25 +70,6 @@ class UIManager extends EventDispatcher {
     handleManageTeamsClick($evt){
         l.debug('Caught Manage Teams Click');
         this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
-    }
-
-    handleRequestMyTeamsResponse($evt){
-        l.debug('My teams: ', $evt.data);
-        let self = this;
-        this.geb.removeEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
-
-        DOMUtils.removeAllChildren(this.teamSelectionEl);
-
-        for(let i = 0; i < $evt.data.teams.length; i++){
-            let team = $evt.data.teams[i];
-            let optionEl = self.doc.createElement('option');
-            optionEl.value = team.teamId;
-            optionEl.textContent = team.name;
-            self.teamSelectionEl.appendChild(optionEl);
-        }
-
-        self.teamSelectionEl.disabled = false;
-
     }
 
     handleLogOutClick($evt){
@@ -123,6 +107,65 @@ class UIManager extends EventDispatcher {
         this.geb.dispatchEvent(new JacEvent('requestMyTeams'));
     }
 
+    handleRequestMyTeamsResponse($evt){
+        l.debug('My teams: ', $evt.data);
+        let self = this;
+        this.geb.removeEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
+
+        DOMUtils.removeAllChildren(self.teamSelectionEl);
+
+        for(let i = 0; i < $evt.data.teams.length; i++){
+            let team = $evt.data.teams[i];
+            let optionEl = self.doc.createElement('option');
+            optionEl.value = team.teamId;
+            optionEl.textContent = team.name;
+            self.teamSelectionEl.appendChild(optionEl);
+        }
+
+        self.teamSelectionEl.disabled = false;
+        self.handleTeamSelectionChange(null);
+    }
+
+    handleTeamSelectionChange($evt){
+        l.debug('Team Selection Change');
+        let self = this;
+        let index = self.teamSelectionEl.selectedIndex;
+        this.populateMembers(self.teamSelectionEl.options[index].value,
+                             self.teamSelectionEl.options[index].text);
+    }
+
+    populateMembers($teamId, $teamName){
+        l.debug('Populate Members: ', $teamId, $teamName);
+        let self = this;
+        let data = {
+            teamId:$teamId,
+            teamName:$teamName
+        };
+
+        this.geb.addEventListener('requestTeamMembersResponse', self.requestTeamMembersResponseDelegate);
+        this.geb.dispatchEvent(new JacEvent('requestTeamMembers', data));
+    }
+
+    handleRequestTeamMembersResponse($evt){
+        l.debug('Team Members: ', $evt.data);
+        let self = this;
+        this.geb.removeEventListener('requestTeamMembersResponse', self.requestTeamMembersResponseDelegate);
+
+        DOMUtils.removeAllChildren(self.memberSelectionEl);
+
+        //Populate selection here
+        for(let i = 0 ; i < $evt.data.members.length; i++){
+            let member = $evt.data.members[i];
+            let optionEl = self.doc.createElement('option');
+            optionEl.value = member.id;
+            optionEl.textContent = member.name;
+            self.memberSelectionEl.appendChild(optionEl);
+        }
+
+        self.memberSelectionEl.disabled = false;
+    }
+
+    //TODO: Move Populate Badges Fetch to appPage.js
     populateRecentBadges(){
         l.debug('Populate Recent Badges');
         fetch('api/listMyBadges', {
