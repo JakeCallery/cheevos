@@ -30,6 +30,9 @@ class UIManager extends EventDispatcher {
         this.profileImg = this.dom.getElementById('profileImg');
         this.profileOverlayContainer = this.dom.getElementById('profileOverlayContainer');
         this.badgesContainer = this.dom.getElementById('badgesContainer');
+        this.manageTeamsButton = this.dom.getElementById('manageTeamsButton');
+        this.logOutButton = this.dom.getElementById('logOutButton');
+
         this.notificationsSwitch = this.dom.getElementById('notificationsCheckbox');
         this.notificationsSwitch.disabled = true;
 
@@ -40,14 +43,33 @@ class UIManager extends EventDispatcher {
         this.userSubscribedDelegate = EventUtils.bind(self, self.handleUserSubscribed);
         this.userNotSubscribedDelegate = EventUtils.bind(self, self.handleUserNotSubscribed);
         this.notificationsSwitchClickDelegate = EventUtils.bind(self, self.handleNotificationsSwitchClick);
+        this.manageTeamsClickDelegate = EventUtils.bind(self, self.handleManageTeamsClick);
+        this.logOutClickDelegate = EventUtils.bind(self, self.handleLogOutClick);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
         this.notificationsSwitch.addEventListener('click', self.notificationsSwitchClickDelegate);
+        this.manageTeamsButton.addEventListener('click', self.manageTeamsClickDelegate);
+        this.logOutButton.addEventListener('click', self.logOutClickDelegate);
+
+        //Gloabl Events
         this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
         this.geb.addEventListener('userSubscribed', self.userSubscribedDelegate);
         this.geb.addEventListener('userNotSubscribed', self.userNotSubscribedDelegate);
+
+        //Init
         this.populateRecentBadges();
+    }
+
+    handleManageTeamsClick($evt){
+        l.debug('Caught Manage Teams Click');
+        this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
+
+    }
+
+    handleLogOutClick($evt){
+        l.debug('Caught Log Out Click');
+        this.geb.dispatchEvent(new JacEvent('requestLogOut'));
     }
 
     handleNotificationsSwitchClick($evt) {

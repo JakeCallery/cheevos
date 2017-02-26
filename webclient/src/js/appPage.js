@@ -37,8 +37,18 @@ let profileImg = document.getElementById('profileImg');
 
 //Events
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
-geb.addEventListener('serviceWorkerRegistered', () => {
+geb.addEventListener('serviceWorkerRegistered', ($evt) => {
     l.debug('SW Ready!');
+});
+
+geb.addEventListener('requestLogOut', ($evt) => {
+    l.debug('Caught Logout request');
+    window.location = '/logout';
+});
+
+geb.addEventListener('requestManageTeams', ($evt) => {
+    l.debug('caught request manage teams');
+    window.location = '/teams';
 });
 
 function handleReadyStateChange($evt) {
