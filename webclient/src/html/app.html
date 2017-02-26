@@ -35,7 +35,23 @@
     <div class="createBadgeDiv">
         <h2>Send a badge!</h2>
         <div class="createBadgeContainer">
+            <h3>Select Team</h3>
+            <select name="teamSelection" id="teamSelection" disabled>
+                <option value="Loading_Teams">Loading Teams...</option>
+            </select>
 
+            <h3>Select Member</h3>
+            <select name="memberSelection" id="memberSelection" disabled>
+                <option value="Loading_Members">Loading Members...</option>
+            </select>
+
+            <div class="exampleBadgeContainer">
+                <img src="/testBadgeIcon.png" width="128" height="128" alt="badgeIcon">
+                <label for="titleTextField">Title<input type="text" id="titleTextField"></label>
+                <label for="descTextField">Description <input type="text" id="descTextField"></label>
+            </div>
+            <button id="previewBadgeButton">Preview Badge</button>
+            <button id="sendBadgeButton">Send Badge</button>
         </div>
     </div>
 

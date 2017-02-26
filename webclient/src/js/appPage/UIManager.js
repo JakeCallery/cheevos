@@ -10,30 +10,31 @@ import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
 
 class UIManager extends EventDispatcher {
-    constructor($dom){
+    constructor($doc){
         super();
 
         //Public properties
         this.geb = new GlobalEventBus();
 
         //DOM Elements
-        this.dom = $dom;
+        this.doc = $doc;
 
         //Managers
-        this.badgeUIMaker = new BadgeUIMaker(this.dom);
+        this.badgeUIMaker = new BadgeUIMaker(this.doc);
     }
 
     init(){
         l.debug('UI Manager Init');
 
         //DOM ELEMENTS
-        this.profileImg = this.dom.getElementById('profileImg');
-        this.profileOverlayContainer = this.dom.getElementById('profileOverlayContainer');
-        this.badgesContainer = this.dom.getElementById('badgesContainer');
-        this.manageTeamsButton = this.dom.getElementById('manageTeamsButton');
-        this.logOutButton = this.dom.getElementById('logOutButton');
+        this.profileImg = this.doc.getElementById('profileImg');
+        this.profileOverlayContainer = this.doc.getElementById('profileOverlayContainer');
+        this.badgesContainer = this.doc.getElementById('badgesContainer');
+        this.manageTeamsButton = this.doc.getElementById('manageTeamsButton');
+        this.logOutButton = this.doc.getElementById('logOutButton');
+        this.teamSelectionEl = this.doc.getElementById('teamSelection');
 
-        this.notificationsSwitch = this.dom.getElementById('notificationsCheckbox');
+        this.notificationsSwitch = this.doc.getElementById('notificationsCheckbox');
         this.notificationsSwitch.disabled = true;
 
         //Delegates
@@ -45,6 +46,7 @@ class UIManager extends EventDispatcher {
         this.notificationsSwitchClickDelegate = EventUtils.bind(self, self.handleNotificationsSwitchClick);
         this.manageTeamsClickDelegate = EventUtils.bind(self, self.handleManageTeamsClick);
         this.logOutClickDelegate = EventUtils.bind(self, self.handleLogOutClick);
+        this.requestMyTeamsResponseDelegate = EventUtils.bind(self, self.handleRequestMyTeamsResponse);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
@@ -59,11 +61,30 @@ class UIManager extends EventDispatcher {
 
         //Init
         this.populateRecentBadges();
+        this.populateTeams();
     }
 
     handleManageTeamsClick($evt){
         l.debug('Caught Manage Teams Click');
         this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
+    }
+
+    handleRequestMyTeamsResponse($evt){
+        l.debug('My teams: ', $evt.data);
+        let self = this;
+        this.geb.removeEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
+
+        DOMUtils.removeAllChildren(this.teamSelectionEl);
+
+        for(let i = 0; i < $evt.data.teams.length; i++){
+            let team = $evt.data.teams[i];
+            let optionEl = self.doc.createElement('option');
+            optionEl.value = team.teamId;
+            optionEl.textContent = team.name;
+            self.teamSelectionEl.appendChild(optionEl);
+        }
+
+        self.teamSelectionEl.disabled = false;
 
     }
 
@@ -93,6 +114,13 @@ class UIManager extends EventDispatcher {
         l.debug('UI caught user NOT subscribed...');
         this.notificationsSwitch.checked = false;
         this.notificationsSwitch.disabled = false;
+    }
+
+    populateTeams(){
+        l.debug('Populate Teams');
+        let self = this;
+        this.geb.addEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
+        this.geb.dispatchEvent(new JacEvent('requestMyTeams'));
     }
 
     populateRecentBadges(){

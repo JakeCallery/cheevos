@@ -51,6 +51,39 @@ geb.addEventListener('requestManageTeams', ($evt) => {
     window.location = '/teams';
 });
 
+geb.addEventListener('requestMyTeams', ($evt) => {
+    l.debug('caught request for teams');
+    fetch('/api/listMyTeams', {
+        method: 'POST',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify({
+        })
+    })
+    .then(($response) => {
+        l.debug('List Teams Responded...');
+        $response.json()
+        .then(($res) => {
+            l.debug('RES: ', $res);
+            let data = $res.data;
+            geb.dispatchEvent(new JacEvent('requestMyTeamsResponse', $res.data));
+        })
+        .catch(($error) => {
+            l.error('List Teams parse error: ', $error);
+        });
+    })
+    .catch(($error) => {
+        l.debug('List Teams Error: ', $error);
+    });
+});
+
+geb.addEventListener('requestTeamMembers', ($evt) => {
+    l.debug('caught request team members for team: ', $evt.data.teamName);
+
+});
+
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
