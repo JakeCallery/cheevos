@@ -32,12 +32,24 @@ class ServiceWorkerManager extends EventDispatcher {
 
         //Delegates
         this.swRegisteredDelegate = EventUtils.bind(self, self.handleSWRegistered);
+        this.requestToggleUserSubscriptionDelegate = EventUtils.bind(self, self.handleRequestToggleUserSubscription);
 
         //Events
         this.geb.addEventListener('serviceWorkerRegistered', self.swRegisteredDelegate);
+        this.geb.addEventListener('requestToggleUserSubscription', self.requestToggleUserSubscriptionDelegate);
+        this.geb.addEventListener('requestUnSubscribeUser', self.requestUnSubscribeUserDelegate);
 
         //Do work
         this.registerServiceWorker();
+    }
+
+    handleRequestToggleUserSubscription($evt){
+        l.debug('Caught Request Toggle User Subscription');
+        if(this.isSubscribed){
+            this.unsubscribeUser();
+        } else {
+            this.subscribeUser();
+        }
     }
 
     registerServiceWorker() {

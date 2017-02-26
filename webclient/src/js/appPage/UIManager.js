@@ -7,6 +7,7 @@ import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 import BadgeUIMaker from 'general/BadgeUIMaker'
 import GlobalEventBus from 'jac/events/GlobalEventBus';
+import JacEvent from 'jac/events/JacEvent';
 
 class UIManager extends EventDispatcher {
     constructor($dom){
@@ -29,6 +30,8 @@ class UIManager extends EventDispatcher {
         this.profileImg = this.dom.getElementById('profileImg');
         this.profileOverlayContainer = this.dom.getElementById('profileOverlayContainer');
         this.badgesContainer = this.dom.getElementById('badgesContainer');
+        this.notificationsSwitch = this.dom.getElementById('notificationsCheckbox');
+        this.notificationsSwitch.disabled = true;
 
         //Delegates
         let self = this;
@@ -36,26 +39,38 @@ class UIManager extends EventDispatcher {
         this.serviceWorkerRegisteredDelegate = EventUtils.bind(self, self.handleSWRegistered);
         this.userSubscribedDelegate = EventUtils.bind(self, self.handleUserSubscribed);
         this.userNotSubscribedDelegate = EventUtils.bind(self, self.handleUserNotSubscribed);
+        this.notificationsSwitchClickDelegate = EventUtils.bind(self, self.handleNotificationsSwitchClick);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
+        this.notificationsSwitch.addEventListener('click', self.notificationsSwitchClickDelegate);
         this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
         this.geb.addEventListener('userSubscribed', self.userSubscribedDelegate);
         this.geb.addEventListener('userNotSubscribed', self.userNotSubscribedDelegate);
         this.populateRecentBadges();
     }
 
-    handleSWRegistered() {
+    handleNotificationsSwitchClick($evt) {
+        l.debug('Caught Notifications Switch Click');
+        this.notificationsSwitch.disabled = true;
+        this.geb.dispatchEvent(new JacEvent('requestToggleUserSubscription'));
+    }
+
+    handleSWRegistered($evt) {
         l.debug('UI Caught SW Registered');
         this.isSWRegistered = true;
     }
 
-    handleUserSubscribed(){
+    handleUserSubscribed($evt){
         l.debug('UI caught user subscribed...');
+        this.notificationsSwitch.checked = true;
+        this.notificationsSwitch.disabled = false;
     }
 
-    handleUserNotSubscribed(){
+    handleUserNotSubscribed($evt){
         l.debug('UI caught user NOT subscribed...');
+        this.notificationsSwitch.checked = false;
+        this.notificationsSwitch.disabled = false;
     }
 
     populateRecentBadges(){

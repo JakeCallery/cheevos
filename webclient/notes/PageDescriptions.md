@@ -84,7 +84,9 @@
   * ex. Sleepless Warrior
 * Body Text
   * ex. Turned caffeine and pizza into code for 48hrs straight.
-  
+* Buttons
+  * View
+
 ##Profile Page/Overlay/PopOver
 *Things that can be edited
   * Username
