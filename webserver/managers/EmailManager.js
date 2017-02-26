@@ -55,7 +55,7 @@ class EmailManager {
             emailLines.push('');
             emailLines.push('Please click the link below to join the ' + $teamName + ' team.');
             emailLines.push(
-                'Link: <a href="http://subvoicestudios.com/invited/' + $inviteRecord.properties.code + '">' +
+                'Link: <a href="https://badger.jakecallery.com/invited/' + $inviteRecord.properties.code + '">' +
                 'Accept Invite</a>');
 
             let email = emailLines.join('\r\n').trim();
