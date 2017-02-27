@@ -37,6 +37,8 @@ let profileImg = document.getElementById('profileImg');
 
 //Events
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
+
+
 geb.addEventListener('serviceWorkerRegistered', ($evt) => {
     l.debug('SW Ready!');
 });
@@ -106,6 +108,32 @@ geb.addEventListener('requestTeamMembers', ($evt) => {
     .catch(($error) => {
         l.error('List Members API Error: ', $error);
     })
+});
+
+geb.addEventListener('requestSendBadge', ($evt) => {
+    l.debug('Caught Request Send Badge: ', $evt.data);
+
+    fetch('/api/sendBadge', {
+        method: 'POST',
+        credentials: 'include',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify($evt.data)
+    })
+    .then(($response) => {
+        $response.json()
+        .then(($res) => {
+            l.debug('Response: ', $res);
+        })
+        .catch(($error) => {
+            l.error('Send Badge Response Parse Error: ', $error);
+        })
+    })
+    .catch(($error) => {
+        l.debug('Send Badge Error: ', $error);
+    });
+
 });
 
 function handleReadyStateChange($evt) {
