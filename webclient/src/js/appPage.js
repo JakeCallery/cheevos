@@ -125,13 +125,16 @@ geb.addEventListener('requestSendBadge', ($evt) => {
         $response.json()
         .then(($res) => {
             l.debug('Response: ', $res);
+            geb.dispatchEvent(new JacEvent('sendBadgeComplete',$res));
         })
         .catch(($error) => {
             l.error('Send Badge Response Parse Error: ', $error);
+            geb.dispatchEvent(new JacEvent('sendBadgeFailed', $error));
         })
     })
     .catch(($error) => {
         l.debug('Send Badge Error: ', $error);
+        geb.dispatchEvent(new JacEvent('sendBadgeFailed', $error));
     });
 
 });

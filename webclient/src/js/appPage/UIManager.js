@@ -55,6 +55,8 @@ class UIManager extends EventDispatcher {
         this.teamSelectionChangeDelegate = EventUtils.bind(self, self.handleTeamSelectionChange);
         this.sendBadgeButtonClickDelegate = EventUtils.bind(self, self.handleSendBadgeClick);
         this.previewBadgeButtonClickDelegate = EventUtils.bind(self, self.handlePreviewBadgeClick);
+        this.sendBadgeCompleteDelegate = EventUtils.bind(self, self.handleSendBadgeComplete);
+        this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
@@ -77,6 +79,7 @@ class UIManager extends EventDispatcher {
 
     handleSendBadgeClick($evt){
         l.debug('Caught Send Badge click');
+        this.sendBadgeButton.disabled = true;
         let self = this;
         let data = {
             memberId: self.memberSelectionEl.options[self.memberSelectionEl.selectedIndex].value,
@@ -85,7 +88,20 @@ class UIManager extends EventDispatcher {
             nameText: this.titleTextField.value,
             descText: this.descTextField.value
         };
+
+        this.geb.addEventListener('sendBadgeComplete', self.sendBadgeCompleteDelegate);
+        this.geb.addEventListener('sendBadgeFailed', self.sendBadgeFailedDelegate);
         this.geb.dispatchEvent(new JacEvent('requestSendBadge', data));
+    }
+
+    handleSendBadgeComplete($evt){
+        l.debug('Caught Send Badge Complete');
+        this.sendBadgeButton.disabled = false;
+    }
+
+    handleSendBadgeFailed($evt){
+        l.debug('Caught Send Badge Failed: ', $evt.data);
+        this.sendBadgeButton.disabled = false;
     }
 
     handlePreviewBadgeClick($evt){
