@@ -104,8 +104,10 @@ class UIManager extends EventDispatcher {
         this.sendBadgeButton.disabled = false;
     }
 
+    //TODO: Preview Badge Notification
     handlePreviewBadgeClick($evt){
         l.debug('Caught Preview Badge click');
+        alert('Not Yet Implemented');
     }
 
     handleManageTeamsClick($evt){
