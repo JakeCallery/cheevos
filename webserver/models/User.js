@@ -261,13 +261,16 @@ class User {
             });
     }
 
+
     getAllMyBadges() {
-        console.log('Getting ALL badges...');
+        console.log('Getting ALL badges (minus blocked users)...');
         let session = db.session();
         return session
         .run(
             'MATCH (user:User {userId:{userId}})' +
             '<-[:sent_to]-(badge:Badge) ' +
+            'MATCH (badge)<-[:sent_from]-(sender) ' +
+            'MATCH (user) WHERE NOT (user)-[:is_blocking]->(sender) ' +
             'RETURN badge',
             {
                 userId:this.id
@@ -288,13 +291,15 @@ class User {
     }
 
     getMyBadgesOnTeam($teamId) {
-        console.log('Getting my badges on team...');
+        console.log('Getting my badges on team (minus blocked users)...');
         let session = db.session();
         return session
             .run(
                 'MATCH (user:User {userId:{userId}})' +
                 '<-[:sent_to]-(badge:Badge)-[:part_of_team]->' +
                 '(team:Team {teamId:{teamId}}) ' +
+                'MATCH (badge)<-[:sent_from]-(sender) ' +
+                'MATCH (user) WHERE NOT (user)-[:is_blocking]->(sender) ' +
                 'RETURN badge',
                 {
                     userId:this.id,
