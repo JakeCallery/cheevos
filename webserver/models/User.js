@@ -239,7 +239,7 @@ class User {
                 '<-[:sent_to]-(badge:Badge) ' +
                 'MATCH (badge)-[:part_of_team]->(team) ' +
                 'MATCH (badge)<-[:sent_from]->(sender) ' +
-                'RETURN badge, sender.firstName, sender.lastName, team.teamName ' +
+                'RETURN badge, sender.firstName, sender.lastName, sender.userId, team.teamName ' +
                 'ORDER BY badge.createdTime DESC ' +
                 'LIMIT 10',
                 {

@@ -28,6 +28,7 @@ router.post('/', (req, res) => {
             for(let i = 0; i < $dbResult.records.length; i++) {
                 let dbBadge = $dbResult.records[i].get('badge');
                 let badge = Badge.newBadgeFromDB(dbBadge).json();
+                badge.senderId = $dbResult.records[i].get('sender.userId');
                 badge.senderName = $dbResult.records[i].get('sender.firstName') + ' ' + $dbResult.records[i].get('sender.lastName');
                 badge.teamName = $dbResult.records[i].get('team.teamName');
                 resObj.data.badges.push(badge);

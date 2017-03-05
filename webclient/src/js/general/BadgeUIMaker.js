@@ -15,7 +15,7 @@ class BadgeUIMaker extends EventDispatcher {
         l.debug('new BageUIMaker');
     }
 
-    createBadgeDiv($title, $desc, $senderName, $team, $iconUrl) {
+    createBadgeDiv($title, $desc, $senderName, $senderId, $team, $iconUrl) {
         let badgeContainer = this.dom.createElement('div');
         DOMUtils.addClass(badgeContainer, 'badgeContainer');
 
@@ -41,12 +41,43 @@ class BadgeUIMaker extends EventDispatcher {
         let senderP = this.dom.createElement('p');
         senderP.textContent = $senderName;
 
+        //Block User
+        let blockButton = this.dom.createElement('button');
+        blockButton.blockId = $senderId;
+        blockButton.textContent = 'Block User';
+        blockButton.addEventListener('click', ($evt) => {
+            l.debug('Block Button Clicked: ', $evt.target.blockId);
+            fetch('/api/blockUser', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    userIdToBlock: $evt.target.blockId
+                })
+            })
+            .then(($response) => {
+                $response.json()
+                .then(($res) => {
+                    l.debug('Response: ', $res);
+                })
+                .catch(($error) => {
+                    l.error('PARSE ERROR: ', $error);
+                });
+            })
+            .catch(($error) => {
+                l.error('Block User Error: ', $error);
+            })
+        });
+
         //Combine
         badgeContainer.appendChild(img);
         badgeContainer.appendChild(titleP);
         badgeContainer.appendChild(descP);
         badgeContainer.appendChild(teamP);
         badgeContainer.appendChild(senderP);
+        badgeContainer.appendChild(blockButton);
 
         return badgeContainer;
     }

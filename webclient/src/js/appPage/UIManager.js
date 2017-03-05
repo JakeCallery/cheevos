@@ -232,6 +232,7 @@ class UIManager extends EventDispatcher {
                             badge.titleText,
                             badge.descText,
                             badge.senderName,
+                            badge.senderId,
                             badge.teamName,
                             badge.iconUrl
                         )
