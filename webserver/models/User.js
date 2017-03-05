@@ -238,7 +238,8 @@ class User {
                 'MATCH (user:User {userId:{userId}})' +
                 '<-[:sent_to]-(badge:Badge) ' +
                 'MATCH (badge)-[:part_of_team]->(team) ' +
-                'MATCH (badge)<-[:sent_from]->(sender) ' +
+                'MATCH (badge)<-[:sent_from]-(sender) ' +
+                'MATCH (user) WHERE NOT (user)-[:is_blocking]->(sender) ' +
                 'RETURN badge, sender.firstName, sender.lastName, sender.userId, team.teamName ' +
                 'ORDER BY badge.createdTime DESC ' +
                 'LIMIT 10',
