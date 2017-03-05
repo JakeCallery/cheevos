@@ -1,11 +1,15 @@
 Plan:
-rough layout index page
 rough layout team management page
 rough in new user tutorial
-routh in new user invited tutorial
+rough in new user invited tutorial
 ---------------------------------------
 
 Upcoming Plan:
+Style Landing Page
+Style App Page
+Style Team Page
+Style User Invited Page
+Create Tutorial / First time login
 Validate against google login status (https://developers.google.com/identity/sign-in/web/listeners)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 When user unsubscribes, remove endpoint
@@ -46,6 +50,7 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+rough layout index page
 set up api test page
 ssl cert from let's encrypt
 nGrok over https setup
