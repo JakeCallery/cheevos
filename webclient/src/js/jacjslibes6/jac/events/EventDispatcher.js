@@ -86,6 +86,10 @@ export default class EventDispatcher {
             let handlersForType = this.handlers[$event.type];
             for (let i = 0, len = handlersForType.length; i < len; i++) {
                 if (handlersForType.length > i) {
+                    //function check can be removed for more effeciency
+                    if(typeof(handlersForType[i]) !== 'function'){
+                        throw('Handler not a function: ' + handlersForType[i]);
+                    }
                     handlersForType[i]($event);
                 } else {
                     break;

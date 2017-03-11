@@ -18,6 +18,7 @@ On Notification send, check if endpoint is still valid (remove if not)
 Clean up API responses
 Set up Test User Bots
 Test APIs against odd characters
+Handle Sending Badge to yourself (Currently fails)
 ---------------------------------------
 
 Known Bugs

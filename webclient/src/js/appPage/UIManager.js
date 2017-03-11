@@ -8,6 +8,7 @@ import EventDispatcher from 'jac/events/EventDispatcher';
 import BadgeUIMaker from 'general/BadgeUIMaker'
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
+import HeaderUIManager from 'header/HeaderUIManager';
 
 class UIManager extends EventDispatcher {
     constructor($doc){
@@ -21,35 +22,27 @@ class UIManager extends EventDispatcher {
 
         //Managers
         this.badgeUIMaker = new BadgeUIMaker(this.doc);
+        this.headerUIManager = new HeaderUIManager(this.doc);
     }
 
     init(){
         l.debug('UI Manager Init');
 
+        //setup header
+        this.headerUIManager.init();
+
         //DOM ELEMENTS
-        this.profileImg = this.doc.getElementById('profileImg');
-        this.profileOverlayContainer = this.doc.getElementById('profileOverlayContainer');
         this.badgesContainer = this.doc.getElementById('badgesContainer');
-        this.manageTeamsButton = this.doc.getElementById('manageTeamsButton');
-        this.logOutButton = this.doc.getElementById('logOutButton');
         this.teamSelectionEl = this.doc.getElementById('teamSelection');
         this.memberSelectionEl = this.doc.getElementById('memberSelection');
         this.previewBadgeButton = this.doc.getElementById('previewBadgeButton');
         this.sendBadgeButton = this.doc.getElementById('sendBadgeButton');
-        this.notificationsSwitch = this.doc.getElementById('notificationsCheckbox');
-        this.notificationsSwitch.disabled = true;
         this.titleTextField = this.doc.getElementById('titleTextField');
         this.descTextField = this.doc.getElementById('descTextField');
 
         //Delegates
         let self = this;
-        this.profileClickDelegate = EventUtils.bind(self, self.handleProfileClick);
         this.serviceWorkerRegisteredDelegate = EventUtils.bind(self, self.handleSWRegistered);
-        this.userSubscribedDelegate = EventUtils.bind(self, self.handleUserSubscribed);
-        this.userNotSubscribedDelegate = EventUtils.bind(self, self.handleUserNotSubscribed);
-        this.notificationsSwitchClickDelegate = EventUtils.bind(self, self.handleNotificationsSwitchClick);
-        this.manageTeamsClickDelegate = EventUtils.bind(self, self.handleManageTeamsClick);
-        this.logOutClickDelegate = EventUtils.bind(self, self.handleLogOutClick);
         this.requestMyTeamsResponseDelegate = EventUtils.bind(self, self.handleRequestMyTeamsResponse);
         this.requestTeamMembersResponseDelegate = EventUtils.bind(self, self.handleRequestTeamMembersResponse);
         this.teamSelectionChangeDelegate = EventUtils.bind(self, self.handleTeamSelectionChange);
@@ -59,18 +52,12 @@ class UIManager extends EventDispatcher {
         this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
 
         //Event Handlers
-        this.profileImg.addEventListener('click', self.profileClickDelegate);
-        this.notificationsSwitch.addEventListener('click', self.notificationsSwitchClickDelegate);
-        this.manageTeamsButton.addEventListener('click', self.manageTeamsClickDelegate);
-        this.logOutButton.addEventListener('click', self.logOutClickDelegate);
         this.teamSelectionEl.addEventListener('change', self.teamSelectionChangeDelegate);
         this.sendBadgeButton.addEventListener('click', self.sendBadgeButtonClickDelegate);
         this.previewBadgeButton.addEventListener('click', self.previewBadgeButtonClickDelegate);
 
         //Gloabl Events
         this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
-        this.geb.addEventListener('userSubscribed', self.userSubscribedDelegate);
-        this.geb.addEventListener('userNotSubscribed', self.userNotSubscribedDelegate);
 
         //Init
         this.populateRecentBadges();
@@ -89,8 +76,6 @@ class UIManager extends EventDispatcher {
             descText: this.descTextField.value
         };
 
-        this.geb.addEventListener('sendBadgeComplete', self.sendBadgeCompleteDelegate);
-        this.geb.addEventListener('sendBadgeFailed', self.sendBadgeFailedDelegate);
         this.geb.dispatchEvent(new JacEvent('requestSendBadge', data));
     }
 
@@ -110,37 +95,9 @@ class UIManager extends EventDispatcher {
         alert('Not Yet Implemented');
     }
 
-    handleManageTeamsClick($evt){
-        l.debug('Caught Manage Teams Click');
-        this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
-    }
-
-    handleLogOutClick($evt){
-        l.debug('Caught Log Out Click');
-        this.geb.dispatchEvent(new JacEvent('requestLogOut'));
-    }
-
-    handleNotificationsSwitchClick($evt) {
-        l.debug('Caught Notifications Switch Click');
-        this.notificationsSwitch.disabled = true;
-        this.geb.dispatchEvent(new JacEvent('requestToggleUserSubscription'));
-    }
-
     handleSWRegistered($evt) {
         l.debug('UI Caught SW Registered');
         this.isSWRegistered = true;
-    }
-
-    handleUserSubscribed($evt){
-        l.debug('UI caught user subscribed...');
-        this.notificationsSwitch.checked = true;
-        this.notificationsSwitch.disabled = false;
-    }
-
-    handleUserNotSubscribed($evt){
-        l.debug('UI caught user NOT subscribed...');
-        this.notificationsSwitch.checked = false;
-        this.notificationsSwitch.disabled = false;
     }
 
     populateTeams(){
@@ -246,12 +203,6 @@ class UIManager extends EventDispatcher {
         .catch(($error) => {
             l.error('FETCH ERROR: ', $error);
         });
-    }
-
-    handleProfileClick($evt){
-        l.debug('this: ', this);
-        l.debug('Profile Image click');
-        DOMUtils.toggleClass(this.profileOverlayContainer, 'displayNone');
     }
 
 }
