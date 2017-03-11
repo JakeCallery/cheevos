@@ -56,7 +56,7 @@ class UIManager extends EventDispatcher {
         this.sendBadgeButton.addEventListener('click', self.sendBadgeButtonClickDelegate);
         this.previewBadgeButton.addEventListener('click', self.previewBadgeButtonClickDelegate);
 
-        //Gloabl Events
+        //Global Events
         this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
 
         //Init

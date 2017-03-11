@@ -27,6 +27,7 @@ class HeaderUIManager extends EventDispatcher {
         this.profileOverlayContainer = this.doc.getElementById('profileOverlayContainer');
         this.logOutButton = this.doc.getElementById('logOutButton');
         this.manageTeamsButton = this.doc.getElementById('manageTeamsButton');
+        this.mainPageButton = this.doc.getElementById('mainPageButton');
         this.notificationsSwitch = this.doc.getElementById('notificationsCheckbox');
         this.notificationsSwitch.disabled = true;
 
@@ -37,12 +38,14 @@ class HeaderUIManager extends EventDispatcher {
         this.userNotSubscribedDelegate = EventUtils.bind(self, self.handleUserNotSubscribed);
         this.notificationsSwitchClickDelegate = EventUtils.bind(self, self.handleNotificationsSwitchClick);
         this.manageTeamsClickDelegate = EventUtils.bind(self, self.handleManageTeamsClick);
+        this.mainPageClickDelegate = EventUtils.bind(self, self.handleMainPageClick);
         this.logOutClickDelegate = EventUtils.bind(self, self.handleLogOutClick);
 
         //Event Handlers
         this.profileImg.addEventListener('click', self.profileClickDelegate);
         this.notificationsSwitch.addEventListener('click', self.notificationsSwitchClickDelegate);
-        this.manageTeamsButton.addEventListener('click', self.manageTeamsClickDelegate);
+        if(this.manageTeamsButton) this.manageTeamsButton.addEventListener('click', self.manageTeamsClickDelegate);
+        if(this.mainPageButton) this.mainPageButton.addEventListener('click', self.mainPageClickDelegate);
         this.logOutButton.addEventListener('click', self.logOutClickDelegate);
 
         //Global Events
@@ -53,6 +56,11 @@ class HeaderUIManager extends EventDispatcher {
     handleManageTeamsClick($evt){
         l.debug('Caught Manage Teams Click');
         this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
+    }
+
+    handleMainPageClick($evt){
+        l.debug('Caught Main Page Click');
+        this.geb.dispatchEvent(new JacEvent('requestMainPage'));
     }
 
     handleLogOutClick($evt){

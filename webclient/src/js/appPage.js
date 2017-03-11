@@ -22,8 +22,6 @@ l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL 
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
 
 let geb = new GlobalEventBus();
-let isSubscribed = false;
-let swRegistration = null;
 
 //TODO: Find a way to put this in as external (file loader)
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
