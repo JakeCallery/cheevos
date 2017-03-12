@@ -167,18 +167,33 @@ class Team {
 
     }
 
-    static getMembers($teamId) {
+    static getMembers($teamId, $requesterId) {
         console.log('Getting Team Members');
 
         let session = db.session();
+        let queryStr = '';
+        if(typeof($requesterId) !== 'undefined'){
+            queryStr =
+                'MATCH (requester:User {userId:{userId}})' +
+                'MATCH (team:Team {teamId:{teamId}}) ' +
+                'MATCH (team)-[:has_member]->(member) ' +
+                'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
+                'OPTIONAL MATCH (requester)-[block:is_blocking]->(member) ' +
+                'RETURN member, SIGN(COUNT(mod)) AS isMod, SIGN(COUNT(block)) AS isBlocked';
+        } else {
+            queryStr =
+                'MATCH (team:Team {teamId:{teamId}}) ' +
+                'MATCH (team)-[:has_member]->(member) ' +
+                'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
+                'RETURN member, SIGN(COUNT(mod)) AS isMod';
+        }
+
         return session
         .run(
-            'MATCH (team:Team {teamId:{teamId}}) ' +
-            'MATCH (team)-[:has_member]->(member) ' +
-            'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
-            'RETURN member, SIGN(COUNT(mod)) AS isMod',
+            queryStr,
             {
-                teamId: $teamId
+                teamId: $teamId,
+                userId: $requesterId
             }
         )
         .then(($dbResult) => {

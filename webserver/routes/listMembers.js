@@ -12,7 +12,7 @@ router.post('/', (req, res) => {
     console.log('Caught List Members Request: ', req.body);
 
     let user = req.cheevosData.sessionUser;
-    Team.getMembers(req.body.teamId)
+    Team.getMembers(req.body.teamId, user.data.userId)
     .then(($dbResult => {
         console.log('List Memebers DB Result: ', $dbResult);
         let resObj = {
@@ -27,9 +27,11 @@ router.post('/', (req, res) => {
             let member = $dbResult.records[i].get('member');
             let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
             let authType = member.properties.authType;
+            let isBlocked = neo4j.int($dbResult.records[i].get('isBlocked')).toNumber();
 
             resObj.data.members.push({
                 id: member.properties.userId,
+                isBlocked: isBlocked,
                 name: member.properties.firstName + ' ' + member.properties.lastName,
                 profileImg: member.properties[authType+'ProfileImg'],
                 isMod: isMod
