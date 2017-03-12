@@ -23,9 +23,11 @@ router.post('/', (req, res) => {
 
         for(let i = 0; i < $dbResult.records.length; i++) {
             let member = $dbResult.records[i].get('member');
+            let mod = $dbResult.records[i].get('mod');
             resObj.data.members.push({
                 id: member.properties.userId,
-                name: member.properties.googleName
+                name: member.properties.googleName,
+                isMod: mod
             });
         }
 

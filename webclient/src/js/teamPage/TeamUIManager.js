@@ -19,6 +19,7 @@ class TeamUIManager extends EventDispatcher {
         this.geb = new GlobalEventBus();
 
         //DOM Elements
+        //TODO: Move these into init?
         this.doc = $doc;
         this.myTeamsDiv = this.doc.getElementById('myTeamsDiv');
 

@@ -175,7 +175,8 @@ class Team {
         .run(
             'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (team)-[:has_member]->(member) ' +
-            'RETURN member',
+            'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
+            'RETURN member, mod',
             {
                 teamId: $teamId
             }
