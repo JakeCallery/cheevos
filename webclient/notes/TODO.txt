@@ -19,7 +19,7 @@ Clean up API responses
 Set up Test User Bots
 Test APIs against odd characters
 Handle Sending Badge to yourself (Currently fails)
----------------------------------------
+
 
 Known Bugs
 ---------------------------------------
@@ -39,6 +39,7 @@ Better gmail/email system token checking and error logging
 log collection and analysis
 externalize domain (replace all localhost references)
 proper domain for vapidDetails
+implement built in achievements
 ----------------------------------------
 
 Test For

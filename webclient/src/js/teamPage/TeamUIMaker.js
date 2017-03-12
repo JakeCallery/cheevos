@@ -26,6 +26,7 @@ class TeamUIMaker extends EventDispatcher {
         teamNameEl.innerHTML = $teamObj.teamName;
 
         let isModCheckbox = this.doc.createElement('input');
+        isModCheckbox.disabled = true;
         isModCheckbox.type = 'checkbox';
         isModCheckbox.name = 'isModCheckbox';
         DOMUtils.addClass(isModCheckbox, 'teamItemIsModCheckbox');

@@ -227,6 +227,8 @@ MyTeams Div
 .teamDiv {
     display: flex;
     flex-direction: row;
+    background-color: #2b542c;
+    cursor: pointer;
 }
 
 .teamItem {
