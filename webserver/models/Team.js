@@ -176,7 +176,7 @@ class Team {
             'MATCH (team:Team {teamId:{teamId}}) ' +
             'MATCH (team)-[:has_member]->(member) ' +
             'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
-            'RETURN member, mod',
+            'RETURN member, SIGN(COUNT(mod)) AS isMod',
             {
                 teamId: $teamId
             }

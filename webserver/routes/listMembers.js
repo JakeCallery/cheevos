@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Team = require('../models/Team');
+const neo4j = require('neo4j-driver').v1;
 
 router.post('/', (req, res) => {
     console.log('Caught List Members Request: ', req.body);
@@ -23,11 +24,12 @@ router.post('/', (req, res) => {
 
         for(let i = 0; i < $dbResult.records.length; i++) {
             let member = $dbResult.records[i].get('member');
-            let mod = $dbResult.records[i].get('mod');
+            let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
+
             resObj.data.members.push({
                 id: member.properties.userId,
                 name: member.properties.googleName,
-                isMod: mod
+                isMod: isMod
             });
         }
 
