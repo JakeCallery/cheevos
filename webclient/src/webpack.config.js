@@ -8,6 +8,7 @@ module.exports = {
         landingEntry:'./js/landingPage.js',
         appEntry:'./js/appPage.js',
         invitedEntry:'./js/invitedPage.js',
+        invitedNotLoggedInEntry:'./js/invitedNotLoggedInPage.js',
         apitestEntry:'./js/apitestPage.js',
         teamEntry:'./js/teamPage.js'
     },
@@ -72,6 +73,15 @@ module.exports = {
             hash: true,
             chunks: [
                 'invitedEntry'
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: 'invitedNotLoggedIn.html',
+            template: 'html/invitedNotLoggedIn.html',
+            hash: true,
+            chunks: [
+                'invitedNotLoggedInEntry'
             ]
         }),
 

@@ -40,6 +40,7 @@ const sendBadge = require('./routes/sendBadge');
 const createTeam = require('./routes/createTeam');
 const inviteMember = require('./routes/inviteMember');
 const invited = require('./routes/invited');
+const invitedNotLoggedIn = require('./routes/invitedNotLoggedIn');
 const acceptInvite = require('./routes/acceptInvite');
 const listMembers = require('./routes/listMembers');
 const listMyTeams = require('./routes/listMyTeams');
@@ -98,6 +99,7 @@ app.use(passport.session());
 //Page routes
 app.use('/', indexPage);
 app.use('/invited', invited);
+app.use('/invitedNotLoggedIn', invitedNotLoggedIn);
 app.use('/apitest', apitestPage);
 app.use('/teams', teamPage);
 

@@ -16,7 +16,7 @@ router.get('/:code', (req, res) => {
     } else {
         //redirect to login
         req.session.initialPath = "/invited" + req.path;
-        res.redirect('/login');
+        res.redirect('/invitedNotLoggedIn');
     }
 });
 
