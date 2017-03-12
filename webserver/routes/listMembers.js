@@ -25,16 +25,16 @@ router.post('/', (req, res) => {
 
         for(let i = 0; i < $dbResult.records.length; i++) {
             let member = $dbResult.records[i].get('member');
-            let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
             let authType = member.properties.authType;
             let isBlocked = neo4j.int($dbResult.records[i].get('isBlocked')).toNumber();
+            let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
 
             resObj.data.members.push({
                 id: member.properties.userId,
-                isBlocked: isBlocked,
                 name: member.properties.firstName + ' ' + member.properties.lastName,
                 profileImg: member.properties[authType+'ProfileImg'],
-                isMod: isMod
+                isBlocked: (isBlocked === 1),
+                isMod: (isMod === 1)
             });
         }
 
