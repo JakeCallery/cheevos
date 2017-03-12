@@ -17,7 +17,8 @@ router.post('/', (req, res) => {
         console.log('List Memebers DB Result: ', $dbResult);
         let resObj = {
             data:{
-                members:[]
+                members:[],
+                teamId:req.body.teamId
             },
             status:'SUCCESS'
         };
@@ -25,10 +26,12 @@ router.post('/', (req, res) => {
         for(let i = 0; i < $dbResult.records.length; i++) {
             let member = $dbResult.records[i].get('member');
             let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
+            let authType = member.properties.authType;
 
             resObj.data.members.push({
                 id: member.properties.userId,
                 name: member.properties.firstName + ' ' + member.properties.lastName,
+                profileImg: member.properties[authType+'ProfileImg'],
                 isMod: isMod
             });
         }

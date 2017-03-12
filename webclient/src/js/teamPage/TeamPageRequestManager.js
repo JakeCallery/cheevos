@@ -80,7 +80,7 @@ class TeamPageRequestManager extends EventDispatcher {
             $response.json()
             .then(($res) => {
                 l.debug('List Members API Response: ', $res);
-                self.geb.dispatchEvent(new JacEvent('newmemberlist', $res.data.members));
+                self.geb.dispatchEvent(new JacEvent('newmemberlist', $res.data));
             })
             .catch(($err) => {
                 l.error('List Memeber Parse Error: ', $err);

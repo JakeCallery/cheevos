@@ -52,7 +52,8 @@ class TeamUIManager extends EventDispatcher {
     }
 
     handleNewMemberList($evt){
-        l.debug('New Memeber List: ', $evt.data);
+        l.debug('Team: ' + $evt.data.teamId);
+        l.debug('New Member List: ', $evt.data.members);
     }
 
     handleNewTeamList($evt){
@@ -88,10 +89,6 @@ class TeamUIManager extends EventDispatcher {
         //TODO: Fully implement
         l.debug('Collapse Team Element');
         $el.collapsed = true;
-    }
-
-    handleNewMemeberList($evt){
-        l.debug('New Member List: ' + $evt.data);
     }
 
     getTeamIdFromElementId($elementId){
