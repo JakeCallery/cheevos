@@ -14,12 +14,14 @@ Block user from badge (Block Totally, may not use block from team)
 Teams associated with (both moderator of and member of)
 Enable / Disable Team Notifications
 Expand row to show members
-Add member specific actions to right of member in list (block, unblock, make moderator, remove moderator)
+Is Moderator Icon
 Invite user button takes to invite user / users page
+Add member specific actions to right of member in list (block, unblock, make moderator, remove moderator)
 
-Blocked users
+##Blocked users
+List of blocked users
+Unblock button next to each user
 
-Row of team / Actions on Right
 
 
 

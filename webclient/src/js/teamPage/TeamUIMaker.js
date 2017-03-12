@@ -44,10 +44,23 @@ class TeamUIMaker extends EventDispatcher {
             notificationCheckbox.checked = true;
         }
 
+        let inviteButton = this.doc.createElement('button');
+        inviteButton.innerHTML = 'Invite';
+        inviteButton.id = 'inviteButton_' + $teamObj.teamId;
+        DOMUtils.addClass(inviteButton, 'inviteToTeamButton');
+        DOMUtils.addClass(inviteButton, 'teamItem');
+
+        //Add to container
         container.appendChild(teamNameEl);
         container.appendChild(isModCheckbox);
         container.appendChild(notificationCheckbox);
+        container.appendChild(inviteButton);
+
         return container;
+    }
+
+    createMemberListDiv($memberList){
+
     }
 
 }
