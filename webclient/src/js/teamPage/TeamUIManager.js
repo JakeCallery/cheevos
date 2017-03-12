@@ -56,8 +56,19 @@ class TeamUIManager extends EventDispatcher {
             let teamEl = this.teamUIMaker.createTeamDiv($evt.data[i]);
             this.myTeamsDiv.appendChild(teamEl);
             teamEl.addEventListener('click', ($evt) => {
-                l.debug('Team El Clicked');
+                l.debug('Team El Clicked: ' + this.getTeamIdFromElementId($evt.currentTarget.id));
             });
+        }
+
+    }
+
+    getTeamIdFromElementId($elementId){
+        let tokens = $elementId.split('_');
+        if(tokens.length > 1){
+            return tokens[tokens.length-1];
+        } else {
+            l.error('Bad Element ID / Team ID: ', $elementId);
+            return null;
         }
 
     }
