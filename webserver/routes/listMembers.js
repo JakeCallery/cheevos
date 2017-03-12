@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
 
             resObj.data.members.push({
                 id: member.properties.userId,
-                name: member.properties.googleName,
+                name: member.properties.firstName + ' ' + member.properties.lastName,
                 isMod: isMod
             });
         }
