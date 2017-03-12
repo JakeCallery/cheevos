@@ -8,7 +8,8 @@ import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import ServiceWorkerManager from 'general/ServiceWorkerManager';
-import UIManager from 'teamPage/UIManager';
+import UIManager from 'teamPage/TeamUIManager';
+import TeamPageRequestManager from 'teamPage/TeamPageRequestManager';
 
 //import through loaders
 import '../css/main.css';
@@ -24,10 +25,13 @@ l.debug('New Team Page');
 //Setup managers
 let uiManager = new UIManager(document);
 let swManager = new ServiceWorkerManager();
-
+let reqManager = new TeamPageRequestManager();
 
 //Events
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
+
+//Request Teams
+reqManager.getTeams();
 
 geb.addEventListener('requestMainPage', ($evt) => {
     l.debug('caught request main page');

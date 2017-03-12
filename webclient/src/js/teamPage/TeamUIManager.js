@@ -6,12 +6,12 @@ import l from 'jac/logger/Logger';
 import DOMUtils from 'jac/utils/DOMUtils';
 import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
-import BadgeUIMaker from 'general/BadgeUIMaker'
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
 import HeaderUIManager from 'header/HeaderUIManager';
+import TeamUIMaker from 'teamPage/TeamUIMaker';
 
-class UIManager extends EventDispatcher {
+class TeamUIManager extends EventDispatcher {
     constructor($doc){
         super();
 
@@ -20,29 +20,45 @@ class UIManager extends EventDispatcher {
 
         //DOM Elements
         this.doc = $doc;
+        this.myTeamsDiv = this.doc.getElementById('myTeamsDiv');
 
         //Managers
         this.headerUIManager = new HeaderUIManager(this.doc);
+        this.teamUIMaker = new TeamUIMaker(this.doc);
 
         l.debug('new Team Page UI Manager');
     }
 
     init(){
         l.debug('Team Page UI Manager init');
-
+        let self = this;
         //setup header
         this.headerUIManager.init();
 
         //DOM ELEMENTS
 
         //Delegates
+        self.newTeamListDelegate = EventUtils.bind(self, self.handleNewTeamList);
 
         //Event Handlers
 
         //Global Events
+        this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
 
+        //Init
 
     }
+
+    handleNewTeamList($evt){
+        l.debug('New Team Data: ', $evt.data);
+
+        for(let i = 0; i < $evt.data.length; i++){
+            let teamEl = this.teamUIMaker.createTeamDiv($evt.data[i]);
+            this.myTeamsDiv.appendChild(teamEl);
+        }
+
+    }
+
 }
 
-export default UIManager;
+export default TeamUIManager;

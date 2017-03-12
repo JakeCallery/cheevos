@@ -7,42 +7,42 @@ import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 
 class BadgeUIMaker extends EventDispatcher {
-    constructor($dom){
+    constructor($doc){
         super();
 
-        this.dom = $dom;
+        this.doc = $doc;
 
         l.debug('new BageUIMaker');
     }
 
     createBadgeDiv($title, $desc, $senderName, $senderId, $team, $iconUrl) {
-        let badgeContainer = this.dom.createElement('div');
+        let badgeContainer = this.doc.createElement('div');
         DOMUtils.addClass(badgeContainer, 'badgeContainer');
 
         //Badge Icon
-        let img = this.dom.createElement('img');
+        let img = this.doc.createElement('img');
         img.src = $iconUrl;
         img.width = 128;
         img.height = 128;
 
         //Title
-        let titleP = this.dom.createElement('p');
+        let titleP = this.doc.createElement('p');
         titleP.textContent = $title;
 
         //Desc
-        let descP = this.dom.createElement('p');
+        let descP = this.doc.createElement('p');
         descP.textContent = $desc;
 
         //Team
-        let teamP = this.dom.createElement('p');
+        let teamP = this.doc.createElement('p');
         teamP.textContent = $team;
 
         //Sender
-        let senderP = this.dom.createElement('p');
+        let senderP = this.doc.createElement('p');
         senderP.textContent = $senderName;
 
         //Block User
-        let blockButton = this.dom.createElement('button');
+        let blockButton = this.doc.createElement('button');
         blockButton.blockId = $senderId;
         blockButton.textContent = 'Block User';
         blockButton.addEventListener('click', ($evt) => {

@@ -216,3 +216,31 @@ Badge
 .badgeContainer {
 
 }
+
+/****************
+MyTeams Div
+*****************/
+.myTeamsDiv {
+
+}
+
+.teamDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.teamItem {
+    flex-grow: 1;
+}
+
+.teamItemName {
+
+}
+
+.teamItemIsModCheckbox {
+
+}
+
+.teamItemNotificationCheckbox {
+
+}

@@ -27,7 +27,11 @@
 	    };
 
 	    DOMUtils.addClass = function($domEl, $className){
-		    $domEl.className += ' ' + $className;
+			var delimiter = '';
+			if($domEl.className !== ''){
+				delimiter = ' ';
+			}
+		    $domEl.className += delimiter + $className;
 	    };
 
 	    DOMUtils.removeClass = function($domEl, $className){
