@@ -39,27 +39,58 @@ class TeamUIManager extends EventDispatcher {
 
         //Delegates
         self.newTeamListDelegate = EventUtils.bind(self, self.handleNewTeamList);
-
+        self.newMemberListDelegate = EventUtils.bind(self, self.handleNewMemberList);
         //Event Handlers
 
         //Global Events
         this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
+        this.geb.addEventListener('newmemberlist', self.newMemberListDelegate);
 
         //Init
 
     }
 
+    handleNewMemberList($evt){
+        l.debug('New Memeber List: ', $evt.data);
+    }
+
     handleNewTeamList($evt){
         l.debug('New Team Data: ', $evt.data);
-
+        let self = this;
         for(let i = 0; i < $evt.data.length; i++){
             let teamEl = this.teamUIMaker.createTeamDiv($evt.data[i]);
             this.myTeamsDiv.appendChild(teamEl);
+
             teamEl.addEventListener('click', ($evt) => {
-                l.debug('Team El Clicked: ' + this.getTeamIdFromElementId($evt.currentTarget.id));
+                let el = $evt.currentTarget;
+                let teamId = this.getTeamIdFromElementId(el.id);
+                l.debug('Team El Clicked: ' + teamId);
+
+                if(el.collapsed){
+                    self.expandTeamElement(el);
+                    l.debug('Requesting Team Members');
+                    self.geb.dispatchEvent(new JacEvent('requestmemberlist', teamId));
+                } else {
+                    self.collapseTeamElement(el);
+                }
             });
         }
 
+    }
+
+    expandTeamElement($el){
+        l.debug('Expanding Team Element');
+        $el.collapsed = false;
+    }
+
+    collapseTeamElement($el){
+        //TODO: Fully implement
+        l.debug('Collapse Team Element');
+        $el.collapsed = true;
+    }
+
+    handleNewMemeberList($evt){
+        l.debug('New Member List: ' + $evt.data);
     }
 
     getTeamIdFromElementId($elementId){

@@ -17,6 +17,7 @@ class TeamUIMaker extends EventDispatcher {
         //Element Container
         let container = this.doc.createElement('div');
         container.id = 'teamDiv_' + $teamObj.teamId;
+        container.collapsed = true;
         DOMUtils.addClass(container, 'teamDiv');
 
         //Team Name

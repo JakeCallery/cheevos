@@ -33,6 +33,10 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 //Request Teams
 reqManager.getTeams();
 
+geb.addEventListener('requestmemberlist', ($evt) => {
+    reqManager.getMembers($evt.data);
+});
+
 geb.addEventListener('requestMainPage', ($evt) => {
     l.debug('caught request main page');
     window.location = '/';
