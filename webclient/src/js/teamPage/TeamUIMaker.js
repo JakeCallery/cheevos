@@ -16,6 +16,7 @@ class TeamUIMaker extends EventDispatcher {
         //Element Container
         let container = this.doc.createElement('div');
         container.id = 'teamDiv_' + $teamObj.teamId;
+        container.isModerator = $teamObj.isModerator;
         container.collapsed = true;
         DOMUtils.addClass(container, 'teamDiv');
 
@@ -68,7 +69,7 @@ class TeamUIMaker extends EventDispatcher {
         return container;
     }
 
-    createMemberListDiv($memberObj){
+    createMemberListDiv($memberObj, $isModerator){
         //Element Container
         let container = this.doc.createElement('div');
         container.Id = 'memberDiv_' + $memberObj.id;
@@ -104,6 +105,10 @@ class TeamUIMaker extends EventDispatcher {
         DOMUtils.addClass(isModCB, 'memberItemModeratorCheckbox');
         if($memberObj.isMod){
             isModCB.checked = true;
+        }
+
+        if(!$isModerator){
+            isModCB.disabled = true;
         }
 
         //Add to container
