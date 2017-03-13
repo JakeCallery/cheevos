@@ -18,6 +18,32 @@ class TeamPageRequestManager extends EventDispatcher {
         this.geb = new GlobalEventBus();
     }
 
+    unblockUser($userIdToUnblock){
+        l.debug('Caught Unblock user click');
+        fetch('/api/unblockUser', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                userIdToUnblock:$userIdToUnblock
+            })
+        })
+        .then(($response) => {
+            $response.json()
+            .then(($res) => {
+                l.debug('Unblock Result: ', $res);
+            })
+            .catch(($err) => {
+                l.error('Unblock error: ', $error);
+            })
+        })
+        .catch(($error) => {
+            l.error('unblock error: ', $error);
+        });
+    }
+
     //TODO: Limit number of teams returned
     getTeams(){
         let self = this;

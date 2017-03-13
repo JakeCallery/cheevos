@@ -5,11 +5,14 @@ import l from 'jac/logger/Logger';
 import DOMUtils from 'jac/utils/DOMUtils';
 import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
+import GlobalEventBus from 'jac/events/GlobalEventBus';
+import JacEvent from 'jac/events/JacEvent';
 
 class TeamUIMaker extends EventDispatcher {
     constructor($doc){
         super();
         this.doc = $doc;
+        this.geb = new GlobalEventBus();
     }
 
     createTeamDiv($teamObj){
@@ -121,6 +124,8 @@ class TeamUIMaker extends EventDispatcher {
     }
 
     createBlockedMemberDiv($memberObj){
+        let self = this;
+
         //Element Container
         let container = this.doc.createElement('div');
         container.id = 'blockedMemberDiv_' + $memberObj.id;
@@ -143,6 +148,11 @@ class TeamUIMaker extends EventDispatcher {
         unblockButton.innerHTML = 'Unblock';
         DOMUtils.addClass(unblockButton, 'blockedMemberItem');
         DOMUtils.addClass(unblockButton, 'blockedMemberUnblockButton');
+        unblockButton.addEventListener('click', ($evt) => {
+            l.debug('Unblock user clicked');
+            self.geb.dispatchEvent(new JacEvent('requestunblockuser', $memberObj.id));
+        });
+
 
         //Add to container
         container.appendChild(profileImg);

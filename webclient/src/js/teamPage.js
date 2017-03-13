@@ -34,6 +34,10 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 reqManager.getTeams();
 reqManager.getBlockedMembers();
 
+geb.addEventListener('requestunblockuser', ($evt) => {
+    reqManager.unblockUser($evt.data);
+});
+
 geb.addEventListener('requestmemberlist', ($evt) => {
     reqManager.getMembers($evt.data);
 });

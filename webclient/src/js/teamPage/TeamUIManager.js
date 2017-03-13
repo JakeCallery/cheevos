@@ -42,6 +42,7 @@ class TeamUIManager extends EventDispatcher {
         self.newMemberListDelegate = EventUtils.bind(self, self.handleNewMemberList);
         self.newBlockedMemberListDelegate = EventUtils.bind(self, self.handleNewBlockedMemberList);
 
+
         //Global Events
         this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
         this.geb.addEventListener('newmemberlist', self.newMemberListDelegate);
