@@ -254,6 +254,10 @@ MyTeams Div
 /****************
 Member Div
 *****************/
+.membersDiv {
+
+}
+
 .memberDiv {
     display: flex;
     flex-direction: row;

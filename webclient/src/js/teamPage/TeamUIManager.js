@@ -56,11 +56,13 @@ class TeamUIManager extends EventDispatcher {
         l.debug('New Member List: ', $evt.data.members);
         let self = this;
         let parentEl =  this.doc.getElementById('teamDiv_' + $evt.data.teamId);
+        let membersEl = this.doc.createElement('div');
+        DOMUtils.addClass(membersEl, 'membersDiv');
+        DOMUtils.insertAfter(parentEl, membersEl);
 
         for(let i = 0; i < $evt.data.members.length; i++){
             let memberEl = this.teamUIMaker.createMemberListDiv($evt.data.members[i]);
-            //parentEl.appendChild(memberEl);
-            DOMUtils.insertAfter(parentEl, memberEl);
+            membersEl.appendChild(memberEl);
         }
     }
 
@@ -96,6 +98,8 @@ class TeamUIManager extends EventDispatcher {
     collapseTeamElement($el){
         //TODO: Fully implement
         l.debug('Collapse Team Element');
+        let nodeToRemove = $el.nextSibling;
+        nodeToRemove.parentNode.removeChild(nodeToRemove);
         $el.collapsed = true;
     }
 
