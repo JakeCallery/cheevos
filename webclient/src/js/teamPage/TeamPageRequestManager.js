@@ -8,6 +8,7 @@ import EventDispatcher from 'jac/events/EventDispatcher';
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
 import TeamObj from 'teamPage/TeamObj';
+import MemberObj from 'teamPage/MemberObj';
 
 class TeamPageRequestManager extends EventDispatcher {
     constructor(){
@@ -80,7 +81,19 @@ class TeamPageRequestManager extends EventDispatcher {
             $response.json()
             .then(($res) => {
                 l.debug('List Members API Response: ', $res);
-                self.geb.dispatchEvent(new JacEvent('newmemberlist', $res.data));
+                let memberObjs = [];
+                for(let i = 0; i < $res.data.members.length; i++){
+                    let obj = $res.data.members[i];
+                    let member = new MemberObj(obj.name,
+                                                obj.id,
+                                                $res.data.teamId,
+                                                obj.profileImg,
+                                                obj.isBlocked,
+                                                obj.isMod);
+                    memberObjs.push(member);
+                }
+                self.geb.dispatchEvent(new JacEvent('newmemberlist', {teamId:$res.data.teamId,
+                                                                      members:memberObjs}));
             })
             .catch(($err) => {
                 l.error('List Memeber Parse Error: ', $err);

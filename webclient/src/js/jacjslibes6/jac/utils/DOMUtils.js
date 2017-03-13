@@ -162,6 +162,10 @@
 		    }
 	    };
 
+	    DOMUtils.insertAfter = function($referenceElement, $newElement){
+			$referenceElement.parentNode.insertBefore($newElement, $referenceElement.nextSibling);
+		};
+
         //Return constructor
         return DOMUtils;
     })();

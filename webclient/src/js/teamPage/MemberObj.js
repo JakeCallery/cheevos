@@ -3,9 +3,14 @@
  */
 
 class MemberObj {
-    constructor($name, $id, $profileUrl){
+    constructor($name, $id, $teamId, $profileUrl, $isBlocked, $isMod){
         this.name = $name;
         this.id = $id;
-        this.profileUrl = $profileUrl;
+        this.teamId = $teamId;
+        this.profileImg = $profileUrl;
+        this.isBlocked = $isBlocked;
+        this.isMod = $isMod;
     }
 }
+
+export default MemberObj;

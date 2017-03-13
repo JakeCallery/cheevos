@@ -54,6 +54,14 @@ class TeamUIManager extends EventDispatcher {
     handleNewMemberList($evt){
         l.debug('Team: ' + $evt.data.teamId);
         l.debug('New Member List: ', $evt.data.members);
+        let self = this;
+        let parentEl =  this.doc.getElementById('teamDiv_' + $evt.data.teamId);
+
+        for(let i = 0; i < $evt.data.members.length; i++){
+            let memberEl = this.teamUIMaker.createMemberListDiv($evt.data.members[i]);
+            //parentEl.appendChild(memberEl);
+            DOMUtils.insertAfter(parentEl, memberEl);
+        }
     }
 
     handleNewTeamList($evt){
