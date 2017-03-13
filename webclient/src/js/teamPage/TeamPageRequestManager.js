@@ -86,14 +86,16 @@ class TeamPageRequestManager extends EventDispatcher {
                     let obj = $res.data.members[i];
                     let member = new MemberObj(obj.name,
                                                 obj.id,
-                                                $res.data.teamId,
                                                 obj.profileImg,
+                                                $res.data.teamId,
                                                 obj.isBlocked,
                                                 obj.isMod);
                     memberObjs.push(member);
                 }
-                self.geb.dispatchEvent(new JacEvent('newmemberlist', {teamId:$res.data.teamId,
-                                                                      members:memberObjs}));
+                self.geb.dispatchEvent(new JacEvent('newmemberlist', {
+                    teamId:$res.data.teamId,
+                    members:memberObjs
+                }));
             })
             .catch(($err) => {
                 l.error('List Memeber Parse Error: ', $err);
@@ -101,6 +103,44 @@ class TeamPageRequestManager extends EventDispatcher {
         })
         .catch(($error) => {
             l.error('List Members API Error: ', $error);
+        });
+    }
+
+    getBlockedMembers(){
+        let self = this;
+        l.debug('Getting Blocked Members...');
+        fetch('/api/listBlockedUsers', {
+            method: 'GET',
+            credentials: 'include'
+        })
+        .then(($response) => {
+            $response.json()
+            .then(($res) => {
+                let memberObjs = [];
+                for(let i = 0; i < $res.data.blockedUsers.length; i++){
+                    let obj = $res.data.blockedUsers[i];
+                    let member = new MemberObj(
+                        obj.name,
+                        obj.id,
+                        obj.profileImg,
+                        null,
+                        null,
+                        null
+                    );
+                    memberObjs.push(member);
+                }
+
+                l.debug('Got Blocked Members');
+                self.geb.dispatchEvent(new JacEvent('newblockedmemberlist', {
+                    members:memberObjs
+                }));
+            })
+            .catch(($err) => {
+                l.error('List Blocked Users Error: ', $err);
+            });
+        })
+        .catch(($error) => {
+            l.error('List Blocked Users Error: ', $error);
         });
     }
 }

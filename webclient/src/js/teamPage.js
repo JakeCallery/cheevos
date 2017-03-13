@@ -32,6 +32,7 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 
 //Request Teams
 reqManager.getTeams();
+reqManager.getBlockedMembers();
 
 geb.addEventListener('requestmemberlist', ($evt) => {
     reqManager.getMembers($evt.data);

@@ -11,16 +11,17 @@ View last 10 badges (streamed in list of rest of badges)
 Block user from badge (Block Totally, may not use block from team)
 
 ##Team Management on separate page
-Teams associated with (both moderator of and member of)
-Enable / Disable Team Notifications
-Expand row to show members
-Is Moderator Icon
-Invite user button takes to invite user / users page
-Add member specific actions to right of member in list (block, unblock, make moderator, remove moderator)
+  Teams associated with (both moderator of and member of)
+  Enable / Disable Team Notifications
 
-##Blocked users
-List of blocked users
-Unblock button next to each user
+  Expand row to show members
+    Is Moderator Icon
+    Invite user button takes to invite user / users page
+    Add member specific actions to right of member in list (block, unblock, make moderator, remove moderator)
+
+  Blocked users
+    List of blocked users
+    Unblock button next to each user
 
 
 

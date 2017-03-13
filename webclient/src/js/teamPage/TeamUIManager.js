@@ -17,15 +17,7 @@ class TeamUIManager extends EventDispatcher {
 
         //Public properties
         this.geb = new GlobalEventBus();
-
-        //DOM Elements
-        //TODO: Move these into init?
         this.doc = $doc;
-        this.myTeamsDiv = this.doc.getElementById('myTeamsDiv');
-
-        //Managers
-        this.headerUIManager = new HeaderUIManager(this.doc);
-        this.teamUIMaker = new TeamUIMaker(this.doc);
 
         l.debug('new Team Page UI Manager');
     }
@@ -33,22 +25,42 @@ class TeamUIManager extends EventDispatcher {
     init(){
         l.debug('Team Page UI Manager init');
         let self = this;
+
+        //Managers
+        this.headerUIManager = new HeaderUIManager(this.doc);
+        this.teamUIMaker = new TeamUIMaker(this.doc);
+
         //setup header
         this.headerUIManager.init();
 
         //DOM ELEMENTS
+        this.myTeamsDiv = this.doc.getElementById('myTeamsDiv');
+        this.blockedUsersDiv = this.doc.getElementById('blockedUsersDiv');
 
         //Delegates
         self.newTeamListDelegate = EventUtils.bind(self, self.handleNewTeamList);
         self.newMemberListDelegate = EventUtils.bind(self, self.handleNewMemberList);
-        //Event Handlers
+        self.newBlockedMemberListDelegate = EventUtils.bind(self, self.handleNewBlockedMemberList);
 
         //Global Events
         this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
         this.geb.addEventListener('newmemberlist', self.newMemberListDelegate);
+        this.geb.addEventListener('newblockedmemberlist', self.newBlockedMemberListDelegate);
 
         //Init
 
+    }
+
+    handleNewBlockedMemberList($evt){
+        l.debug('Blocked Members: ', $evt.data.members);
+        let self = this;
+
+        let members = $evt.data.members;
+        for(let i = 0; i < members.length; i++){
+            let member = members[i];
+            let memberEl = this.teamUIMaker.createBlockedMemberDiv(member);
+            this.blockedUsersDiv.appendChild(memberEl);
+        }
     }
 
     handleNewMemberList($evt){
@@ -61,7 +73,7 @@ class TeamUIManager extends EventDispatcher {
         DOMUtils.insertAfter(teamEl, membersEl);
 
         for(let i = 0; i < $evt.data.members.length; i++){
-            let memberEl = this.teamUIMaker.createMemberListDiv($evt.data.members[i], teamEl.isModerator);
+            let memberEl = this.teamUIMaker.createMemberDiv($evt.data.members[i], teamEl.isModerator);
             membersEl.appendChild(memberEl);
         }
     }
@@ -98,7 +110,6 @@ class TeamUIManager extends EventDispatcher {
     }
 
     collapseTeamElement($el){
-        //TODO: Fully implement
         l.debug('Collapse Team Element');
         let nodeToRemove = $el.nextSibling;
         nodeToRemove.parentNode.removeChild(nodeToRemove);

@@ -22,9 +22,11 @@ router.get('/', (req, res) => {
 
         for(let i = 0; i < $dbResult.records.length; i++){
             let blockedUser = $dbResult.records[i].get('blockedUser');
+            let authType = blockedUser.properties.authType;
             resObj.data.blockedUsers.push({
                 id: blockedUser.properties.userId,
-                name: blockedUser.properties.firstName + ' ' + blockedUser.properties.lastName
+                name: blockedUser.properties.firstName + ' ' + blockedUser.properties.lastName,
+                profileImg: blockedUser.properties[authType+'ProfileImg']
             });
         }
 

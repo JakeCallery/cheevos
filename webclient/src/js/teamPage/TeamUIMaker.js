@@ -69,7 +69,7 @@ class TeamUIMaker extends EventDispatcher {
         return container;
     }
 
-    createMemberListDiv($memberObj, $isModerator){
+    createMemberDiv($memberObj, $isModerator){
         //Element Container
         let container = this.doc.createElement('div');
         container.Id = 'memberDiv_' + $memberObj.id;
@@ -116,6 +116,38 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(memberNameEl);
         container.appendChild(isBlockedCB);
         container.appendChild(isModCB);
+
+        return container;
+    }
+
+    createBlockedMemberDiv($memberObj){
+        //Element Container
+        let container = this.doc.createElement('div');
+        container.id = 'blockedMemberDiv_' + $memberObj.id;
+        DOMUtils.addClass(container, 'blockedMemberDiv');
+
+        //Profile Img
+        let profileImg = this.doc.createElement('img');
+        profileImg.src = $memberObj.profileImg;
+        DOMUtils.addClass(profileImg, 'blockedMemberItem');
+        DOMUtils.addClass(profileImg, 'blockedMemberItemProfileImg');
+
+        //Member Name
+        let blockedMemberNameEl = this.doc.createElement('p');
+        DOMUtils.addClass(blockedMemberNameEl, 'blockedMemberItem');
+        DOMUtils.addClass(blockedMemberNameEl, 'blockedMemberItemName');
+        blockedMemberNameEl.innerHTML = $memberObj.name;
+
+        //Unblock Button
+        let unblockButton = this.doc.createElement('button');
+        unblockButton.innerHTML = 'Unblock';
+        DOMUtils.addClass(unblockButton, 'blockedMemberItem');
+        DOMUtils.addClass(unblockButton, 'blockedMemberUnblockButton');
+
+        //Add to container
+        container.appendChild(profileImg);
+        container.appendChild(blockedMemberNameEl);
+        container.appendChild(unblockButton);
 
         return container;
     }

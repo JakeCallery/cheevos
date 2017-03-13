@@ -3,7 +3,7 @@
  */
 
 class MemberObj {
-    constructor($name, $id, $teamId, $profileUrl, $isBlocked, $isMod){
+    constructor($name, $id, $profileUrl, $teamId, $isBlocked, $isMod){
         this.name = $name;
         this.id = $id;
         this.teamId = $teamId;
