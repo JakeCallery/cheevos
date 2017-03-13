@@ -1,5 +1,6 @@
 Plan:
 rough layout team management page
+  hook up buttons on team management page
 rough in new user tutorial
 rough in new user invited tutorial
 Hook up preview badge button on app page
