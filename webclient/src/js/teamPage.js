@@ -49,7 +49,7 @@ geb.addEventListener('requestMainPage', ($evt) => {
 
 geb.addEventListener('requestchangemodstatus', ($evt) => {
     l.debug('caught request change mod status:', $evt.data);
-    reqManager.setModStatus($evt.data.teamId, $evt.data.memberId, $evt.data.newIsModStatus);
+    reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus);
 });
 
 function handleReadyStateChange($evt) {

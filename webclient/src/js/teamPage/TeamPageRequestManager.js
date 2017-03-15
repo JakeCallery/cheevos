@@ -171,8 +171,33 @@ class TeamPageRequestManager extends EventDispatcher {
         });
     }
 
-    setModStatus($teamId, $memberId, $newIsModStatus){
+    setModStatus($memberId, $teamId, $newIsModStatus) {
         l.debug('Set Mod Status: ', $teamId, $memberId, $newIsModStatus);
+        let apiStr = '';
+        if($newIsModStatus === true){
+            apiStr = '/api/addModerator';
+        } else if ($newIsModStatus === false){
+            apiStr = '/api/removeModerator'
+        } else {
+            l.error('Bad Mod Status: ', $newIsModStatus, true);
+        }
+        fetch(apiStr, {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                memberId: $memberId,
+                teamId: $teamId
+            })
+        })
+        .then(($response) => {
+            l.debug('Set Mod Status Response: ', $response);
+        })
+        .catch(($error) => {
+            l.error('Set Mod Status Error: ', $error);
+        });
     }
 }
 
