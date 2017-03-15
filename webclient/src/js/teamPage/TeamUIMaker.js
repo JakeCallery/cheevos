@@ -72,7 +72,9 @@ class TeamUIMaker extends EventDispatcher {
         return container;
     }
 
-    createMemberDiv($memberObj, $isModerator){
+    createMemberDiv($teamId, $memberObj, $isModerator){
+        let self = this;
+
         //Element Container
         let container = this.doc.createElement('div');
         container.Id = 'memberDiv_' + $memberObj.id;
@@ -104,6 +106,7 @@ class TeamUIMaker extends EventDispatcher {
         let isModCB = this.doc.createElement('input');
         isModCB.type = 'checkbox';
         isModCB.name = 'isModCheckbox';
+        isModCB.memberId = $memberObj.id;
         DOMUtils.addClass(isModCB, 'memberItem');
         DOMUtils.addClass(isModCB, 'memberItemModeratorCheckbox');
         if($memberObj.isMod){
@@ -113,6 +116,16 @@ class TeamUIMaker extends EventDispatcher {
         if(!$isModerator){
             isModCB.disabled = true;
         }
+        isModCB.addEventListener('change', ($evt) => {
+            l.debug('Caught Change: ', $evt.target.checked, $evt.target.memberId);
+            self.geb.dispatchEvent(new JacEvent('requestchangemodstatus',
+                {
+                    newIsModStatus: $evt.target.checked,
+                    memberId: $evt.target.memberId,
+                    teamId: $teamId
+                }
+            ));
+        });
 
         //Add to container
         container.appendChild(profileImg);

@@ -132,6 +132,7 @@ class TeamPageRequestManager extends EventDispatcher {
         });
     }
 
+    //TODO: Set returned limits
     getBlockedMembers(){
         let self = this;
         l.debug('Getting Blocked Members...');
@@ -168,6 +169,10 @@ class TeamPageRequestManager extends EventDispatcher {
         .catch(($error) => {
             l.error('List Blocked Users Error: ', $error);
         });
+    }
+
+    setModStatus($teamId, $memberId, $newIsModStatus){
+        l.debug('Set Mod Status: ', $teamId, $memberId, $newIsModStatus);
     }
 }
 

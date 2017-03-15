@@ -47,6 +47,11 @@ geb.addEventListener('requestMainPage', ($evt) => {
     window.location = '/';
 });
 
+geb.addEventListener('requestchangemodstatus', ($evt) => {
+    l.debug('caught request change mod status:', $evt.data);
+    reqManager.setModStatus($evt.data.teamId, $evt.data.memberId, $evt.data.newIsModStatus);
+});
+
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
