@@ -49,6 +49,9 @@ const removeMemberButton = document.getElementById('removeMemberButton');
 const addModUserIdField = document.getElementById('addModUserIdField');
 const addModTeamIdField = document.getElementById('addModTeamIdField');
 const addModButton = document.getElementById('addModButton');
+const removeModUserIdField = document.getElementById('removeModUserIdField');
+const removeModTeamIdField = document.getElementById('removeModTeamIdField');
+const removeModButton = document.getElementById('removeModButton');
 const removeTeamTeamIdField = document.getElementById('removeTeamTeamIdField');
 const removeTeamButton = document.getElementById('removeTeamButton');
 const removeBadgeForUserBadgeIdField = document.getElementById('removeBadgeForUserBadgeIdField');
@@ -367,6 +370,27 @@ function initialiseUI() {
         .catch(($error) => {
             l.error('Add Mod Error: ', $error);
         });
+    });
+
+    removeModButton.addEventListener('click', ($event) => {
+        l.debug('Caught Remove Mod Click');
+        fetch('/api/removeModerator', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                memberId: removeModUserIdField.value,
+                teamId: removeModTeamIdField.value
+            })
+        })
+            .then(($response) => {
+                l.debug('Remove Mod Response: ', $response);
+            })
+            .catch(($error) => {
+                l.error('Remove Mod Error: ', $error);
+            });
     });
 
     removeMemberButton.addEventListener('click', ($event) => {

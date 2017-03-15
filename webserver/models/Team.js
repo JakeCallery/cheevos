@@ -218,6 +218,54 @@ class Team {
         })
     }
 
+    static removeModerator($memberId, $teamId) {
+        console.log('Removing Team Moderator...', $memberId);
+        let session = db.session();
+        return session
+        .run(
+            'MATCH (user:User {userId:{userId}}) ' +
+            'MATCH (team:Team {teamId:{teamId}}) ' +
+            'MATCH (user)-[rel:moderates]->(team) ' +
+            'MATCH (team)-[rel1:moderated_by]->(user)' +
+            'DELETE rel, rel1 ' +
+            'RETURN COUNT(rel), COUNT(rel1)',
+            {
+                userId:$memberId,
+                teamId:$teamId
+            }
+        )
+        .then(($dbResult) => {
+            session.close();
+            console.log('removeModerator Results: ', $dbResult.records.length);
+            if($dbResult.records.length === 1) {
+                //Good result
+                console.log('Here1');
+                return new Promise((resolve, reject) => {
+                    resolve($dbResult);
+                });
+            } else if($dbResult > 1) {
+                //something strange happened
+                console.log('Here2');
+                return new Promise((resolve, reject) => {
+                    reject('Should not be here, more than 1 set of relationships removed');
+                });
+            } else {
+                //not added
+                console.log('Here3');
+                return new Promise((resolve, reject) => {
+                    reject('Zero Records removed');
+                });
+            }
+        })
+        .catch(($error) => {
+            console.log('Error: ', $error);
+            session.close();
+            return new Promise((resolve, reject) => {
+                reject($error);
+            });
+        });
+    }
+
     static addModerator($memberId, $teamId) {
         console.log('Adding Team Moderator...', $memberId);
         let session = db.session();
