@@ -52,6 +52,11 @@ geb.addEventListener('requestchangemodstatus', ($evt) => {
     reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus);
 });
 
+geb.addEventListener('requestblockstatuschange', ($evt) => {
+    l.debug('caught request change block status: ', $evt.data);
+    reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus);
+});
+
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){

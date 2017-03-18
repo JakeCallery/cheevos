@@ -171,6 +171,34 @@ class TeamPageRequestManager extends EventDispatcher {
         });
     }
 
+    setBlockStatus($memberId, $newIsBlockedStatus){
+        l.debug('Set Blocked Status: ', $memberId, $newIsBlockedStatus);
+        let apiStr = '';
+        if($newIsBlockedStatus === true){
+            apiStr = '/api/blockUser';
+        } else if ($newIsBlockedStatus === false){
+            apiStr = '/api/unblockUser'
+        } else {
+            l.error('Bad Block User Status: ', $newIsModStatus, true);
+        }
+        fetch(apiStr, {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                memberId: $memberId
+            })
+        })
+        .then(($response) => {
+            l.debug('Change Block User Status Response: ' + $response);
+        })
+        .catch(($error) => {
+            l.error('Change Block User Status Error: ', $error);
+        })
+    }
+
     setModStatus($memberId, $teamId, $newIsModStatus) {
         l.debug('Set Mod Status: ', $teamId, $memberId, $newIsModStatus);
         let apiStr = '';

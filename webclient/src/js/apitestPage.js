@@ -260,7 +260,7 @@ function initialiseUI() {
                 'Content-Type': 'application/json'
             }),
             body: JSON.stringify({
-                userIdToBlock:blockUserIdField.value
+                memberId:blockUserIdField.value
             })
         })
         .then(($response) => {

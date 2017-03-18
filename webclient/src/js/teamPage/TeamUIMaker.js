@@ -96,11 +96,20 @@ class TeamUIMaker extends EventDispatcher {
         let isBlockedCB = this.doc.createElement('input');
         isBlockedCB.type = 'checkbox';
         isBlockedCB.name = 'isBlockedCheckbox';
+        isBlockedCB.memberId = $memberObj.id;
         DOMUtils.addClass(isBlockedCB, 'memberItem');
         DOMUtils.addClass(isBlockedCB, 'memberItemBlockedCheckbox');
         if($memberObj.isBlocked){
             isBlockedCB.checked = true;
         }
+
+        isBlockedCB.addEventListener('change', ($evt) => {
+            l.debug('Caught Blocked Change: ', $evt.target.checked, $evt.target.memberId);
+            self.geb.dispatchEvent(new JacEvent('requestblockstatuschange', {
+                newIsBlockedStatus: $evt.target.checked,
+                memberId: $evt.target.memberId
+            }));
+        });
 
         //IsMod / Make Mode / Remove Mod
         let isModCB = this.doc.createElement('input');

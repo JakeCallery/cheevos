@@ -9,7 +9,7 @@ const User = require('../models/User');
 router.post('/', (req, res) => {
     console.log('UnBlock user request...');
     let user = req.cheevosData.sessionUser;
-    user.unblockUser(req.body.userIdToUnblock)
+    user.unblockUser(req.body.memberId)
     .then(($dbResult) => {
         let resObj = {
             status:'SUCCESS'

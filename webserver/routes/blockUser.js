@@ -8,7 +8,7 @@ const User = require('../models/User');
 
 router.post('/', (req, res) => {
     console.log('Block User Request...');
-    req.cheevosData.sessionUser.blockUser(req.body.userIdToBlock)
+    req.cheevosData.sessionUser.blockUser(req.body.memberId)
     .then(($dbResult) => {
         let resObj = {
             status:'SUCCESS'

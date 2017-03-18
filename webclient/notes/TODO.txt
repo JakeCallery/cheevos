@@ -1,6 +1,15 @@
 Plan:
 rough layout team management page
   hook up buttons on team management page
+  disable UI that we know will fail if clicked
+    can't block yourself
+    can't remove yourself as moderator
+
+Result event loop
+  Double click blocking for buttons
+  notification of new data
+  UI update on new data
+
 rough in new user tutorial
 rough in new user invited tutorial
 Hook up preview badge button on app page
