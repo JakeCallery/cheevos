@@ -16,6 +16,8 @@ class TeamUIMaker extends EventDispatcher {
     }
 
     createTeamDiv($teamObj){
+        let self = this;
+
         //Element Container
         let container = this.doc.createElement('div');
         container.id = 'teamDiv_' + $teamObj.teamId;
@@ -55,12 +57,37 @@ class TeamUIMaker extends EventDispatcher {
 
         //Invite User to team
         let inviteButton = this.doc.createElement('button');
+        inviteButton.isUIOpen = false;
         inviteButton.innerHTML = 'Invite';
         inviteButton.id = 'inviteButton_' + $teamObj.teamId;
         DOMUtils.addClass(inviteButton, 'inviteToTeamButton');
         DOMUtils.addClass(inviteButton, 'teamItem');
         inviteButton.addEventListener('click', ($evt) => {
             $evt.stopPropagation();
+            if(inviteButton.isUIOpen){
+                //close old UI
+                l.debug('Closing invite UI');
+                let parent = container.parentNode;
+                let inviteUI = DOMUtils.getDirectChildById(parent, 'inviteContainer_' + $teamObj.teamId);
+                inviteUI.closeUI();
+                inviteButton.isUIOpen = false;
+            } else {
+                //open new UI
+                l.debug('Opening Invite UI');
+                self.geb.dispatchEvent(new JacEvent('requestinviteui', {
+                    container: container,
+                    teamId: $teamObj.teamId
+                }));
+                inviteButton.isUIOpen = true;
+            }
+        });
+
+        self.geb.addEventListener('inviteuiclosing', ($evt) => {
+            l.debug('Caught UI Closing: ', $evt.data);
+            if($evt.data == $teamObj.teamId){
+                l.debug('Setting ui open to false');
+                inviteButton.isUIOpen = false;
+            }
         });
 
         //Add to container
@@ -182,6 +209,68 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(unblockButton);
 
         return container;
+    }
+
+    createInviteDiv($teamId){
+        let self = this;
+
+        //Element Container
+        let container = this.doc.createElement('div');
+        container.id = 'inviteContainer_' + $teamId;
+        DOMUtils.addClass(container, 'inviteUserDiv');
+
+        //Label
+        let label = this.doc.createElement('p');
+        label.innerHTML = 'Email Address to Invite: ';
+        DOMUtils.addClass(label, 'inviteLabelP');
+
+        //Email Field:
+        let emailField = this.doc.createElement('input');
+        emailField.type = 'text';
+        DOMUtils.addClass(emailField, 'inviteEmailField');
+
+        //Get Button References
+        let sendButton = this.doc.createElement('button');
+        let cancelButton = this.doc.createElement('button');
+
+        //Send Button
+        sendButton.innerHTML = 'SEND';
+        DOMUtils.addClass(sendButton, 'inviteSendButton');
+        sendButton.clickHandler = function($evt) {
+            l.debug('Send Button Clicked');
+            self.geb.dispatchEvent(new JacEvent('requestsendinvite', emailField.value));
+            container.closeUI();
+        };
+        sendButton.addEventListener('click', sendButton.clickHandler);
+
+        //Cancel Button
+        cancelButton.innerHTML = 'CANCEL';
+        DOMUtils.addClass(cancelButton, 'inviteCancelButton');
+        cancelButton.clickHandler = function($evt) {
+            l.debug('Cancel Button Clicked');
+            container.closeUI();
+        };
+        cancelButton.addEventListener('click', cancelButton.clickHandler);
+
+        container.closeUI = function(){
+            l.debug('Closing UI');
+            sendButton.removeEventListener('click', sendButton.clickHandler);
+            sendButton.clickHandler = undefined;
+            cancelButton.removeEventListener('click', cancelButton.clickHandler);
+            cancelButton.clickHandler = undefined;
+            container.parentNode.removeChild(container);
+            self.geb.dispatchEvent(new JacEvent('inviteuiclosing', $teamId));
+            container = undefined;
+        };
+
+        //Append
+        container.appendChild(label);
+        container.appendChild(emailField);
+        container.appendChild(sendButton);
+        container.appendChild(cancelButton);
+
+        return container;
+
     }
 
 }

@@ -41,15 +41,22 @@ class TeamUIManager extends EventDispatcher {
         self.newTeamListDelegate = EventUtils.bind(self, self.handleNewTeamList);
         self.newMemberListDelegate = EventUtils.bind(self, self.handleNewMemberList);
         self.newBlockedMemberListDelegate = EventUtils.bind(self, self.handleNewBlockedMemberList);
-
+        self.showInviteUIDelegate = EventUtils.bind(self, self.handleShowInviteUI);
 
         //Global Events
         this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
         this.geb.addEventListener('newmemberlist', self.newMemberListDelegate);
         this.geb.addEventListener('newblockedmemberlist', self.newBlockedMemberListDelegate);
+        this.geb.addEventListener('requestinviteui', self.showInviteUIDelegate);
 
         //Init
 
+    }
+
+    handleShowInviteUI($evt){
+        let inviteUI = this.teamUIMaker.createInviteDiv($evt.data.teamId);
+        let teamEl =  this.doc.getElementById('teamDiv_' + $evt.data.teamId);
+        DOMUtils.insertAfter(teamEl, inviteUI);
     }
 
     handleNewBlockedMemberList($evt){

@@ -319,3 +319,26 @@ Blocked Users Div
 
 }
 
+/****************
+Invite User Div
+*****************/
+.inviteUserDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.inviteLabelP {
+
+}
+
+.inviteEmailField {
+
+}
+
+.inviteSendButton {
+
+}
+
+.inviteCancelButton {
+
+}
