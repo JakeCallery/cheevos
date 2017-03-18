@@ -227,6 +227,29 @@ class TeamPageRequestManager extends EventDispatcher {
             l.error('Set Mod Status Error: ', $error);
         });
     }
+
+    sendTeamInvite($emailAddress, $teamId){
+        fetch('/api/inviteMember', {
+            method: 'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({
+                email: $emailAddress,
+                teamId: $teamId
+            })
+        })
+        .then(($response) => {
+            $response.json()
+            .then(($res) => {
+                 l.debug('Invite Response: ', $res);
+            });
+        })
+        .catch(($error) => {
+            l.error('Invite Error: ', $error);
+        })
+    }
 }
 
 export default TeamPageRequestManager;

@@ -1,6 +1,7 @@
 Plan:
 rough layout team management page
   hook up buttons on team management page
+    team notifications checkbox
   disable UI that we know will fail if clicked
     can't block yourself
     can't remove yourself as moderator

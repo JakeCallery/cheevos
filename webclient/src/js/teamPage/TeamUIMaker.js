@@ -238,7 +238,10 @@ class TeamUIMaker extends EventDispatcher {
         DOMUtils.addClass(sendButton, 'inviteSendButton');
         sendButton.clickHandler = function($evt) {
             l.debug('Send Button Clicked');
-            self.geb.dispatchEvent(new JacEvent('requestsendinvite', emailField.value));
+            self.geb.dispatchEvent(new JacEvent('requestsendinvite', {
+                emailAddress: emailField.value,
+                teamId: $teamId
+            }));
             container.closeUI();
         };
         sendButton.addEventListener('click', sendButton.clickHandler);

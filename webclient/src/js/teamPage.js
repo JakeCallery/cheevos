@@ -57,6 +57,11 @@ geb.addEventListener('requestblockstatuschange', ($evt) => {
     reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus);
 });
 
+geb.addEventListener('requestsendinvite', ($evt) => {
+    l.debug('caught send invite request: ', $evt.data) ;
+    reqManager.sendTeamInvite($evt.data.emailAddress, $evt.data.teamId);
+});
+
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){

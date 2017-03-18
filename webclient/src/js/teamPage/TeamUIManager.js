@@ -107,9 +107,7 @@ class TeamUIManager extends EventDispatcher {
                     self.collapseTeamElement(el);
                 }
             });
-
         }
-
     }
 
     expandTeamElement($el){
