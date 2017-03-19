@@ -28,7 +28,7 @@ module.exports = {
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.html$/,
                 loader: 'html-loader',
@@ -41,11 +41,21 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loader: 'style-loader!css-loader',
+                use: [
+                    {
+                        loader: 'style-loader',
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            minimize: true,
+                            sourceMap: false
+                        }
+                    }
+                ],
                 exclude: /node_modules/
             }
         ],
-
     },
 
     plugins: [
@@ -106,11 +116,9 @@ module.exports = {
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 screw_ie8: true,
-                warnings: true
+                warnings: false
             },
-            mangle: {
-                screw_ie8: true
-            }
+            sourceMap: true
         }),
 
         function() {
