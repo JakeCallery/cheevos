@@ -103,6 +103,16 @@ module.exports = {
             ]
         }),
 
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                screw_ie8: true,
+                warnings: true
+            },
+            mangle: {
+                screw_ie8: true
+            }
+        }),
+
         function() {
             this.plugin('watch-run', function(watching, callback) {
                 console.log('Begin Compile At ' + new Date());
