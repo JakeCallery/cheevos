@@ -72,41 +72,52 @@ class TeamUIManager extends EventDispatcher {
     }
 
     handleNewMemberList($evt){
+        l.debug('Removing old members...');
+        let oldMembersDiv = this.doc.getElementById('membersDiv_' + $evt.data.teamId);
+        if(oldMembersDiv){ oldMembersDiv.closeUI(); }
+
         l.debug('Team: ' + $evt.data.teamId);
         l.debug('New Member List: ', $evt.data.members);
         let self = this;
         let teamEl =  this.doc.getElementById('teamDiv_' + $evt.data.teamId);
-        let membersEl = this.doc.createElement('div');
-        DOMUtils.addClass(membersEl, 'membersDiv');
-        DOMUtils.insertAfter(teamEl, membersEl);
+        let membersDiv = this.doc.createElement('div');
+        membersDiv.id = 'membersDiv_' + $evt.data.teamId;
+        membersDiv.closeUI = function(){
+            let memberDivs = DOMUtils.getChildNodesByClassName(membersDiv, 'memberDiv');
+            l.debug('Closing Member Divs: ', memberDivs.length);
+            for(let i = 0; i < memberDivs.length; i++){
+                memberDivs[i].closeUI();
+            }
+
+            membersDiv.parentNode.removeChild(membersDiv);
+        };
+
+        DOMUtils.addClass(membersDiv, 'membersDiv');
+        DOMUtils.insertAfter(teamEl, membersDiv);
 
         for(let i = 0; i < $evt.data.members.length; i++){
             let memberEl = this.teamUIMaker.createMemberDiv($evt.data.myId, $evt.data.teamId, $evt.data.members[i], teamEl.isModerator);
-            membersEl.appendChild(memberEl);
+            membersDiv.appendChild(memberEl);
         }
     }
 
     handleNewTeamList($evt){
         l.debug('New Team Data: ', $evt.data);
         let self = this;
+
+        //Close old teamUIs
+        let teamDivs = DOMUtils.getChildNodesByClassName(this.myTeamsDiv, 'teamDiv');
+        for(let t = 0; t < teamDivs.length; t++){
+            let td = teamDivs[t];
+            let membersDiv = this.findNextMembersDiv(td);
+            membersDiv.closeUI();
+            td.closeUI();
+        }
+
+        //Create new teamUIs
         for(let i = 0; i < $evt.data.length; i++){
             let teamEl = this.teamUIMaker.createTeamDiv($evt.data[i]);
-
             this.myTeamsDiv.appendChild(teamEl);
-
-            teamEl.addEventListener('click', ($evt) => {
-                let el = $evt.currentTarget;
-                let teamId = this.getTeamIdFromElementId(el.id);
-                l.debug('Team El Clicked: ' + teamId);
-
-                if(el.collapsed){
-                    self.expandTeamElement(el);
-                    l.debug('Requesting Team Members');
-                    self.geb.dispatchEvent(new JacEvent('requestmemberlist', teamId));
-                } else {
-                    self.collapseTeamElement(el);
-                }
-            });
         }
     }
 
@@ -117,8 +128,15 @@ class TeamUIManager extends EventDispatcher {
 
     collapseTeamElement($el){
         l.debug('Collapse Team Element');
-        let nodeToRemove = $el.nextSibling;
-        nodeToRemove.parentNode.removeChild(nodeToRemove);
+        //let nodeToRemove = $el.nextSibling;
+        //nodeToRemove.parentNode.removeChild(nodeToRemove);
+        let membersDivNode = this.findNextMembersDiv($el);
+        membersDivNode.closeUI();
+        // let oldMembers = DOMUtils.getChildNodesByClassName(membersDivNode, 'memberDiv');
+        // for(let i = 0; i < oldMembers.length; i++){
+        //     oldMembers[i].closeUI();
+        // }
+        // membersDivNode.parentNode.removeChild(membersDivNode);
         $el.collapsed = true;
     }
 
@@ -131,6 +149,19 @@ class TeamUIManager extends EventDispatcher {
             return null;
         }
 
+    }
+
+    findNextMembersDiv($rootEl){
+        let root = $rootEl;
+        while(root.nextSibling){
+            if(!DOMUtils.hasClass(root.nextSibling,'membersDiv')){
+                root = root.nextSibling;
+            } else {
+                l.debug('Found Members Div');
+                return root.nextSibling;
+            }
+        }
+        return undefined;
     }
 
 }

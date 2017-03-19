@@ -51,7 +51,7 @@ class TeamUIMaker extends EventDispatcher {
         if($teamObj.teamNotificationsEnabled) {
             notificationCheckbox.checked = true;
         }
-        notificationCheckbox.addEventListener('click', ($evt) => {
+        notificationCheckbox.clickHandler = function($evt) {
             $evt.stopPropagation();
             self.geb.dispatchEvent(new JacEvent('requestchangeteamnotifications',
                 {
@@ -59,7 +59,8 @@ class TeamUIMaker extends EventDispatcher {
                     newTeamNotificationsStatus: $evt.target.checked
                 }
             ));
-        });
+        };
+        notificationCheckbox.addEventListener('click', notificationCheckbox.clickHandler);
 
         //Invite User to team
         let inviteButton = this.doc.createElement('button');
@@ -68,7 +69,7 @@ class TeamUIMaker extends EventDispatcher {
         inviteButton.id = 'inviteButton_' + $teamObj.teamId;
         DOMUtils.addClass(inviteButton, 'inviteToTeamButton');
         DOMUtils.addClass(inviteButton, 'teamItem');
-        inviteButton.addEventListener('click', ($evt) => {
+        inviteButton.clickHandler = function($evt) {
             $evt.stopPropagation();
             if(inviteButton.isUIOpen){
                 //close old UI
@@ -86,15 +87,46 @@ class TeamUIMaker extends EventDispatcher {
                 }));
                 inviteButton.isUIOpen = true;
             }
-        });
+        };
+        inviteButton.addEventListener('click', inviteButton.clickHandler);
 
-        self.geb.addEventListener('inviteuiclosing', ($evt) => {
+        container.inviteUIClosingHandler = function($evt) {
             l.debug('Caught UI Closing: ', $evt.data);
             if($evt.data == $teamObj.teamId){
                 l.debug('Setting ui open to false');
                 inviteButton.isUIOpen = false;
             }
-        });
+        };
+        self.geb.addEventListener('inviteuiclosing', container.inviteUIClosingHandler);
+
+        container.clickHandler = function($evt) {
+            let el = $evt.currentTarget;
+            let teamId = self.getTeamIdFromElementId(el.id);
+            l.debug('Team El Clicked: ' + teamId);
+
+            if(el.collapsed){
+                //TODO:el.collapsed is also in TeamUIManager (not DRY)
+                el.collapsed = false;
+                l.debug('Requesting Team Members');
+                self.geb.dispatchEvent(new JacEvent('requestmemberlist', teamId));
+            } else {
+                //self.collapseTeamElement(el);
+                //TODO: this is also in collapseTeamElement in TeamUIManager
+                el.collapsed = true;
+                let membersDivNode = self.findNextMembersDiv(el);
+                if(typeof(membersDivNode) !== 'undefined'){ membersDivNode.closeUI(); }
+            }
+        };
+        container.addEventListener('click', container.clickHandler);
+
+        container.closeUI = function(){
+            l.debug('Closing TeamDiv UI');
+            notificationCheckbox.removeEventListener('click', notificationCheckbox.clickHandler);
+            inviteButton.removeEventListener('click', inviteButton.clickHandler);
+            self.geb.removeEventListener('inviteuiclosing', container.inviteUIClosingHandler);
+            container.removeEventListener('click', container.clickHandler);
+            container.parentNode.removeChild(container);
+        };
 
         //Add to container
         container.appendChild(teamNameEl);
@@ -136,13 +168,14 @@ class TeamUIMaker extends EventDispatcher {
             isBlockedCB.checked = true;
         }
 
-        isBlockedCB.addEventListener('change', ($evt) => {
+        isBlockedCB.changeHandler = function($evt) {
             l.debug('Caught Blocked Change: ', $evt.target.checked, $evt.target.memberId);
             self.geb.dispatchEvent(new JacEvent('requestblockstatuschange', {
                 newIsBlockedStatus: $evt.target.checked,
                 memberId: $evt.target.memberId
             }));
-        });
+        };
+        isBlockedCB.addEventListener('change', isBlockedCB.changeHandler);
 
         //IsMod / Make Mode / Remove Mod
         let isModCB = this.doc.createElement('input');
@@ -165,7 +198,7 @@ class TeamUIMaker extends EventDispatcher {
             isModCB.disabled = true;
         }
 
-        isModCB.addEventListener('change', ($evt) => {
+        isModCB.changeHandler = function($evt){
             l.debug('Caught Change: ', $evt.target.checked, $evt.target.memberId);
             self.geb.dispatchEvent(new JacEvent('requestchangemodstatus',
                 {
@@ -174,7 +207,18 @@ class TeamUIMaker extends EventDispatcher {
                     teamId: $teamId
                 }
             ));
-        });
+        };
+        isModCB.addEventListener('change', isModCB.changeHandler);
+
+        container.closeUI = function(){
+            l.debug('Closing MemberUI');
+            isBlockedCB.removeEventListener('change', isBlockedCB.changeHandler);
+            isBlockedCB.changeHandler = undefined;
+            isModCB.removeEventListener('change', isModCB.changeHandler);
+            isModCB.removeEventListener = undefined;
+            container.parentNode.removeChild(container);
+            container = undefined;
+        };
 
         //Add to container
         container.appendChild(profileImg);
@@ -287,6 +331,31 @@ class TeamUIMaker extends EventDispatcher {
 
         return container;
 
+    }
+
+    //TODO: Combine this one with the one from TeamUIManager (util class maybe?)
+    getTeamIdFromElementId($elementId){
+        let tokens = $elementId.split('_');
+        if(tokens.length > 1){
+            return tokens[tokens.length-1];
+        } else {
+            l.error('Bad Element ID / Team ID: ', $elementId);
+            return null;
+        }
+    }
+
+    //TODO: Combine this one with the one from TeamUIManager (util class maybe?)
+    findNextMembersDiv($rootEl){
+        let root = $rootEl;
+        while(root.nextSibling){
+            if(!DOMUtils.hasClass(root.nextSibling,'membersDiv')){
+                root = root.nextSibling;
+            } else {
+                l.debug('Found Members Div');
+                return root.nextSibling;
+            }
+        }
+        return undefined;
     }
 
 }
