@@ -81,7 +81,7 @@ class TeamUIManager extends EventDispatcher {
         DOMUtils.insertAfter(teamEl, membersEl);
 
         for(let i = 0; i < $evt.data.members.length; i++){
-            let memberEl = this.teamUIMaker.createMemberDiv($evt.data.teamId, $evt.data.members[i], teamEl.isModerator);
+            let memberEl = this.teamUIMaker.createMemberDiv($evt.data.myId, $evt.data.teamId, $evt.data.members[i], teamEl.isModerator);
             membersEl.appendChild(memberEl);
         }
     }

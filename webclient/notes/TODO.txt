@@ -1,9 +1,5 @@
 Plan:
 
-disable UI that we know will fail if clicked
-  can't block yourself
-  can't remove yourself as moderator
-
 UI Element .remove() function (remove listeners etc.. / mem leaks)
 
 Result event loop
@@ -66,6 +62,9 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+disable UI that we know will fail if clicked
+  can't block yourself
+  can't remove yourself as moderator
 rough layout team management page
   hook up buttons on team management page
     team notifications checkbox

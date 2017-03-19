@@ -105,7 +105,7 @@ class TeamUIMaker extends EventDispatcher {
         return container;
     }
 
-    createMemberDiv($teamId, $memberObj, $isModerator){
+    createMemberDiv($myId, $teamId, $memberObj, $isModerator){
         let self = this;
 
         //Element Container
@@ -155,9 +155,16 @@ class TeamUIMaker extends EventDispatcher {
             isModCB.checked = true;
         }
 
+        //If I am not team moderator, I cannot make changes to mod status
         if(!$isModerator){
             isModCB.disabled = true;
         }
+
+        //Disable if I am mod / can't remove self as moderator
+        if($myId === $memberObj.id){
+            isModCB.disabled = true;
+        }
+
         isModCB.addEventListener('change', ($evt) => {
             l.debug('Caught Change: ', $evt.target.checked, $evt.target.memberId);
             self.geb.dispatchEvent(new JacEvent('requestchangemodstatus',

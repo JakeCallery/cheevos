@@ -18,7 +18,8 @@ router.post('/', (req, res) => {
         let resObj = {
             data:{
                 members:[],
-                teamId:req.body.teamId
+                teamId:req.body.teamId,
+                myId: user.data.userId
             },
             status:'SUCCESS'
         };

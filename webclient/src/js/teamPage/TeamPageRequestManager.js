@@ -120,6 +120,7 @@ class TeamPageRequestManager extends EventDispatcher {
                     memberObjs.push(member);
                 }
                 self.geb.dispatchEvent(new JacEvent('newmemberlist', {
+                    myId: $res.data.myId,
                     teamId:$res.data.teamId,
                     members:memberObjs
                 }));
