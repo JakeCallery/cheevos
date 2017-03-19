@@ -62,6 +62,11 @@ geb.addEventListener('requestsendinvite', ($evt) => {
     reqManager.sendTeamInvite($evt.data.emailAddress, $evt.data.teamId);
 });
 
+geb.addEventListener('requestchangeteamnotifications', ($evt) => {
+    l.debug('caught request change team notifications');
+    reqManager.setTeamNotificationsStatus($evt.data.teamId, $evt.data.newTeamNotificationsStatus);
+});
+
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){

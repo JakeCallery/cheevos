@@ -53,6 +53,12 @@ class TeamUIMaker extends EventDispatcher {
         }
         notificationCheckbox.addEventListener('click', ($evt) => {
             $evt.stopPropagation();
+            self.geb.dispatchEvent(new JacEvent('requestchangeteamnotifications',
+                {
+                    teamId: $teamObj.teamId,
+                    newTeamNotificationsStatus: $evt.target.checked
+                }
+            ));
         });
 
         //Invite User to team

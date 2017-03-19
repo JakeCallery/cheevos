@@ -6,10 +6,14 @@ rough layout team management page
     can't block yourself
     can't remove yourself as moderator
 
+UI Element .remove() function (remove listeners etc.. / mem leaks)
+
 Result event loop
   Double click blocking for buttons
   notification of new data
   UI update on new data
+
+Limits on List Team and Members requests
 
 rough in new user tutorial
 rough in new user invited tutorial

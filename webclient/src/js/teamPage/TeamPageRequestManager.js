@@ -229,6 +229,40 @@ class TeamPageRequestManager extends EventDispatcher {
         });
     }
 
+    setTeamNotificationsStatus($teamId, $newTeamNotificationsStatus) {
+        let apiStr = '';
+        if($newTeamNotificationsStatus === true){
+            apiStr = '/api/enableTeamNotifications';
+        } else if($newTeamNotificationsStatus === false){
+            apiStr = '/api/disableTeamNotifications';
+        } else {
+            l.error('Bad Notifications Status: ', $newTeamNotificationsStatus, true);
+        }
+
+        fetch(apiStr, {
+            method:'POST',
+            credentials: 'include',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body:JSON.stringify({
+                teamId: $teamId
+            })
+        })
+        .then(($response) => {
+            $response.json()
+            .then(($res) => {
+                l.debug('Change Team Notifications Res: ', $res);
+            })
+            .catch(($error) => {
+                l.debug('Change Team Notrifications Error: ', $error);
+            })
+        })
+        .catch(($error) => {
+            l.error('Error: ', $error);
+        });
+    }
+
     sendTeamInvite($emailAddress, $teamId){
         fetch('/api/inviteMember', {
             method: 'POST',
