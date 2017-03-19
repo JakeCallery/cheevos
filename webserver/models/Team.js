@@ -169,18 +169,21 @@ class Team {
 
     static getMembers($teamId, $requesterId) {
         console.log('Getting Team Members');
-
         let session = db.session();
         let queryStr = '';
+
         if(typeof($requesterId) !== 'undefined'){
+            //Don't include self and return moderates and blocking info
             queryStr =
-                'MATCH (requester:User {userId:{userId}})' +
+                'MATCH (requester:User {userId:{requesterId}})' +
                 'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MATCH (team)-[:has_member]->(member) ' +
+                'WHERE NOT member.userId = {requesterId} ' +
                 'OPTIONAL MATCH (member)-[mod:moderates]->(team) ' +
                 'OPTIONAL MATCH (requester)-[block:is_blocking]->(member) ' +
                 'RETURN member, SIGN(COUNT(mod)) AS isMod, SIGN(COUNT(block)) AS isBlocked';
         } else {
+            //Include all members of team, return moderates info
             queryStr =
                 'MATCH (team:Team {teamId:{teamId}}) ' +
                 'MATCH (team)-[:has_member]->(member) ' +
@@ -193,7 +196,7 @@ class Team {
             queryStr,
             {
                 teamId: $teamId,
-                userId: $requesterId
+                requesterId: $requesterId
             }
         )
         .then(($dbResult) => {
