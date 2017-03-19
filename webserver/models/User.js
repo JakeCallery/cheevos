@@ -327,8 +327,8 @@ class User {
         return session
         .run(
             'MATCH (user:User {userId:{userId}}) ' +
-            'MATCH (user)-[:member_of]->(team) ' +
-            'RETURN team',
+            'MATCH (user)-[rel:member_of]->(team) ' +
+            'RETURN team, rel.notificationsEnabled as teamNotificationsEnabled',
             {
                 userId: this.id
             }

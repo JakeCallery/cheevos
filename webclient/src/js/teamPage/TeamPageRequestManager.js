@@ -71,6 +71,7 @@ class TeamPageRequestManager extends EventDispatcher {
                 for(let i = 0; i < $res.data.teams.length; i++){
                     let team = $res.data.teams[i];
                     let teamObj = new TeamObj(team.name, team.teamId);
+                    teamObj.teamNotificationsEnabled = team.teamNotificationsEnabled;
                     if(moderatedIds.indexOf(team.teamId) != -1){
                         teamObj.isModerator = true;
                     }

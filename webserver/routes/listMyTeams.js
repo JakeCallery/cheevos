@@ -24,9 +24,12 @@ router.post('/', (req, res) => {
         console.log('List My Teams DB Result: ', $dbResult);
         for(let i = 0; i < $dbResult.records.length; i++) {
             let team = $dbResult.records[i].get('team');
+            let teamNotificationsEnabled = $dbResult.records[i].get('teamNotificationsEnabled');
+
             resObj.data.teams.push({
                 teamId: team.properties.teamId,
-                name: team.properties.teamName
+                name: team.properties.teamName,
+                teamNotificationsEnabled: teamNotificationsEnabled
             });
         }
         return user.getTeamsIModerate();

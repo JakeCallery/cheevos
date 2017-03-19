@@ -10,7 +10,6 @@ class TeamObj {
         this.memberList = (typeof $memberList !== 'undefined') ? $memberList:false;
         this.isModerator = (typeof $isModerator !== 'undefined') ? $isModerator:false;
         this.teamNotificationsEnabled = (typeof $teamNotifications !== 'undefined') ? $teamNotifications:false;
-
     }
 }
 
