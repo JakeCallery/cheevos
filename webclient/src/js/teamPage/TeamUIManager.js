@@ -63,6 +63,12 @@ class TeamUIManager extends EventDispatcher {
         l.debug('Blocked Members: ', $evt.data.members);
         let self = this;
 
+        //CloseUI on old list
+        let blockedMembers = DOMUtils.getChildNodesByClassName(this.blockedUsersDiv, 'blockedMemberDiv');
+        for(let b = 0; b < blockedMembers.length; b++){
+            blockedMembers[b].closeUI();
+        }
+
         let members = $evt.data.members;
         for(let i = 0; i < members.length; i++){
             let member = members[i];
@@ -143,12 +149,12 @@ class TeamUIManager extends EventDispatcher {
     getTeamIdFromElementId($elementId){
         let tokens = $elementId.split('_');
         if(tokens.length > 1){
-            return tokens[tokens.length-1];
+            tokens.shift();
+            return tokens.join('_');
         } else {
             l.error('Bad Element ID / Team ID: ', $elementId);
             return null;
         }
-
     }
 
     findNextMembersDiv($rootEl){

@@ -177,6 +177,14 @@ class TeamUIMaker extends EventDispatcher {
         };
         isBlockedCB.addEventListener('change', isBlockedCB.changeHandler);
 
+        isBlockedCB.newStatusHandler = function($evt){
+            l.debug('newStatusHandler: ', $myId, $evt.data.memberId);
+            if($evt.data.memberId === $memberObj.id){
+                isBlockedCB.checked = $evt.data.newStatus;
+            }
+        };
+        self.geb.addEventListener('newblockuserstatus', isBlockedCB.newStatusHandler);
+
         //IsMod / Make Mode / Remove Mod
         let isModCB = this.doc.createElement('input');
         isModCB.type = 'checkbox';
@@ -212,10 +220,13 @@ class TeamUIMaker extends EventDispatcher {
 
         container.closeUI = function(){
             l.debug('Closing MemberUI');
+            self.geb.removeEventListener('newblockuserstatus', isBlockedCB.changeHandler);
+            isBlockedCB.changeHandler = undefined;
             isBlockedCB.removeEventListener('change', isBlockedCB.changeHandler);
             isBlockedCB.changeHandler = undefined;
             isModCB.removeEventListener('change', isModCB.changeHandler);
             isModCB.removeEventListener = undefined;
+
             container.parentNode.removeChild(container);
             container = undefined;
         };
@@ -254,11 +265,17 @@ class TeamUIMaker extends EventDispatcher {
         unblockButton.innerHTML = 'Unblock';
         DOMUtils.addClass(unblockButton, 'blockedMemberItem');
         DOMUtils.addClass(unblockButton, 'blockedMemberUnblockButton');
-        unblockButton.addEventListener('click', ($evt) => {
+        unblockButton.clickHandler = function($evt) {
             l.debug('Unblock user clicked');
             self.geb.dispatchEvent(new JacEvent('requestunblockuser', $memberObj.id));
-        });
+        };
+        unblockButton.addEventListener('click', unblockButton.clickHandler);
 
+        container.closeUI = function(){
+            l.debug('Closing Blocked Member UI');
+            unblockButton.removeEventListener('click', unblockButton.clickHandler);
+            container.parentNode.removeChild(container);
+        };
 
         //Add to container
         container.appendChild(profileImg);
@@ -337,7 +354,8 @@ class TeamUIMaker extends EventDispatcher {
     getTeamIdFromElementId($elementId){
         let tokens = $elementId.split('_');
         if(tokens.length > 1){
-            return tokens[tokens.length-1];
+            tokens.shift();
+            return tokens.join('_');
         } else {
             l.error('Bad Element ID / Team ID: ', $elementId);
             return null;

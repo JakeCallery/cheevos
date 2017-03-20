@@ -18,32 +18,6 @@ class TeamPageRequestManager extends EventDispatcher {
         this.geb = new GlobalEventBus();
     }
 
-    unblockUser($userIdToUnblock){
-        l.debug('Caught Unblock user click');
-        fetch('/api/unblockUser', {
-            method: 'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body:JSON.stringify({
-                userIdToUnblock:$userIdToUnblock
-            })
-        })
-        .then(($response) => {
-            $response.json()
-            .then(($res) => {
-                l.debug('Unblock Result: ', $res);
-            })
-            .catch(($err) => {
-                l.error('Unblock error: ', $error);
-            })
-        })
-        .catch(($error) => {
-            l.error('unblock error: ', $error);
-        });
-    }
-
     //TODO: Limit number of teams returned
     getTeams(){
         let self = this;
@@ -174,6 +148,7 @@ class TeamPageRequestManager extends EventDispatcher {
     }
 
     setBlockStatus($memberId, $newIsBlockedStatus){
+        let self = this;
         l.debug('Set Blocked Status: ', $memberId, $newIsBlockedStatus);
         let apiStr = '';
         if($newIsBlockedStatus === true){
@@ -181,7 +156,7 @@ class TeamPageRequestManager extends EventDispatcher {
         } else if ($newIsBlockedStatus === false){
             apiStr = '/api/unblockUser'
         } else {
-            l.error('Bad Block User Status: ', $newIsModStatus, true);
+            l.error('Bad Block User Status: ', $newIsBlockedStatus, true);
         }
         fetch(apiStr, {
             method: 'POST',
@@ -195,6 +170,10 @@ class TeamPageRequestManager extends EventDispatcher {
         })
         .then(($response) => {
             l.debug('Change Block User Status Response: ' + $response);
+            self.geb.dispatchEvent(new JacEvent('newblockuserstatus', {
+                memberId: $memberId,
+                newStatus: $newIsBlockedStatus
+            }));
         })
         .catch(($error) => {
             l.error('Change Block User Status Error: ', $error);

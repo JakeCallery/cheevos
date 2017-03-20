@@ -35,7 +35,7 @@ reqManager.getTeams();
 reqManager.getBlockedMembers();
 
 geb.addEventListener('requestunblockuser', ($evt) => {
-    reqManager.unblockUser($evt.data);
+    reqManager.setBlockStatus($evt.data, false);
 });
 
 geb.addEventListener('requestmemberlist', ($evt) => {
@@ -65,6 +65,11 @@ geb.addEventListener('requestsendinvite', ($evt) => {
 geb.addEventListener('requestchangeteamnotifications', ($evt) => {
     l.debug('caught request change team notifications');
     reqManager.setTeamNotificationsStatus($evt.data.teamId, $evt.data.newTeamNotificationsStatus);
+});
+
+geb.addEventListener('newblockuserstatus', ($evt) => {
+    l.debug('caught new block user status');
+    reqManager.getBlockedMembers();
 });
 
 function handleReadyStateChange($evt) {

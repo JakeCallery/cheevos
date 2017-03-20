@@ -1,6 +1,6 @@
 Plan:
 
-UI Element .remove() function (remove listeners etc.. / mem leaks)
+UI Element .closeUI() function (remove listeners etc.. / mem leaks)
 
 Result event loop
   Double click blocking for buttons
