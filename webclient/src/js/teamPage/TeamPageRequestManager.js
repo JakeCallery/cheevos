@@ -45,8 +45,10 @@ class TeamPageRequestManager extends EventDispatcher {
                 for(let i = 0; i < $res.data.teams.length; i++){
                     let team = $res.data.teams[i];
                     let teamObj = new TeamObj(team.name, team.teamId);
+
                     teamObj.teamNotificationsEnabled = team.teamNotificationsEnabled;
-                    if(moderatedIds.indexOf(team.teamId) != -1){
+
+                    if(moderatedIds.indexOf(team.teamId) !== -1){
                         teamObj.isModerator = true;
                     }
 
@@ -149,35 +151,46 @@ class TeamPageRequestManager extends EventDispatcher {
 
     setBlockStatus($memberId, $newIsBlockedStatus){
         let self = this;
-        l.debug('Set Blocked Status: ', $memberId, $newIsBlockedStatus);
-        let apiStr = '';
-        if($newIsBlockedStatus === true){
-            apiStr = '/api/blockUser';
-        } else if ($newIsBlockedStatus === false){
-            apiStr = '/api/unblockUser'
-        } else {
-            l.error('Bad Block User Status: ', $newIsBlockedStatus, true);
-        }
-        fetch(apiStr, {
-            method: 'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
-                memberId: $memberId
+        return new Promise((resolve, reject) => {
+            l.debug('Set Blocked Status: ', $memberId, $newIsBlockedStatus);
+            let apiStr = '';
+            if($newIsBlockedStatus === true){
+                apiStr = '/api/blockUser';
+            } else if ($newIsBlockedStatus === false){
+                apiStr = '/api/unblockUser'
+            } else {
+                l.error('Bad Block User Status: ', $newIsBlockedStatus, true);
+            }
+
+            fetch(apiStr, {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    memberId: $memberId
+                })
             })
-        })
-        .then(($response) => {
-            l.debug('Change Block User Status Response: ' + $response);
-            self.geb.dispatchEvent(new JacEvent('newblockuserstatus', {
-                memberId: $memberId,
-                newStatus: $newIsBlockedStatus
-            }));
-        })
-        .catch(($error) => {
-            l.error('Change Block User Status Error: ', $error);
-        })
+            .then(($response) => {
+                return $response.json()
+            })
+            .then(($res) => {
+                l.debug('Change Block User Status Response: ', $res);
+                self.geb.dispatchEvent(new JacEvent('newblockuserstatus', {
+                    memberId: $memberId,
+                    newStatus: $newIsBlockedStatus
+                }));
+                resolve($res);
+            })
+            .catch(($error) => {
+                l.error('Change Block User Status Error: ', $error);
+                resolve({
+                    'status': 'ERROR',
+                    'message': $error
+                });
+            });
+        });
     }
 
     setModStatus($memberId, $teamId, $newIsModStatus) {

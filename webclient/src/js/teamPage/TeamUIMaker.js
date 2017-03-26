@@ -7,12 +7,15 @@ import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
+import UIGEB from 'general/UIGEB';
+import UIRequestEvent from 'general/UIRequestEvent';
 
 class TeamUIMaker extends EventDispatcher {
     constructor($doc){
         super();
         this.doc = $doc;
         this.geb = new GlobalEventBus();
+        this.uigeb = new UIGEB();
     }
 
     createTeamDiv($teamObj){
@@ -92,7 +95,7 @@ class TeamUIMaker extends EventDispatcher {
 
         container.inviteUIClosingHandler = function($evt) {
             l.debug('Caught UI Closing: ', $evt.data);
-            if($evt.data == $teamObj.teamId){
+            if($evt.data === $teamObj.teamId){
                 l.debug('Setting ui open to false');
                 inviteButton.isUIOpen = false;
             }
@@ -168,14 +171,18 @@ class TeamUIMaker extends EventDispatcher {
             isBlockedCB.checked = true;
         }
 
-        isBlockedCB.changeHandler = function($evt) {
+        isBlockedCB.clickHandler = function($evt) {
             l.debug('Caught Blocked Change: ', $evt.target.checked, $evt.target.memberId);
-            self.geb.dispatchEvent(new JacEvent('requestblockstatuschange', {
+            $evt.target.disabled = true;
+            self.uigeb.dispatchUIEvent('requestblockstatuschange', {
                 newIsBlockedStatus: $evt.target.checked,
                 memberId: $evt.target.memberId
-            }));
+            }, () => {
+                l.debug('-- Caught Block Status Change request complete');
+                $evt.target.disabled = false
+            });
         };
-        isBlockedCB.addEventListener('change', isBlockedCB.changeHandler);
+        isBlockedCB.addEventListener('click', isBlockedCB.clickHandler);
 
         isBlockedCB.newStatusHandler = function($evt){
             l.debug('newStatusHandler: ', $myId, $evt.data.memberId);
@@ -266,8 +273,15 @@ class TeamUIMaker extends EventDispatcher {
         DOMUtils.addClass(unblockButton, 'blockedMemberItem');
         DOMUtils.addClass(unblockButton, 'blockedMemberUnblockButton');
         unblockButton.clickHandler = function($evt) {
-            l.debug('Unblock user clicked');
-            self.geb.dispatchEvent(new JacEvent('requestunblockuser', $memberObj.id));
+            l.debug('-- Unblock user clicked');
+            let element = $evt.target;
+            element.disabled = true;
+            self.uigeb.dispatchUIEvent('requestunblockuser',
+                $memberObj.id,
+                () => {
+                l.debug('-- Caught Block request complete');
+                element.disabled = false;
+            });
         };
         unblockButton.addEventListener('click', unblockButton.clickHandler);
 

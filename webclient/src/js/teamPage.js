@@ -10,6 +10,7 @@ import GlobalEventBus from 'jac/events/GlobalEventBus';
 import ServiceWorkerManager from 'general/ServiceWorkerManager';
 import UIManager from 'teamPage/TeamUIManager';
 import TeamPageRequestManager from 'teamPage/TeamPageRequestManager';
+import UIGEB from 'general/UIGEB';
 
 //import through loaders
 import '../css/main.css';
@@ -19,6 +20,7 @@ l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL 
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
 
 let geb = new GlobalEventBus();
+let uigeb = new UIGEB();
 
 l.debug('New Team Page');
 
@@ -34,8 +36,14 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 reqManager.getTeams();
 reqManager.getBlockedMembers();
 
-geb.addEventListener('requestunblockuser', ($evt) => {
-    reqManager.setBlockStatus($evt.data, false);
+uigeb.addEventListener('requestunblockuser', ($evt) => {
+    let evtId = $evt.id;
+    l.debug('Event ID: ', evtId);
+    reqManager.setBlockStatus($evt.data, false)
+    .then(($response) => {
+        l.debug('Completing request unblock user: ', $response);
+        uigeb.completeUIEvent(evtId, $response);
+    });
 });
 
 geb.addEventListener('requestmemberlist', ($evt) => {
@@ -52,9 +60,15 @@ geb.addEventListener('requestchangemodstatus', ($evt) => {
     reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus);
 });
 
-geb.addEventListener('requestblockstatuschange', ($evt) => {
+uigeb.addEventListener('requestblockstatuschange', ($evt) => {
     l.debug('caught request change block status: ', $evt.data);
-    reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus);
+    let evtId = $evt.id;
+    l.debug('Event ID: ', evtId);
+    reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus)
+    .then(($response) => {
+        l.debug('Completing request block status change: ', $response);
+        uigeb.completeUIEvent(evtId, $response);
+    });
 });
 
 geb.addEventListener('requestsendinvite', ($evt) => {
