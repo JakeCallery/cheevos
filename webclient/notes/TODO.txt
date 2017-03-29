@@ -36,8 +36,12 @@ Handle Sending Badge to yourself (Currently fails)
 
 Known Bugs
 ---------------------------------------
+<none>
 
 Before Release:
+Look into Version Injection
+  https://www.npmjs.com/package/webpack-auto-inject-version
+
 Query Performance: https://neo4j.com/docs/cypher-refcard/current/ (see bottom right of page)
 
 Optimize "recent badges" call.  Maybe keep relationships to the last 10 badges on the user node
