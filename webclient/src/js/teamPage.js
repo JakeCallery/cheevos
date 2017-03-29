@@ -131,12 +131,16 @@ uigeb.addEventListener('requestblockstatuschange', ($evt) => {
     })
 });
 
-geb.addEventListener('requestsendinvite', ($evt) => {
+uigeb.addEventListener('requestsendinvite', ($evt) => {
     l.debug('caught send invite request: ', $evt.data) ;
+    let evtId = $evt.id;
+    l.debug('Event ID: ', evtId);
     reqManager.sendTeamInvite($evt.data.emailAddress, $evt.data.teamId)
     .then(($response) => {
         if($response.status === Status.SUCCESS){
             l.debug('Status: ', $response.status);
+            geb.dispatchEvent(new JacEvent('newinviteuserstatus', $response.data));
+            uigeb.completeUIEvent(evtId, $response);
         } else {
             l.error('Unknown response status: ', $response.status);
         }
