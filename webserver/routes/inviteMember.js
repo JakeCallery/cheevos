@@ -45,7 +45,8 @@ router.post('/', (req, res) => {
     .then(($emailResponse) => {
         console.log('Email Response: ', $emailResponse);
         let resObj = {
-            status:'SUCCESS'
+            status:'SUCCESS',
+            data: {}
         };
         res.status(200).json(resObj);
     })

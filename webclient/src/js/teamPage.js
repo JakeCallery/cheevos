@@ -114,9 +114,13 @@ uigeb.addEventListener('requestblockstatuschange', ($evt) => {
     l.debug('Event ID: ', evtId);
     reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus)
     .then(($response) => {
-        l.debug('Completing request block status change: ', $response);
-        geb.dispatchEvent(new JacEvent('newblockuserstatus', $response.data));
-        uigeb.completeUIEvent(evtId, $response);
+        if($response.status === Status.SUCCESS){
+            l.debug('Completing request block status change: ', $response);
+            geb.dispatchEvent(new JacEvent('newblockuserstatus', $response.data));
+            uigeb.completeUIEvent(evtId, $response);
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
     })
     .catch(($error) => {
         geb.dispatchEvent(new JacEvent('errorevent', $error.data));
@@ -125,7 +129,17 @@ uigeb.addEventListener('requestblockstatuschange', ($evt) => {
 
 geb.addEventListener('requestsendinvite', ($evt) => {
     l.debug('caught send invite request: ', $evt.data) ;
-    reqManager.sendTeamInvite($evt.data.emailAddress, $evt.data.teamId);
+    reqManager.sendTeamInvite($evt.data.emailAddress, $evt.data.teamId)
+    .then(($response) => {
+        if($response.status === Status.SUCCESS){
+            l.debug('Status: ', $response.status);
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    });
 });
 
 geb.addEventListener('requestchangeteamnotifications', ($evt) => {
@@ -135,6 +149,7 @@ geb.addEventListener('requestchangeteamnotifications', ($evt) => {
         l.debug('Response: ', $response);
         if($response.status === Status.SUCCESS){
             //TODO: Dispatch UI completion event?
+            l.debug('Status: ', $response.status);
         } else {
             l.error('Unknown response status: ', $response.status);
         }
@@ -146,7 +161,17 @@ geb.addEventListener('requestchangeteamnotifications', ($evt) => {
 
 geb.addEventListener('newblockuserstatus', ($evt) => {
     l.debug('caught new block user status');
-    reqManager.getBlockedMembers();
+    reqManager.getBlockedMembers()
+    .then(($response) => {
+        if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    });
 });
 
 function handleReadyStateChange($evt) {
