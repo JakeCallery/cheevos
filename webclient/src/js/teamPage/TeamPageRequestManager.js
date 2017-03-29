@@ -21,19 +21,20 @@ class TeamPageRequestManager extends EventDispatcher {
     //TODO: Limit number of teams returned
     getTeams(){
         let self = this;
-        l.debug('Getting Teams');
-
-        fetch('/api/listMyTeams', {
-            method: 'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
+        return new Promise((resolve, reject) => {
+            l.debug('Getting Teams');
+            fetch('/api/listMyTeams', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                })
             })
-        })
-        .then(($response) => {
-            $response.json()
+            .then(($response) => {
+                return $response.json();
+            })
             .then(($res) => {
                 l.debug('Get Teams Res: ', $res);
                 let moderatedIds = [];
@@ -54,16 +55,20 @@ class TeamPageRequestManager extends EventDispatcher {
 
                     teamObjs.push(teamObj);
                 }
-                self.geb.dispatchEvent(new JacEvent('newteamlist', teamObjs));
+                resolve({
+                    status: 'SUCCESS',
+                    data: teamObjs
+                });
             })
-            .catch(($err) => {
-                l.error('Get Teams Parse Error: ', $err);
+            .catch(($error) => {
+                l.error('List Teams Error: ', $error);
+                resolve({
+                    status: 'ERROR',
+                    message: $error
+                });
             });
-
         })
-        .catch(($error) => {
-            l.debug('List Teams Error: ', $error);
-        });
+
     }
 
     //TODO: Limit number of members returned

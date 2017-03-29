@@ -1,5 +1,10 @@
 Plan:
 
+Wrap all Request Manager calls in Promises
+Update teamPage.js and appPage.js to use uigeb
+Error Message Manager (watches for errorevent?
+  Maybe use the UIManager to watch for this and throw a pop up
+
 Result event loop
   Pop Up for Error Messages on website
   Double click blocking for buttons

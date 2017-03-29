@@ -11,6 +11,7 @@ import ServiceWorkerManager from 'general/ServiceWorkerManager';
 import UIManager from 'teamPage/TeamUIManager';
 import TeamPageRequestManager from 'teamPage/TeamPageRequestManager';
 import UIGEB from 'general/UIGEB';
+import JacEvent from 'jac/events/JacEvent';
 
 //import through loaders
 import '../css/main.css';
@@ -33,7 +34,17 @@ let reqManager = new TeamPageRequestManager();
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
 
 //Request Teams
-reqManager.getTeams();
+reqManager.getTeams()
+.then(($response) => {
+    if($response.status === 'SUCCESS'){
+        geb.dispatchEvent(new JacEvent('newteamlist', $response.data));
+    } else if ($response.status === 'ERROR') {
+        geb.dispatchEvent(new JacEvent('errorevent', $response.message));
+    } else {
+        l.error('Unknown response status: ', $response.status);
+    }
+});
+
 reqManager.getBlockedMembers();
 
 uigeb.addEventListener('requestunblockuser', ($evt) => {
