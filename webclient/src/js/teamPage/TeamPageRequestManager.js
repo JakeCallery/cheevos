@@ -127,12 +127,14 @@ class TeamPageRequestManager extends EventDispatcher {
     getBlockedMembers(){
         let self = this;
         l.debug('Getting Blocked Members...');
-        fetch('/api/listBlockedUsers', {
-            method: 'GET',
-            credentials: 'include'
-        })
-        .then(($response) => {
-            $response.json()
+        return new Promise((resolve, reject) => {
+            fetch('/api/listBlockedUsers', {
+                method: 'GET',
+                credentials: 'include'
+            })
+            .then(($response) => {
+                return $response.json();
+            })
             .then(($res) => {
                 let memberObjs = [];
                 for(let i = 0; i < $res.data.blockedUsers.length; i++){
@@ -153,12 +155,9 @@ class TeamPageRequestManager extends EventDispatcher {
                     members:memberObjs
                 }));
             })
-            .catch(($err) => {
-                l.error('List Blocked Users Error: ', $err);
+            .catch(($error) => {
+                l.error('List Blocked Users Error: ', $error);
             });
-        })
-        .catch(($error) => {
-            l.error('List Blocked Users Error: ', $error);
         });
     }
 
@@ -190,17 +189,19 @@ class TeamPageRequestManager extends EventDispatcher {
             })
             .then(($res) => {
                 l.debug('Change Block User Status Response: ', $res);
-                self.geb.dispatchEvent(new JacEvent('newblockuserstatus', {
-                    memberId: $memberId,
-                    newStatus: $newIsBlockedStatus
-                }));
-                resolve($res);
+                resolve({
+                    status: Status.SUCCESS,
+                    data: {
+                        memberId: $memberId,
+                        newStatus: $newIsBlockedStatus
+                    }
+                });
             })
             .catch(($error) => {
                 l.error('Change Block User Status Error: ', $error);
-                resolve({
-                    'status': 'ERROR',
-                    'message': $error
+                reject({
+                    status: Status.ERROR,
+                    data: $error
                 });
             });
         });

@@ -56,7 +56,11 @@ uigeb.addEventListener('requestunblockuser', ($evt) => {
     reqManager.setBlockStatus($evt.data, false)
     .then(($response) => {
         l.debug('Completing request unblock user: ', $response);
+        geb.dispatchEvent(new JacEvent('newblockuserstatus', $response.data));
         uigeb.completeUIEvent(evtId, $response);
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
     });
 });
 
@@ -91,8 +95,12 @@ uigeb.addEventListener('requestblockstatuschange', ($evt) => {
     reqManager.setBlockStatus($evt.data.memberId, $evt.data.newIsBlockedStatus)
     .then(($response) => {
         l.debug('Completing request block status change: ', $response);
+        geb.dispatchEvent(new JacEvent('newblockuserstatus', $response.data));
         uigeb.completeUIEvent(evtId, $response);
-    });
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    })
 });
 
 geb.addEventListener('requestsendinvite', ($evt) => {
