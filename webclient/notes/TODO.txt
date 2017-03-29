@@ -1,5 +1,5 @@
 Plan:
-
+setModstatus UI events
 Wrap all Request Manager calls in Promises
 Update teamPage.js and appPage.js to use uigeb
 Error Message Manager (watches for errorevent?

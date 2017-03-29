@@ -18,6 +18,7 @@ router.post('/', (req, res) => {
 
         if($dbResult.records.length === 1){
             resObj.status = 'SUCCESS';
+            resObj.data = {};
             res.status(200).json(resObj);
         } else {
             resObj.status = 'ERROR';

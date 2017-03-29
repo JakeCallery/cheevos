@@ -216,64 +216,83 @@ class TeamPageRequestManager extends EventDispatcher {
 
     setModStatus($memberId, $teamId, $newIsModStatus) {
         l.debug('Set Mod Status: ', $teamId, $memberId, $newIsModStatus);
-        let apiStr = '';
-        if($newIsModStatus === true){
-            apiStr = '/api/addModerator';
-        } else if ($newIsModStatus === false){
-            apiStr = '/api/removeModerator'
-        } else {
-            l.error('Bad Mod Status: ', $newIsModStatus, true);
-        }
-        fetch(apiStr, {
-            method: 'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
-                memberId: $memberId,
-                teamId: $teamId
+        return new Promise((resolve, reject) => {
+            let apiStr = '';
+            if($newIsModStatus === true){
+                apiStr = '/api/addModerator';
+            } else if ($newIsModStatus === false){
+                apiStr = '/api/removeModerator'
+            } else {
+                l.error('Bad Mod Status: ', $newIsModStatus, true);
+            }
+            fetch(apiStr, {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    memberId: $memberId,
+                    teamId: $teamId
+                })
             })
-        })
-        .then(($response) => {
-            l.debug('Set Mod Status Response: ', $response);
-        })
-        .catch(($error) => {
-            l.error('Set Mod Status Error: ', $error);
+            .then(($response) => {
+                return $response.json();
+            })
+            .then(($response) => {
+                l.debug('Set Mod Status Response: ', $response);
+                resolve({
+                    status: $response.status,
+                    data: $response.data
+                });
+            })
+            .catch(($error) => {
+                l.error('Set Mod Status Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
         });
     }
 
     setTeamNotificationsStatus($teamId, $newTeamNotificationsStatus) {
-        let apiStr = '';
-        if($newTeamNotificationsStatus === true){
-            apiStr = '/api/enableTeamNotifications';
-        } else if($newTeamNotificationsStatus === false){
-            apiStr = '/api/disableTeamNotifications';
-        } else {
-            l.error('Bad Notifications Status: ', $newTeamNotificationsStatus, true);
-        }
-
-        fetch(apiStr, {
-            method:'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body:JSON.stringify({
-                teamId: $teamId
+        return new Promise((resolve, reject) => {
+            let apiStr = '';
+            if($newTeamNotificationsStatus === true){
+                apiStr = '/api/enableTeamNotifications';
+            } else if($newTeamNotificationsStatus === false){
+                apiStr = '/api/disableTeamNotifications';
+            } else {
+                l.error('Bad Notifications Status: ', $newTeamNotificationsStatus, true);
+            }
+            fetch(apiStr, {
+                method:'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body:JSON.stringify({
+                    teamId: $teamId
+                })
             })
-        })
-        .then(($response) => {
-            $response.json()
+            .then(($response) => {
+                return $response.json();
+            })
             .then(($res) => {
                 l.debug('Change Team Notifications Res: ', $res);
+                resolve({
+                    status: $res.status,
+                    data: $res.data
+                });
             })
             .catch(($error) => {
                 l.debug('Change Team Notrifications Error: ', $error);
-            })
-        })
-        .catch(($error) => {
-            l.error('Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
         });
     }
 

@@ -95,7 +95,17 @@ geb.addEventListener('requestMainPage', ($evt) => {
 
 geb.addEventListener('requestchangemodstatus', ($evt) => {
     l.debug('caught request change mod status:', $evt.data);
-    reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus);
+    reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus)
+    .then(($response) => {
+        if($response.status === Status.SUCCESS){
+            l.debug('Success: ', $response);
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    });
 });
 
 uigeb.addEventListener('requestblockstatuschange', ($evt) => {
@@ -120,7 +130,18 @@ geb.addEventListener('requestsendinvite', ($evt) => {
 
 geb.addEventListener('requestchangeteamnotifications', ($evt) => {
     l.debug('caught request change team notifications');
-    reqManager.setTeamNotificationsStatus($evt.data.teamId, $evt.data.newTeamNotificationsStatus);
+    reqManager.setTeamNotificationsStatus($evt.data.teamId, $evt.data.newTeamNotificationsStatus)
+    .then(($response) => {
+        l.debug('Response: ', $response);
+        if($response.status === Status.SUCCESS){
+            //TODO: Dispatch UI completion event?
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    });
 });
 
 geb.addEventListener('newblockuserstatus', ($evt) => {
