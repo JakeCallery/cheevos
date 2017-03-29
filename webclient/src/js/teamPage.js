@@ -12,6 +12,7 @@ import UIManager from 'teamPage/TeamUIManager';
 import TeamPageRequestManager from 'teamPage/TeamPageRequestManager';
 import UIGEB from 'general/UIGEB';
 import JacEvent from 'jac/events/JacEvent';
+import Status from 'general/Status';
 
 //import through loaders
 import '../css/main.css';
@@ -36,15 +37,17 @@ document.addEventListener('readystatechange', handleReadyStateChange ,false);
 //Request Teams
 reqManager.getTeams()
 .then(($response) => {
-    if($response.status === 'SUCCESS'){
+    if($response.status === Status.SUCCESS){
         geb.dispatchEvent(new JacEvent('newteamlist', $response.data));
-    } else if ($response.status === 'ERROR') {
-        geb.dispatchEvent(new JacEvent('errorevent', $response.message));
     } else {
         l.error('Unknown response status: ', $response.status);
     }
+})
+.catch(($error) => {
+    geb.dispatchEvent(new JacEvent('errorevent', $error.data));
 });
 
+//Get Blocked Members
 reqManager.getBlockedMembers();
 
 uigeb.addEventListener('requestunblockuser', ($evt) => {
@@ -58,7 +61,17 @@ uigeb.addEventListener('requestunblockuser', ($evt) => {
 });
 
 geb.addEventListener('requestmemberlist', ($evt) => {
-    reqManager.getMembers($evt.data);
+    reqManager.getMembers($evt.data)
+    .then(($response) => {
+        if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('newmemberlist', $response.data));
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    })
 });
 
 geb.addEventListener('requestMainPage', ($evt) => {

@@ -3,12 +3,12 @@
  */
 
 import l from 'jac/logger/Logger';
-import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
 import TeamObj from 'teamPage/TeamObj';
 import MemberObj from 'teamPage/MemberObj';
+import Status from 'general/Status';
 
 class TeamPageRequestManager extends EventDispatcher {
     constructor(){
@@ -62,9 +62,9 @@ class TeamPageRequestManager extends EventDispatcher {
             })
             .catch(($error) => {
                 l.error('List Teams Error: ', $error);
-                resolve({
+                reject({
                     status: 'ERROR',
-                    message: $error
+                    data: $error
                 });
             });
         })
@@ -75,43 +75,51 @@ class TeamPageRequestManager extends EventDispatcher {
     getMembers($teamId){
         let self = this;
         l.debug('Getting members for: ', $teamId);
-        fetch('/api/listMembers', {
-            method: 'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
-                teamId: $teamId
+
+        return new Promise((resolve, reject) => {
+            fetch('/api/listMembers', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    teamId: $teamId
+                })
             })
-        })
-        .then(($response) => {
-            $response.json()
+            .then(($response) => {
+                return $response.json();
+            })
             .then(($res) => {
                 l.debug('List Members API Response: ', $res);
                 let memberObjs = [];
                 for(let i = 0; i < $res.data.members.length; i++){
                     let obj = $res.data.members[i];
                     let member = new MemberObj(obj.name,
-                                                obj.id,
-                                                obj.profileImg,
-                                                $res.data.teamId,
-                                                obj.isBlocked,
-                                                obj.isMod);
+                        obj.id,
+                        obj.profileImg,
+                        $res.data.teamId,
+                        obj.isBlocked,
+                        obj.isMod);
                     memberObjs.push(member);
                 }
-                self.geb.dispatchEvent(new JacEvent('newmemberlist', {
-                    myId: $res.data.myId,
-                    teamId:$res.data.teamId,
-                    members:memberObjs
-                }));
+
+                resolve({
+                    status: Status.SUCCESS,
+                    data:{
+                        myId: $res.data.myId,
+                        teamId:$res.data.teamId,
+                        members:memberObjs
+                    }
+                });
             })
-            .catch(($err) => {
-                l.error('List Memeber Parse Error: ', $err);
+            .catch(($error) => {
+                l.error('List Members API Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
             });
-        })
-        .catch(($error) => {
-            l.error('List Members API Error: ', $error);
         });
     }
 
