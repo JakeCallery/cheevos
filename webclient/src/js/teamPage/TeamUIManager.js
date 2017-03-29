@@ -86,6 +86,7 @@ class TeamUIManager extends EventDispatcher {
         l.debug('New Member List: ', $evt.data.members);
         let self = this;
         let teamEl =  this.doc.getElementById('teamDiv_' + $evt.data.teamId);
+        let inviteUIEl = this.doc.getElementById('inviteContainer_' + $evt.data.teamId);
         let membersDiv = this.doc.createElement('div');
         membersDiv.id = 'membersDiv_' + $evt.data.teamId;
         membersDiv.closeUI = function(){
@@ -99,7 +100,13 @@ class TeamUIManager extends EventDispatcher {
         };
 
         DOMUtils.addClass(membersDiv, 'membersDiv');
-        DOMUtils.insertAfter(teamEl, membersDiv);
+        l.debug('inviteUIEL: ', inviteUIEl);
+        if(inviteUIEl !== null){
+            DOMUtils.insertAfter(inviteUIEl, membersDiv);
+        } else {
+            DOMUtils.insertAfter(teamEl, membersDiv);
+        }
+
 
         for(let i = 0; i < $evt.data.members.length; i++){
             let memberEl = this.teamUIMaker.createMemberDiv($evt.data.myId, $evt.data.teamId, $evt.data.members[i], teamEl.isModerator);
