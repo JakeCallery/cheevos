@@ -213,17 +213,23 @@ class TeamUIMaker extends EventDispatcher {
             isModCB.disabled = true;
         }
 
-        isModCB.changeHandler = function($evt){
-            l.debug('Caught Change: ', $evt.target.checked, $evt.target.memberId);
-            self.geb.dispatchEvent(new JacEvent('requestchangemodstatus',
+        isModCB.clickHandler = function($evt){
+            l.debug('Caught click: ', $evt.target.checked, $evt.target.memberId);
+            let element = $evt.target;
+            element.disabled = true;
+            self.uigeb.dispatchUIEvent('requestchangemodstatus',
                 {
                     newIsModStatus: $evt.target.checked,
                     memberId: $evt.target.memberId,
                     teamId: $teamId
+                },
+                () => {
+                    l.debug('-- Caught Mod change request complete');
+                    element.disabled = false;
                 }
-            ));
+            );
         };
-        isModCB.addEventListener('change', isModCB.changeHandler);
+        isModCB.addEventListener('click', isModCB.clickHandler);
 
         container.closeUI = function(){
             l.debug('Closing MemberUI');

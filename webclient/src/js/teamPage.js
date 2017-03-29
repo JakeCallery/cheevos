@@ -93,12 +93,16 @@ geb.addEventListener('requestMainPage', ($evt) => {
     window.location = '/';
 });
 
-geb.addEventListener('requestchangemodstatus', ($evt) => {
+uigeb.addEventListener('requestchangemodstatus', ($evt) => {
     l.debug('caught request change mod status:', $evt.data);
+    let evtId = $evt.id;
+    l.debug('Event ID: ', evtId);
     reqManager.setModStatus($evt.data.memberId, $evt.data.teamId, $evt.data.newIsModStatus)
     .then(($response) => {
         if($response.status === Status.SUCCESS){
             l.debug('Success: ', $response);
+            geb.dispatchEvent(new JacEvent('newmodstatus', $response.data));
+            uigeb.completeUIEvent(evtId, $response);
         } else {
             l.error('Unknown response status: ', $response.status);
         }
