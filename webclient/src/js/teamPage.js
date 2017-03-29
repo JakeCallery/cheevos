@@ -48,7 +48,17 @@ reqManager.getTeams()
 });
 
 //Get Blocked Members
-reqManager.getBlockedMembers();
+reqManager.getBlockedMembers()
+.then(($response) => {
+    if($response.status === Status.SUCCESS){
+        geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
+    } else {
+        l.error('Unknown response status: ', $response.status);
+    }
+})
+.catch(($error) => {
+    geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+});
 
 uigeb.addEventListener('requestunblockuser', ($evt) => {
     let evtId = $evt.id;

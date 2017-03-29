@@ -151,12 +151,19 @@ class TeamPageRequestManager extends EventDispatcher {
                 }
 
                 l.debug('Got Blocked Members');
-                self.geb.dispatchEvent(new JacEvent('newblockedmemberlist', {
-                    members:memberObjs
-                }));
+                resolve({
+                    status: Status.SUCCESS,
+                    data: {
+                        members: memberObjs
+                    }
+                });
             })
             .catch(($error) => {
                 l.error('List Blocked Users Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                })
             });
         });
     }
