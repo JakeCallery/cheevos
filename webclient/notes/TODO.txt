@@ -1,8 +1,8 @@
 Plan:
 
-Update appPage.js to use uigeb
+Update appPage.js to use uigeb and new organization
   Send Badge Button disable/enable not working
-  Recent badges not working
+
 
 Error Message Manager (watches for errorevent?
   Maybe use the UIManager to watch for this and throw a pop up
@@ -76,6 +76,7 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Recent badges not working (fixed)
 Update teamPage.js to use uigeb
 setModstatus UI events
 Wrap all Request Manager calls in Promises
