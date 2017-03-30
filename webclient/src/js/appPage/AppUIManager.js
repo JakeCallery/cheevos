@@ -50,6 +50,7 @@ class UIManager extends EventDispatcher {
         this.previewBadgeButtonClickDelegate = EventUtils.bind(self, self.handlePreviewBadgeClick);
         this.sendBadgeCompleteDelegate = EventUtils.bind(self, self.handleSendBadgeComplete);
         this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
+        this.newRecentBadgesDelegate = EventUtils.bind(self, self.handleNewRecentBadges);
 
         //Event Handlers
         this.teamSelectionEl.addEventListener('change', self.teamSelectionChangeDelegate);
@@ -58,9 +59,10 @@ class UIManager extends EventDispatcher {
 
         //Global Events
         this.geb.addEventListener('serviceWorkerRegistered', self.serviceWorkerRegisteredDelegate);
+        this.geb.addEventListener('newrecentbadges', self.newRecentBadgesDelegate);
 
         //Init
-        this.populateRecentBadges();
+        //TODO: these need moved into appPage.js
         this.populateTeams();
     }
 
@@ -165,44 +167,23 @@ class UIManager extends EventDispatcher {
         self.memberSelectionEl.disabled = false;
     }
 
-    //TODO: Move Populate Badges Fetch to appPage.js
-    populateRecentBadges(){
-        l.debug('Populate Recent Badges');
-        fetch('api/listMyBadges', {
-            method:'POST',
-            credentials: 'include',
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            }),
-            body: JSON.stringify({
-            })
-        })
-        .then(($response) => {
-            $response.json()
-            .then(($res) => {
-                l.debug($res);
-                let badges = $res.data.badges;
-                for(let i = 0; i < badges.length; i++){
-                    let badge = badges[i];
-                    this.badgesContainer.appendChild(
-                        this.badgeUIMaker.createBadgeDiv(
-                            badge.titleText,
-                            badge.descText,
-                            badge.senderName,
-                            badge.senderId,
-                            badge.teamName,
-                            badge.iconUrl
-                        )
-                    );
-                }
-            })
-            .catch(($error) => {
-                l.error('ERROR: ', $error);
-            })
-        })
-        .catch(($error) => {
-            l.error('FETCH ERROR: ', $error);
-        });
+    handleNewRecentBadges($evt){
+        //TODO: Clear old UI first
+        l.debug('Caught new recent badges');
+        let badges = $evt.data;
+        for (let i = 0; i < badges.length; i++) {
+            let badge = badges[i];
+            this.badgesContainer.appendChild(
+                this.badgeUIMaker.createBadgeDiv(
+                    badge.titleText,
+                    badge.descText,
+                    badge.senderName,
+                    badge.senderId,
+                    badge.teamName,
+                    badge.iconUrl
+                )
+            );
+        }
     }
 
 }

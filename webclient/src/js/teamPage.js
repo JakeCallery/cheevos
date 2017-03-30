@@ -34,6 +34,7 @@ let reqManager = new TeamPageRequestManager();
 //Events
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
 
+//TODO: Move these into ready state change handler (need to wait on the dom)
 //Request Teams
 reqManager.getTeams()
 .then(($response) => {

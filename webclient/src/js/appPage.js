@@ -8,8 +8,10 @@ import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
 import JacEvent from 'jac/events/JacEvent';
 import GlobalEventBus from 'jac/events/GlobalEventBus';
-import UIManager from 'appPage/UIManager';
+import UIManager from 'appPage/AppUIManager';
 import ServiceWorkerManager from 'general/ServiceWorkerManager';
+import AppPageRequestManager from 'appPage/AppPageRequestManager';
+import Status from 'general/Status';
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
@@ -29,6 +31,7 @@ let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E
 //Setup Managers
 let uiManager = new UIManager(document);
 let swManager = new ServiceWorkerManager();
+let reqManager = new AppPageRequestManager();
 
 //DOM Elements
 let profileImg = document.getElementById('profileImg');
@@ -141,6 +144,17 @@ function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
         uiManager.init();
+        reqManager.getRecentBadges()
+        .then(($response) => {
+            if($response.status === Status.SUCCESS){
+                geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
+            } else {
+                l.error('Unknown response status: ', $response.status);
+            }
+        })
+        .catch(($error) => {
+            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        });
     } else if($evt.target.readyState === 'complete'){
         l.debug('Document Complete');
         document.removeEventListener('readystatechange', handleReadyStateChange,false);

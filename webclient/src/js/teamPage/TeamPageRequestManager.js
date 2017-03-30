@@ -56,14 +56,14 @@ class TeamPageRequestManager extends EventDispatcher {
                     teamObjs.push(teamObj);
                 }
                 resolve({
-                    status: 'SUCCESS',
+                    status: $res.status,
                     data: teamObjs
                 });
             })
             .catch(($error) => {
                 l.error('List Teams Error: ', $error);
                 reject({
-                    status: 'ERROR',
+                    status: Status.ERROR,
                     data: $error
                 });
             });
