@@ -35,7 +35,7 @@ class ServiceWorkerManager extends EventDispatcher {
         this.requestToggleUserSubscriptionDelegate = EventUtils.bind(self, self.handleRequestToggleUserSubscription);
 
         //Events
-        this.geb.addEventListener('serviceWorkerRegistered', self.swRegisteredDelegate);
+        this.geb.addEventListener('serviceworkerregistered', self.swRegisteredDelegate);
         this.geb.addEventListener('requesttoggleusersubscription', self.requestToggleUserSubscriptionDelegate);
         this.geb.addEventListener('requestUnSubscribeUser', self.requestUnSubscribeUserDelegate);
 
@@ -59,7 +59,7 @@ class ServiceWorkerManager extends EventDispatcher {
             .then((swReg) => {
                 l.debug('Service Worker is registered', swReg);
                 this.swRegistration = swReg;
-                this.geb.dispatchEvent(new JacEvent('serviceWorkerRegistered'));
+                this.geb.dispatchEvent(new JacEvent('serviceworkerregistered'));
             })
             .catch(($error) => {
                 l.error('Service Worker Error', $error);
@@ -79,10 +79,10 @@ class ServiceWorkerManager extends EventDispatcher {
             this.updateSubscriptionOnServer(subscription);
             if (this.isSubscribed) {
                 l.debug('User IS subscribed.');
-                this.geb.dispatchEvent(new JacEvent('userSubscribed'));
+                this.geb.dispatchEvent(new JacEvent('usersubscribed'));
             } else {
                 l.debug('User is NOT subscribed.');
-                this.geb.dispatchEvent(new JacEvent('userNotSubscribed'));
+                this.geb.dispatchEvent(new JacEvent('usernotsubscribed'));
             }
         });
     }
@@ -119,11 +119,11 @@ class ServiceWorkerManager extends EventDispatcher {
             l.debug('User is subscribed: ', subscription);
             this.updateSubscriptionOnServer(subscription);
             this.isSubscribed = true;
-            this.geb.dispatchEvent(new JacEvent('userSubscribed'));
+            this.geb.dispatchEvent(new JacEvent('usersubscribed'));
         })
         .catch((error) => {
             l.debug('Failed to subscribe the user: ', error);
-            this.geb.dispatchEvent(new JacEvent('userNotSubscribed'));
+            this.geb.dispatchEvent(new JacEvent('usernotsubscribed'));
         });
     }
 
@@ -138,7 +138,7 @@ class ServiceWorkerManager extends EventDispatcher {
             this.updateSubscriptionOnServer(null);
             l.debug('User is unsubscribed');
             this.isSubscribed = false;
-            this.geb.dispatchEvent(new JacEvent('userNotSubscribed'));
+            this.geb.dispatchEvent(new JacEvent('usernotsubscribed'));
         })
         .catch((error) => {
             l.error('Error Unsubscribing: ', error);

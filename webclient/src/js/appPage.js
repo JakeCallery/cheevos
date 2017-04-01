@@ -40,7 +40,7 @@ let profileImg = document.getElementById('profileImg');
 document.addEventListener('readystatechange', handleReadyStateChange ,false);
 
 
-geb.addEventListener('serviceWorkerRegistered', ($evt) => {
+geb.addEventListener('serviceworkerregistered', ($evt) => {
     l.debug('SW Ready!');
 });
 

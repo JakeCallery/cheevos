@@ -49,8 +49,8 @@ class HeaderUIManager extends EventDispatcher {
         this.logOutButton.addEventListener('click', self.logOutClickDelegate);
 
         //Global Events
-        this.geb.addEventListener('userSubscribed', self.userSubscribedDelegate);
-        this.geb.addEventListener('userNotSubscribed', self.userNotSubscribedDelegate);
+        this.geb.addEventListener('usersubscribed', self.userSubscribedDelegate);
+        this.geb.addEventListener('usernotsubscribed', self.userNotSubscribedDelegate);
     }
 
     handleManageTeamsClick($evt){
