@@ -30,7 +30,7 @@ router.post('/', (req, res) => {
             let isBlocked = neo4j.int($dbResult.records[i].get('isBlocked')).toNumber();
             let isMod = neo4j.int($dbResult.records[i].get('isMod')).toNumber();
 
-            resObj.myId = user.data.userId;
+            resObj.data.myId = user.data.userId;
 
             resObj.data.members.push({
                 id: member.properties.userId,

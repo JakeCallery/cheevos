@@ -54,61 +54,36 @@ geb.addEventListener('requestmanageteams', ($evt) => {
     window.location = '/teams';
 });
 
-geb.addEventListener('requestMyTeams', ($evt) => {
+geb.addEventListener('requestmyteams', ($evt) => {
     l.debug('caught request for teams');
-    fetch('/api/listMyTeams', {
-        method: 'POST',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-        })
-    })
+    reqManager.getMyTeams()
     .then(($response) => {
-        l.debug('List Teams Responded...');
-        $response.json()
-        .then(($res) => {
-            l.debug('RES: ', $res);
-            let data = $res.data;
-            geb.dispatchEvent(new JacEvent('requestmyteamsresponse', $res.data));
-        })
-        .catch(($error) => {
-            l.error('List Teams parse error: ', $error);
-        });
+        if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('newteams', $response.data));
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
     })
     .catch(($error) => {
-        l.debug('List Teams Error: ', $error);
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
     });
 });
 
 geb.addEventListener('requestteammembers', ($evt) => {
     l.debug('caught request team members for team: ', $evt.data.teamName, $evt.data.teamId);
-    fetch('/api/listMembers', {
-        method: 'POST',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify({
-            teamId: $evt.data.teamId
-        })
-    })
+    reqManager.getTeamMembers($evt.data.teamId)
     .then(($response) => {
-        l.debug('List Members API Response: ', $response);
-        $response.json()
-        .then(($res) => {
-            let data = $res.data;
-            geb.dispatchEvent(new JacEvent('requestteammembersresponse', data));
-
-        })
-        .catch(($error) => {
-            l.error('List Members Parsing Error: ', $error);
-        })
+        if($response.status === Status.SUCCESS){
+            l.debug('here');
+            geb.dispatchEvent(new JacEvent('newmembers', $response.data));
+            l.debug('here1');
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
     })
     .catch(($error) => {
-        l.error('List Members API Error: ', $error);
-    })
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    });
 });
 
 geb.addEventListener('requestsendbadge', ($evt) => {
@@ -117,14 +92,14 @@ geb.addEventListener('requestsendbadge', ($evt) => {
     reqManager.sendBadge($evt.data)
     .then(($response) => {
         if($response.status === Status.SUCCESS){
-            geb.dispatchEvent(new JacEvent('sendbadgecomplete',$res));
+            geb.dispatchEvent(new JacEvent('sendbadgecomplete',$response));
         } else {
             l.error('Unknown Response Status: ', $response.status);
         }
     })
     .catch(($error) => {
         geb.dispatchEvent(new JacEvent('errorevent', $error.data));
-        //geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
+        geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
     });
 
 });
@@ -132,7 +107,22 @@ geb.addEventListener('requestsendbadge', ($evt) => {
 function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
+        //Setup UI
         uiManager.init();
+
+        //Get Initial Data
+        reqManager.getMyTeams()
+        .then(($response) => {
+            if($response.status === Status.SUCCESS){
+                geb.dispatchEvent(new JacEvent('newteams', $response.data));
+            } else {
+                l.error('Unknown Response Status: ', $response.status);
+            }
+        })
+        .catch(($error) => {
+            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        });
+
         reqManager.getRecentBadges()
         .then(($response) => {
             if($response.status === Status.SUCCESS){

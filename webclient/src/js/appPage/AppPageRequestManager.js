@@ -66,7 +66,6 @@ export default class AppPageRequestManager extends EventDispatcher {
                 resolve({
                     status: $res.status
                 });
-                //geb.dispatchEvent(new JacEvent('sendbadgecomplete',$res));
             })
             .catch(($error) => {
                 l.debug('Send Badge Error: ', $error);
@@ -74,9 +73,71 @@ export default class AppPageRequestManager extends EventDispatcher {
                     status: Status.ERROR,
                     data: $error
                 });
-                //geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
             });
         });
+    }
 
+    getMyTeams(){
+        return new Promise((resolve, reject) => {
+            fetch('/api/listMyTeams', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                })
+            })
+            .then(($response) => {
+                return $response.json();
+            })
+            .then(($response) => {
+                l.debug('Response: ', $response);
+                resolve({
+                    status: $response.status,
+                    data: $response.data
+                });
+            })
+            .catch(($error) => {
+                l.debug('List Teams Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
+        });
+    }
+
+    getTeamMembers($teamId){
+         return new Promise((resolve, reject) => {
+             fetch('/api/listMembers', {
+                 method: 'POST',
+                 credentials: 'include',
+                 headers: new Headers({
+                     'Content-Type': 'application/json'
+                 }),
+                 body: JSON.stringify({
+                     teamId: $teamId
+                 })
+             })
+             .then(($response) => {
+                 l.debug('List Members API Response: ', $response);
+                 return $response.json();
+             })
+             .then(($response) => {
+                 l.debug('Response: ', $response);
+                 resolve({
+                    status: $response.status,
+                     data: $response.data
+                 });
+             })
+             .catch(($error) => {
+                 l.error('List Members API Error: ', $error);
+                 reject({
+                     status: Status.ERROR,
+                     data: $error
+                 });
+             })
+         });
     }
 }

@@ -26,7 +26,7 @@ class UIManager extends EventDispatcher {
     }
 
     init(){
-        l.debug('UI Manager Init');
+        l.debug('***** UI Manager Init *******');
 
         //setup header
         this.headerUIManager.init();
@@ -51,6 +51,9 @@ class UIManager extends EventDispatcher {
         this.sendBadgeCompleteDelegate = EventUtils.bind(self, self.handleSendBadgeComplete);
         this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
         this.newRecentBadgesDelegate = EventUtils.bind(self, self.handleNewRecentBadges);
+        this.requestMyTeamsDelegate = EventUtils.bind(self, self.handleRequestMyTeams);
+        this.newTeamsDelegate = EventUtils.bind(self, self.handleNewTeams);
+        this.newMembersDelegate = EventUtils.bind(self, self.handleNewMembers);
 
         //Event Handlers
         this.teamSelectionEl.addEventListener('change', self.teamSelectionChangeDelegate);
@@ -60,10 +63,13 @@ class UIManager extends EventDispatcher {
         //Global Events
         this.geb.addEventListener('serviceworkerregistered', self.serviceWorkerRegisteredDelegate);
         this.geb.addEventListener('newrecentbadges', self.newRecentBadgesDelegate);
+        this.geb.addEventListener('requestmyteams', self.requestMyTeamsDelegate);
+        this.geb.addEventListener('newteams', self.newTeamsDelegate);
+        this.geb.addEventListener('newmembers', self.newMembersDelegate);
 
         //Init
         //TODO: these need moved into appPage.js
-        this.populateTeams();
+        //this.populateTeams();
     }
 
     handleSendBadgeClick($evt){
@@ -102,18 +108,14 @@ class UIManager extends EventDispatcher {
         this.isSWRegistered = true;
     }
 
-    populateTeams(){
-        l.debug('Populate Teams');
-        let self = this;
-        this.geb.addEventListener('requestmyteamsresponse', self.requestMyTeamsResponseDelegate);
-        this.geb.dispatchEvent(new JacEvent('requestMyTeams'));
+    handleRequestMyTeams($evt){
+        this.teamSelectionEl.disabled = true;
+        this.memberSelectionEl.disabled = true;
     }
 
-    handleRequestMyTeamsResponse($evt){
+    handleNewTeams($evt){
         l.debug('My teams: ', $evt.data);
         let self = this;
-        this.geb.removeEventListener('requestmyteamsresponse', self.requestMyTeamsResponseDelegate);
-
         DOMUtils.removeAllChildren(self.teamSelectionEl);
 
         for(let i = 0; i < $evt.data.teams.length; i++){
@@ -130,12 +132,15 @@ class UIManager extends EventDispatcher {
 
     handleTeamSelectionChange($evt){
         l.debug('Team Selection Change');
-        let self = this;
-        let index = self.teamSelectionEl.selectedIndex;
-        this.populateMembers(self.teamSelectionEl.options[index].value,
-                             self.teamSelectionEl.options[index].text);
+        let index = this.teamSelectionEl.selectedIndex;
+        this.memberSelectionEl.disabled = true;
+        this.geb.dispatchEvent(new JacEvent('requestteammembers', {
+            teamId: this.teamSelectionEl.options[index].value,
+            teamName: this.teamSelectionEl.options[index].text
+        }));
     }
 
+/*
     populateMembers($teamId, $teamName){
         l.debug('Populate Members: ', $teamId, $teamName);
         let self = this;
@@ -147,24 +152,21 @@ class UIManager extends EventDispatcher {
         this.geb.addEventListener('requestteammembersresponse', self.requestTeamMembersResponseDelegate);
         this.geb.dispatchEvent(new JacEvent('requestteammembers', data));
     }
+*/
 
-    handleRequestTeamMembersResponse($evt){
-        l.debug('Team Members: ', $evt.data);
-        let self = this;
-        this.geb.removeEventListener('requestteammembersresponse', self.requestTeamMembersResponseDelegate);
-
-        DOMUtils.removeAllChildren(self.memberSelectionEl);
-
+    handleNewMembers($evt){
+        l.debug('****** Team Members: ', $evt.data);
+        DOMUtils.removeAllChildren(this.memberSelectionEl);
         //Populate selection here
         for(let i = 0 ; i < $evt.data.members.length; i++){
             let member = $evt.data.members[i];
-            let optionEl = self.doc.createElement('option');
+            let optionEl = this.doc.createElement('option');
             optionEl.value = member.id;
             optionEl.textContent = member.name;
-            self.memberSelectionEl.appendChild(optionEl);
+            this.memberSelectionEl.appendChild(optionEl);
         }
 
-        self.memberSelectionEl.disabled = false;
+        this.memberSelectionEl.disabled = false;
     }
 
     handleNewRecentBadges($evt){
