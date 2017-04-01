@@ -55,23 +55,23 @@ class HeaderUIManager extends EventDispatcher {
 
     handleManageTeamsClick($evt){
         l.debug('Caught Manage Teams Click');
-        this.geb.dispatchEvent(new JacEvent('requestManageTeams'));
+        this.geb.dispatchEvent(new JacEvent('requestmanageteams'));
     }
 
     handleMainPageClick($evt){
         l.debug('Caught Main Page Click');
-        this.geb.dispatchEvent(new JacEvent('requestMainPage'));
+        this.geb.dispatchEvent(new JacEvent('requestmainpage'));
     }
 
     handleLogOutClick($evt){
         l.debug('Caught Log Out Click');
-        this.geb.dispatchEvent(new JacEvent('requestLogOut'));
+        this.geb.dispatchEvent(new JacEvent('requestlogout'));
     }
 
     handleNotificationsSwitchClick($evt) {
         l.debug('Caught Notifications Switch Click');
         this.notificationsSwitch.disabled = true;
-        this.geb.dispatchEvent(new JacEvent('requestToggleUserSubscription'));
+        this.geb.dispatchEvent(new JacEvent('requesttoggleusersubscription'));
     }
 
     handleUserSubscribed($evt){

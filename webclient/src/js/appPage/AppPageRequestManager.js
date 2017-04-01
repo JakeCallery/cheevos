@@ -47,4 +47,36 @@ export default class AppPageRequestManager extends EventDispatcher {
             });
         });
     }
+
+    sendBadge($badgeData){
+        return new Promise((resolve, reject) => {
+            fetch('/api/sendBadge', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify($badgeData)
+            })
+            .then(($response) => {
+                return $response.json();
+            })
+            .then(($res) => {
+                l.debug('Response: ', $res);
+                resolve({
+                    status: $res.status
+                });
+                //geb.dispatchEvent(new JacEvent('sendbadgecomplete',$res));
+            })
+            .catch(($error) => {
+                l.debug('Send Badge Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+                //geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
+            });
+        });
+
+    }
 }

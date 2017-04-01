@@ -36,7 +36,7 @@ class ServiceWorkerManager extends EventDispatcher {
 
         //Events
         this.geb.addEventListener('serviceWorkerRegistered', self.swRegisteredDelegate);
-        this.geb.addEventListener('requestToggleUserSubscription', self.requestToggleUserSubscriptionDelegate);
+        this.geb.addEventListener('requesttoggleusersubscription', self.requestToggleUserSubscriptionDelegate);
         this.geb.addEventListener('requestUnSubscribeUser', self.requestUnSubscribeUserDelegate);
 
         //Do work

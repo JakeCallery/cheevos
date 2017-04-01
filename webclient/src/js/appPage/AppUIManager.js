@@ -78,7 +78,7 @@ class UIManager extends EventDispatcher {
             descText: this.descTextField.value
         };
 
-        this.geb.dispatchEvent(new JacEvent('requestSendBadge', data));
+        this.geb.dispatchEvent(new JacEvent('requestsendbadge', data));
     }
 
     handleSendBadgeComplete($evt){
@@ -105,14 +105,14 @@ class UIManager extends EventDispatcher {
     populateTeams(){
         l.debug('Populate Teams');
         let self = this;
-        this.geb.addEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
+        this.geb.addEventListener('requestmyteamsresponse', self.requestMyTeamsResponseDelegate);
         this.geb.dispatchEvent(new JacEvent('requestMyTeams'));
     }
 
     handleRequestMyTeamsResponse($evt){
         l.debug('My teams: ', $evt.data);
         let self = this;
-        this.geb.removeEventListener('requestMyTeamsResponse', self.requestMyTeamsResponseDelegate);
+        this.geb.removeEventListener('requestmyteamsresponse', self.requestMyTeamsResponseDelegate);
 
         DOMUtils.removeAllChildren(self.teamSelectionEl);
 
@@ -144,14 +144,14 @@ class UIManager extends EventDispatcher {
             teamName:$teamName
         };
 
-        this.geb.addEventListener('requestTeamMembersResponse', self.requestTeamMembersResponseDelegate);
-        this.geb.dispatchEvent(new JacEvent('requestTeamMembers', data));
+        this.geb.addEventListener('requestteammembersresponse', self.requestTeamMembersResponseDelegate);
+        this.geb.dispatchEvent(new JacEvent('requestteammembers', data));
     }
 
     handleRequestTeamMembersResponse($evt){
         l.debug('Team Members: ', $evt.data);
         let self = this;
-        this.geb.removeEventListener('requestTeamMembersResponse', self.requestTeamMembersResponseDelegate);
+        this.geb.removeEventListener('requestteammembersresponse', self.requestTeamMembersResponseDelegate);
 
         DOMUtils.removeAllChildren(self.memberSelectionEl);
 

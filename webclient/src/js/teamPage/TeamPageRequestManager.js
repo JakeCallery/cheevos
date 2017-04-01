@@ -17,7 +17,7 @@ class TeamPageRequestManager extends EventDispatcher {
         l.debug('New Team Page Request Manager');
         this.geb = new GlobalEventBus();
     }
-
+    //TODO: Return actual status, not Status.SUCCESS
     //TODO: Limit number of teams returned
     getTeams(){
         let self = this;

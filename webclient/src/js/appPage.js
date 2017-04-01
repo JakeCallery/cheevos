@@ -44,12 +44,12 @@ geb.addEventListener('serviceWorkerRegistered', ($evt) => {
     l.debug('SW Ready!');
 });
 
-geb.addEventListener('requestLogOut', ($evt) => {
+geb.addEventListener('requestlogout', ($evt) => {
     l.debug('Caught Logout request');
     window.location = '/logout';
 });
 
-geb.addEventListener('requestManageTeams', ($evt) => {
+geb.addEventListener('requestmanageteams', ($evt) => {
     l.debug('caught request manage teams');
     window.location = '/teams';
 });
@@ -71,7 +71,7 @@ geb.addEventListener('requestMyTeams', ($evt) => {
         .then(($res) => {
             l.debug('RES: ', $res);
             let data = $res.data;
-            geb.dispatchEvent(new JacEvent('requestMyTeamsResponse', $res.data));
+            geb.dispatchEvent(new JacEvent('requestmyteamsresponse', $res.data));
         })
         .catch(($error) => {
             l.error('List Teams parse error: ', $error);
@@ -82,7 +82,7 @@ geb.addEventListener('requestMyTeams', ($evt) => {
     });
 });
 
-geb.addEventListener('requestTeamMembers', ($evt) => {
+geb.addEventListener('requestteammembers', ($evt) => {
     l.debug('caught request team members for team: ', $evt.data.teamName, $evt.data.teamId);
     fetch('/api/listMembers', {
         method: 'POST',
@@ -99,7 +99,7 @@ geb.addEventListener('requestTeamMembers', ($evt) => {
         $response.json()
         .then(($res) => {
             let data = $res.data;
-            geb.dispatchEvent(new JacEvent('requestTeamMembersResponse', data));
+            geb.dispatchEvent(new JacEvent('requestteammembersresponse', data));
 
         })
         .catch(($error) => {
@@ -111,31 +111,20 @@ geb.addEventListener('requestTeamMembers', ($evt) => {
     })
 });
 
-geb.addEventListener('requestSendBadge', ($evt) => {
+geb.addEventListener('requestsendbadge', ($evt) => {
     l.debug('Caught Request Send Badge: ', $evt.data);
 
-    fetch('/api/sendBadge', {
-        method: 'POST',
-        credentials: 'include',
-        headers: new Headers({
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify($evt.data)
-    })
+    reqManager.sendBadge($evt.data)
     .then(($response) => {
-        $response.json()
-        .then(($res) => {
-            l.debug('Response: ', $res);
-            geb.dispatchEvent(new JacEvent('sendBadgeComplete',$res));
-        })
-        .catch(($error) => {
-            l.error('Send Badge Response Parse Error: ', $error);
-            geb.dispatchEvent(new JacEvent('sendBadgeFailed', $error));
-        })
+        if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('sendbadgecomplete',$res));
+        } else {
+            l.error('Unknown Response Status: ', $response.status);
+        }
     })
     .catch(($error) => {
-        l.debug('Send Badge Error: ', $error);
-        geb.dispatchEvent(new JacEvent('sendBadgeFailed', $error));
+        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        //geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
     });
 
 });

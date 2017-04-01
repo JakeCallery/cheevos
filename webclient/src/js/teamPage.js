@@ -89,7 +89,7 @@ geb.addEventListener('requestmemberlist', ($evt) => {
     })
 });
 
-geb.addEventListener('requestMainPage', ($evt) => {
+geb.addEventListener('requestmainpage', ($evt) => {
     l.debug('caught request main page');
     window.location = '/';
 });
