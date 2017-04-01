@@ -8,6 +8,7 @@ import ConsoleTarget from 'jac/logger/ConsoleTarget';
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
+import '../css/normalize.css';
 import '../css/main.css';
 
 l.addLogTarget(new ConsoleTarget());

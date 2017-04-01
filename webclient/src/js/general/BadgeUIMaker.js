@@ -3,7 +3,6 @@
  */
 import l from 'jac/logger/Logger';
 import DOMUtils from 'jac/utils/DOMUtils';
-import EventUtils from 'jac/utils/EventUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 
 class BadgeUIMaker extends EventDispatcher {

@@ -11,6 +11,7 @@ import swURL from "file-loader?name=service-worker.js!babel-loader!./service-wor
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
+import '../css/normalize.css';
 import '../css/main.css';
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';

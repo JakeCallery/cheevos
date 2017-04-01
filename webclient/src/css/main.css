@@ -342,3 +342,17 @@ Invite User Div
 .inviteCancelButton {
 
 }
+
+/****************
+Error Div
+*****************/
+.errorUIDiv {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #a719a5
+}
+
+.errorUIP {
+    color: #e0e6ea;
+}

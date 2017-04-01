@@ -2,6 +2,7 @@
  * Created by Jake on 2/7/2017.
  */
 
+//Imports
 import l from 'jac/logger/Logger';
 import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
@@ -12,9 +13,11 @@ import UIManager from 'appPage/AppUIManager';
 import ServiceWorkerManager from 'general/ServiceWorkerManager';
 import AppPageRequestManager from 'appPage/AppPageRequestManager';
 import Status from 'general/Status';
+import ErrorManager from 'general/ErrorManager';
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
+import '../css/normalize.css';
 import '../css/main.css';
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';
@@ -29,6 +32,7 @@ let geb = new GlobalEventBus();
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
 
 //Setup Managers
+let errManager = new ErrorManager(document);
 let uiManager = new UIManager(document);
 let swManager = new ServiceWorkerManager();
 let reqManager = new AppPageRequestManager();
@@ -108,6 +112,7 @@ function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
         //Setup UI
+        errManager.init();
         uiManager.init();
 
         //Get Initial Data
@@ -126,6 +131,7 @@ function handleReadyStateChange($evt) {
         reqManager.getRecentBadges()
         .then(($response) => {
             if($response.status === Status.SUCCESS){
+                geb.dispatchEvent(new JacEvent('errorevent', $error.data));
                 geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
             } else {
                 l.error('Unknown response status: ', $response.status);

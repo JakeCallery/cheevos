@@ -7,6 +7,7 @@ import VerboseLevel from 'jac/logger/VerboseLevel';
 import LogLevel from 'jac/logger/LogLevel';
 import ConsoleTarget from 'jac/logger/ConsoleTarget';
 
+import '../css/normalize.css';
 import '../css/main.css';
 
 //TODO: Wait for dom ready

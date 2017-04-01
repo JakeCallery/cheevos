@@ -15,6 +15,7 @@ import JacEvent from 'jac/events/JacEvent';
 import Status from 'general/Status';
 
 //import through loaders
+import '../css/normalize.css';
 import '../css/main.css';
 
 l.addLogTarget(new ConsoleTarget());
