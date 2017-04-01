@@ -1,18 +1,7 @@
 Plan:
 
-Update appPage.js to use uigeb and new organization
-  Send Badge Button disable/enable not working
-
-
 Error Message Manager (watches for errorevent?
   Maybe use the UIManager to watch for this and throw a pop up
-
-Result event loop
-  Pop Up for Error Messages on website
-  Double click blocking for buttons
-  notification of new data
-  UI update on new data
-  Notification of request completion
 
 Limits on List Team and Members requests
 
@@ -76,6 +65,15 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Result event loop
+  Pop Up for Error Messages on website
+  Double click blocking for buttons
+  notification of new data
+  UI update on new data
+  Notification of request completion
+
+Update appPage.js to use uigeb and new organization
+  Send Badge Button disable/enable not working
 Recent badges not working (fixed)
 Update teamPage.js to use uigeb
 setModstatus UI events
