@@ -43,18 +43,15 @@ class UIManager extends EventDispatcher {
         //Delegates
         let self = this;
         this.serviceWorkerRegisteredDelegate = EventUtils.bind(self, self.handleSWRegistered);
-        this.requestMyTeamsResponseDelegate = EventUtils.bind(self, self.handleRequestMyTeamsResponse);
-        this.requestTeamMembersResponseDelegate = EventUtils.bind(self, self.handleRequestTeamMembersResponse);
         this.teamSelectionChangeDelegate = EventUtils.bind(self, self.handleTeamSelectionChange);
         this.sendBadgeButtonClickDelegate = EventUtils.bind(self, self.handleSendBadgeClick);
         this.previewBadgeButtonClickDelegate = EventUtils.bind(self, self.handlePreviewBadgeClick);
-        this.sendBadgeCompleteDelegate = EventUtils.bind(self, self.handleSendBadgeComplete);
-        this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
         this.newRecentBadgesDelegate = EventUtils.bind(self, self.handleNewRecentBadges);
         this.requestMyTeamsDelegate = EventUtils.bind(self, self.handleRequestMyTeams);
         this.newTeamsDelegate = EventUtils.bind(self, self.handleNewTeams);
         this.newMembersDelegate = EventUtils.bind(self, self.handleNewMembers);
-
+        this.sendBadgeCompleteDelegate = EventUtils.bind(self, self.handleSendBadgeComplete);
+        this.sendBadgeFailedDelegate = EventUtils.bind(self, self.handleSendBadgeFailed);
         //Event Handlers
         this.teamSelectionEl.addEventListener('change', self.teamSelectionChangeDelegate);
         this.sendBadgeButton.addEventListener('click', self.sendBadgeButtonClickDelegate);
@@ -66,10 +63,8 @@ class UIManager extends EventDispatcher {
         this.geb.addEventListener('requestmyteams', self.requestMyTeamsDelegate);
         this.geb.addEventListener('newteams', self.newTeamsDelegate);
         this.geb.addEventListener('newmembers', self.newMembersDelegate);
-
-        //Init
-        //TODO: these need moved into appPage.js
-        //this.populateTeams();
+        this.geb.addEventListener('sendbadgecomplete', self.sendBadgeCompleteDelegate);
+        this.geb.addEventListener('sendbadgefailed', self.sendBadgeFailedDelegate);
     }
 
     handleSendBadgeClick($evt){
@@ -139,20 +134,6 @@ class UIManager extends EventDispatcher {
             teamName: this.teamSelectionEl.options[index].text
         }));
     }
-
-/*
-    populateMembers($teamId, $teamName){
-        l.debug('Populate Members: ', $teamId, $teamName);
-        let self = this;
-        let data = {
-            teamId:$teamId,
-            teamName:$teamName
-        };
-
-        this.geb.addEventListener('requestteammembersresponse', self.requestTeamMembersResponseDelegate);
-        this.geb.dispatchEvent(new JacEvent('requestteammembers', data));
-    }
-*/
 
     handleNewMembers($evt){
         l.debug('****** Team Members: ', $evt.data);
