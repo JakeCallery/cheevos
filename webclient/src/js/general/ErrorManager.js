@@ -13,6 +13,7 @@ export default class ErrorManager extends EventDispatcher {
         this.doc = $doc;
         this.geb = new GlobalEventBus();
         this.isOpen = false;
+        this.timeoutId = null;
 
         l.debug('New ErrorManager');
     }
@@ -58,14 +59,27 @@ export default class ErrorManager extends EventDispatcher {
 
     closeUI() {
         this.isOpen = false;
+        this.clearUITimeout();
         this.errorUIP.innerHTML = '';
         if(this.errorUIWrapperDiv.parentNode){
             this.errorUIWrapperDiv.parentNode.removeChild(this.errorUIWrapperDiv);
         }
     }
 
+    clearUITimeout(){
+        if(this.timeoutId){
+            l.debug('Clearing Error UI Timeout');
+            clearTimeout(this.timeoutId);
+        }
+    }
+
     handleErrorEvent($evt){
         l.debug('---------- Caught Error Event');
         this.openUI($evt.data);
+        this.clearUITimeout();
+        this.timeoutId = setTimeout(() => {
+            l.debug('Time\'s up, closing error UI');
+            this.closeUI();
+        }, 5000);
     }
 }

@@ -1,8 +1,5 @@
 Plan:
 
-Error Message Manager (watches for errorevent?
-  Maybe use the UIManager to watch for this and throw a pop up
-
 Limits on List Team and Members requests
 
 rough in new user tutorial
@@ -66,6 +63,9 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Error Message Manager (watches for errorevent)?
+  Maybe use the UIManager to watch for this and throw a pop up
+
 Result event loop
   Pop Up for Error Messages on website
   Double click blocking for buttons

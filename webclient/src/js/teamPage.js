@@ -13,6 +13,7 @@ import TeamPageRequestManager from 'teamPage/TeamPageRequestManager';
 import UIGEB from 'general/UIGEB';
 import JacEvent from 'jac/events/JacEvent';
 import Status from 'general/Status';
+import ErrorManager from 'general/ErrorManager';
 
 //import through loaders
 import '../css/normalize.css';
@@ -28,6 +29,7 @@ let uigeb = new UIGEB();
 l.debug('New Team Page');
 
 //Setup managers
+let errManager = new ErrorManager(document);
 let uiManager = new UIManager(document);
 let swManager = new ServiceWorkerManager();
 let reqManager = new TeamPageRequestManager();
@@ -174,6 +176,7 @@ geb.addEventListener('newblockuserstatus', ($evt) => {
     reqManager.getBlockedMembers()
     .then(($response) => {
         if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
             geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
         } else {
             l.error('Unknown response status: ', $response.status);
@@ -188,6 +191,7 @@ function handleReadyStateChange($evt) {
     l.debug('Ready State Change: ', $evt.target.readyState);
     if($evt.target.readyState === 'interactive'){
         uiManager.init();
+        errManager.init();
     } else if($evt.target.readyState === 'complete'){
         l.debug('Document Complete');
         document.removeEventListener('readystatechange', handleReadyStateChange,false);
