@@ -346,13 +346,20 @@ Invite User Div
 /****************
 Error Div
 *****************/
-.errorUIDiv {
+.errorUIWrapperDiv {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #a719a5
+    background-color: #a719a5;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .errorUIP {
     color: #e0e6ea;
+}
+
+.errorCloseButton {
+
 }

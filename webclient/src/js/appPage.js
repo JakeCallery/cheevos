@@ -131,7 +131,6 @@ function handleReadyStateChange($evt) {
         reqManager.getRecentBadges()
         .then(($response) => {
             if($response.status === Status.SUCCESS){
-                geb.dispatchEvent(new JacEvent('errorevent', $error.data));
                 geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
             } else {
                 l.error('Unknown response status: ', $response.status);
