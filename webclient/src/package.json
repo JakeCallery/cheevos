@@ -4,7 +4,7 @@
   "description": "Cheevos Web Client",
   "main": "index.js",
   "dependencies": {
-    "fetch-polyfill": "0.8.2",
+    "document-ready-promise": "3.0.1",
     "shortid": "2.2.8",
     "uuid": "3.0.1",
     "web-push": "3.2.1",

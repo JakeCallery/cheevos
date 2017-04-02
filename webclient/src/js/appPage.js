@@ -14,6 +14,7 @@ import ServiceWorkerManager from 'general/ServiceWorkerManager';
 import AppPageRequestManager from 'appPage/AppPageRequestManager';
 import Status from 'general/Status';
 import ErrorManager from 'general/ErrorManager';
+import ReadyManager from 'ready/ReadyManager';
 
 //Import through loaders
 import 'file-loader?name=manifest.json!./manifest.json';
@@ -22,148 +23,116 @@ import '../css/main.css';
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';
 
-let domReady = false;
-let polyFillReady = false;
-
-if(!global.fetch){
-    require.ensure([], () => {
-        require('whatwg-fetch');
-        polyFillReady = true;
-        checkReady();
-    }, 'whatwg-fetch');
-} else {
-    polyFillReady = true;
-    checkReady();
-}
-
 l.addLogTarget(new ConsoleTarget());
 l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL | VerboseLevel.LINE);
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
 
-let geb = new GlobalEventBus();
+//Wait for Ready
+let readyManager = new ReadyManager();
+readyManager.ready()
+.then(($response) => {
+    //Basic Managers / Buses
+    let geb = new GlobalEventBus();
+    let reqManager = new AppPageRequestManager();
 
-//TODO: Find a way to put this in as external (file loader)
-let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
+    geb.addEventListener('serviceworkerregistered', ($evt) => {
+        l.debug('SW Ready!');
+    });
 
-let reqManager = new AppPageRequestManager();
+    geb.addEventListener('requestlogout', ($evt) => {
+        l.debug('Caught Logout request');
+        window.location = '/logout';
+    });
 
-//DOM Elements
-let profileImg = document.getElementById('profileImg');
+    geb.addEventListener('requestmanageteams', ($evt) => {
+        l.debug('caught request manage teams');
+        window.location = '/teams';
+    });
 
-//Events
-document.addEventListener('readystatechange', handleReadyStateChange ,false);
+    geb.addEventListener('requestmyteams', ($evt) => {
+        l.debug('caught request for teams');
+        reqManager.getMyTeams()
+            .then(($response) => {
+                if($response.status === Status.SUCCESS){
+                    geb.dispatchEvent(new JacEvent('newteams', $response.data));
+                } else {
+                    l.error('Unknown response status: ', $response.status);
+                }
+            })
+            .catch(($error) => {
+                geb.dispatchEvent(new JacEvent('errorevent', $error));
+            });
+    });
 
+    geb.addEventListener('requestteammembers', ($evt) => {
+        l.debug('caught request team members for team: ', $evt.data.teamName, $evt.data.teamId);
+        reqManager.getTeamMembers($evt.data.teamId)
+            .then(($response) => {
+                if($response.status === Status.SUCCESS){
+                    l.debug('here');
+                    geb.dispatchEvent(new JacEvent('newmembers', $response.data));
+                    l.debug('here1');
+                } else {
+                    l.error('Unknown response status: ', $response.status);
+                }
+            })
+            .catch(($error) => {
+                geb.dispatchEvent(new JacEvent('errorevent', $error));
+            });
+    });
 
-geb.addEventListener('serviceworkerregistered', ($evt) => {
-    l.debug('SW Ready!');
-});
+    geb.addEventListener('requestsendbadge', ($evt) => {
+        l.debug('Caught Request Send Badge: ', $evt.data);
 
-geb.addEventListener('requestlogout', ($evt) => {
-    l.debug('Caught Logout request');
-    window.location = '/logout';
-});
+        reqManager.sendBadge($evt.data)
+            .then(($response) => {
+                if($response.status === Status.SUCCESS){
+                    geb.dispatchEvent(new JacEvent('sendbadgecomplete',$response));
+                } else {
+                    l.error('Unknown Response Status: ', $response.status);
+                }
+            })
+            .catch(($error) => {
+                geb.dispatchEvent(new JacEvent('errorevent', $error));
+                geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
+            });
 
-geb.addEventListener('requestmanageteams', ($evt) => {
-    l.debug('caught request manage teams');
-    window.location = '/teams';
-});
+    });
 
-geb.addEventListener('requestmyteams', ($evt) => {
-    l.debug('caught request for teams');
+    //Setup Managers
+    let errManager = new ErrorManager(document);
+    let uiManager = new UIManager(document);
+    let swManager = new ServiceWorkerManager();
+
+    //Setup UI
+    errManager.init();
+    uiManager.init();
+
+    //Get Initial Data
     reqManager.getMyTeams()
     .then(($response) => {
-        if($response.status === Status.SUCCESS){
+        if ($response.status === Status.SUCCESS) {
             geb.dispatchEvent(new JacEvent('newteams', $response.data));
-        } else {
-            l.error('Unknown response status: ', $response.status);
-        }
-    })
-    .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error));
-    });
-});
-
-geb.addEventListener('requestteammembers', ($evt) => {
-    l.debug('caught request team members for team: ', $evt.data.teamName, $evt.data.teamId);
-    reqManager.getTeamMembers($evt.data.teamId)
-    .then(($response) => {
-        if($response.status === Status.SUCCESS){
-            l.debug('here');
-            geb.dispatchEvent(new JacEvent('newmembers', $response.data));
-            l.debug('here1');
-        } else {
-            l.error('Unknown response status: ', $response.status);
-        }
-    })
-    .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error));
-    });
-});
-
-geb.addEventListener('requestsendbadge', ($evt) => {
-    l.debug('Caught Request Send Badge: ', $evt.data);
-
-    reqManager.sendBadge($evt.data)
-    .then(($response) => {
-        if($response.status === Status.SUCCESS){
-            geb.dispatchEvent(new JacEvent('sendbadgecomplete',$response));
         } else {
             l.error('Unknown Response Status: ', $response.status);
         }
     })
     .catch(($error) => {
         geb.dispatchEvent(new JacEvent('errorevent', $error));
-        geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
     });
 
+    reqManager.getRecentBadges()
+    .then(($response) => {
+        if ($response.status === Status.SUCCESS) {
+            geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
+    });
+})
+.catch(($error) => {
+    l.error('Ready ERROR: ', $error);
 });
-
-function checkReady(){
-    if(domReady && polyFillReady) {
-        //Setup Managers
-        let errManager = new ErrorManager(document);
-        let uiManager = new UIManager(document);
-        let swManager = new ServiceWorkerManager();
-
-
-        //Setup UI
-        errManager.init();
-        uiManager.init();
-
-        //Get Initial Data
-        reqManager.getMyTeams()
-        .then(($response) => {
-            if ($response.status === Status.SUCCESS) {
-                geb.dispatchEvent(new JacEvent('newteams', $response.data));
-            } else {
-                l.error('Unknown Response Status: ', $response.status);
-            }
-        })
-        .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error));
-        });
-
-        reqManager.getRecentBadges()
-        .then(($response) => {
-            if ($response.status === Status.SUCCESS) {
-                geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
-            } else {
-                l.error('Unknown response status: ', $response.status);
-            }
-        })
-        .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error));
-        });
-    }
-}
-
-function handleReadyStateChange($evt) {
-    l.debug('Ready State Change: ', $evt.target.readyState);
-    if($evt.target.readyState === 'interactive') {
-        domReady = true;
-        checkReady();
-    } else if($evt.target.readyState === 'complete'){
-        l.debug('Document Complete');
-        document.removeEventListener('readystatechange', handleReadyStateChange,false);
-    }
-}
