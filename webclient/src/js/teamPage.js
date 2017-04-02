@@ -176,7 +176,6 @@ geb.addEventListener('newblockuserstatus', ($evt) => {
     reqManager.getBlockedMembers()
     .then(($response) => {
         if($response.status === Status.SUCCESS){
-            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
             geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
         } else {
             l.error('Unknown response status: ', $response.status);

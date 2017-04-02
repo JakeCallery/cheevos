@@ -285,12 +285,15 @@ class TeamUIMaker extends EventDispatcher {
             self.uigeb.dispatchUIEvent('requestunblockuser',
                 $memberObj.id,
                 () => {
-                l.debug('-- Caught Block request complete');
-                element.disabled = false;
-            });
+                    l.debug('-- Caught Block request complete');
+                    element.disabled = false;
+                    container.closeUI();
+                }
+            );
         };
         unblockButton.addEventListener('click', unblockButton.clickHandler);
 
+        //Container Functions
         container.closeUI = function(){
             l.debug('Closing Blocked Member UI');
             unblockButton.removeEventListener('click', unblockButton.clickHandler);
