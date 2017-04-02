@@ -1,7 +1,7 @@
 Plan:
 
 PolyFill fetch
-  Promisify require(whatwg-fetch)
+  Promisify require(whatwg-fetch) / Polyfill manager / "ready" manager?
   Only download if needed
   http://anujnair.com/blog/13-conditionally-load-multiple-polyfills-using-webpack-promises-and-code-splitting
 
