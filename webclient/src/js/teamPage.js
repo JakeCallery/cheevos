@@ -48,7 +48,7 @@ reqManager.getTeams()
     }
 })
 .catch(($error) => {
-    geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    geb.dispatchEvent(new JacEvent('errorevent', $error));
 });
 
 //Get Blocked Members
@@ -61,7 +61,7 @@ reqManager.getBlockedMembers()
     }
 })
 .catch(($error) => {
-    geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+    geb.dispatchEvent(new JacEvent('errorevent', $error));
 });
 
 uigeb.addEventListener('requestunblockuser', ($evt) => {
@@ -74,7 +74,7 @@ uigeb.addEventListener('requestunblockuser', ($evt) => {
         uigeb.completeUIEvent(evtId, $response);
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -88,7 +88,7 @@ geb.addEventListener('requestmemberlist', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     })
 });
 
@@ -112,7 +112,7 @@ uigeb.addEventListener('requestchangemodstatus', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -131,7 +131,7 @@ uigeb.addEventListener('requestblockstatuschange', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     })
 });
 
@@ -150,7 +150,7 @@ uigeb.addEventListener('requestsendinvite', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -167,7 +167,7 @@ geb.addEventListener('requestchangeteamnotifications', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -182,7 +182,7 @@ geb.addEventListener('newblockuserstatus', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 

@@ -22,6 +22,20 @@ import '../css/main.css';
 import 'file-loader?name=icon.png!../images/icon.png';
 import 'file-loader?name=badge.png!../images/badge.png';
 
+let domReady = false;
+let polyFillReady = false;
+
+if(!global.fetch){
+    require.ensure([], () => {
+        require('whatwg-fetch');
+        polyFillReady = true;
+        checkReady();
+    }, 'whatwg-fetch');
+} else {
+    polyFillReady = true;
+    checkReady();
+}
+
 l.addLogTarget(new ConsoleTarget());
 l.verboseFilter = (VerboseLevel.NORMAL | VerboseLevel.TIME | VerboseLevel.LEVEL | VerboseLevel.LINE);
 l.levelFilter = (LogLevel.DEBUG | LogLevel.INFO | LogLevel.WARNING | LogLevel.ERROR);
@@ -31,10 +45,6 @@ let geb = new GlobalEventBus();
 //TODO: Find a way to put this in as external (file loader)
 let applicationServerPublicKey = 'BETix3nG7KB6YIvsG0kTrs3BGv5_ebD9X5Wg-4ebcOjd0E2Wp1SGJfdD--El1bxEaINOASoipqZF_qqFe0S51n8';
 
-//Setup Managers
-let errManager = new ErrorManager(document);
-let uiManager = new UIManager(document);
-let swManager = new ServiceWorkerManager();
 let reqManager = new AppPageRequestManager();
 
 //DOM Elements
@@ -69,7 +79,7 @@ geb.addEventListener('requestmyteams', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -86,7 +96,7 @@ geb.addEventListener('requestteammembers', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
     });
 });
 
@@ -102,15 +112,20 @@ geb.addEventListener('requestsendbadge', ($evt) => {
         }
     })
     .catch(($error) => {
-        geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
         geb.dispatchEvent(new JacEvent('sendbadgefailed', $error));
     });
 
 });
 
-function handleReadyStateChange($evt) {
-    l.debug('Ready State Change: ', $evt.target.readyState);
-    if($evt.target.readyState === 'interactive'){
+function checkReady(){
+    if(domReady && polyFillReady) {
+        //Setup Managers
+        let errManager = new ErrorManager(document);
+        let uiManager = new UIManager(document);
+        let swManager = new ServiceWorkerManager();
+
+
         //Setup UI
         errManager.init();
         uiManager.init();
@@ -118,27 +133,35 @@ function handleReadyStateChange($evt) {
         //Get Initial Data
         reqManager.getMyTeams()
         .then(($response) => {
-            if($response.status === Status.SUCCESS){
+            if ($response.status === Status.SUCCESS) {
                 geb.dispatchEvent(new JacEvent('newteams', $response.data));
             } else {
                 l.error('Unknown Response Status: ', $response.status);
             }
         })
         .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+            geb.dispatchEvent(new JacEvent('errorevent', $error));
         });
 
         reqManager.getRecentBadges()
         .then(($response) => {
-            if($response.status === Status.SUCCESS){
+            if ($response.status === Status.SUCCESS) {
                 geb.dispatchEvent(new JacEvent('newrecentbadges', $response.data));
             } else {
                 l.error('Unknown response status: ', $response.status);
             }
         })
         .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error.data));
+            geb.dispatchEvent(new JacEvent('errorevent', $error));
         });
+    }
+}
+
+function handleReadyStateChange($evt) {
+    l.debug('Ready State Change: ', $evt.target.readyState);
+    if($evt.target.readyState === 'interactive') {
+        domReady = true;
+        checkReady();
     } else if($evt.target.readyState === 'complete'){
         l.debug('Document Complete');
         document.removeEventListener('readystatechange', handleReadyStateChange,false);

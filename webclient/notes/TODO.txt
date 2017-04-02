@@ -1,5 +1,10 @@
 Plan:
 
+PolyFill fetch
+  Promisify require(whatwg-fetch)
+  Only download if needed
+  http://anujnair.com/blog/13-conditionally-load-multiple-polyfills-using-webpack-promises-and-code-splitting
+
 Limits on List Team and Members requests
 
 rough in new user tutorial
@@ -26,10 +31,11 @@ Test APIs against odd characters
 Handle Sending Badge to yourself (Currently fails)
 Analytics
 Offline notification page (for updates once live?)
+---------------------------------------
 
 Known Bugs
----------------------------------------
 <none>
+---------------------------------------
 
 Before Release:
 Look into Version Injection

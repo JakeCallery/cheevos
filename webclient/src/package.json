@@ -4,9 +4,11 @@
   "description": "Cheevos Web Client",
   "main": "index.js",
   "dependencies": {
+    "fetch-polyfill": "0.8.2",
     "shortid": "2.2.8",
     "uuid": "3.0.1",
-    "web-push": "3.2.1"
+    "web-push": "3.2.1",
+    "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
     "babel-core": "6.20.0",
