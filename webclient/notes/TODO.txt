@@ -1,26 +1,22 @@
 Plan:
 
-PolyFill fetch
-  Promisify require(whatwg-fetch) / Polyfill manager / "ready" manager?
-  Only download if needed
-  http://anujnair.com/blog/13-conditionally-load-multiple-polyfills-using-webpack-promises-and-code-splitting
+Style Landing Page
+Style App Page
+Style Team Page
+Style User Invited Page
 
+Hook up preview badge button on app page
 Limits on List Team and Members requests
 
-rough in new user tutorial
-rough in new user invited tutorial
-Hook up preview badge button on app page
+Create Tutorial / First time login
+  rough in new user tutorial
+  rough in new user invited tutorial
 ---------------------------------------
 
 Upcoming Plan:
 Decide on whether or not to show badges sent while user was blocked
   after they become unblocked
 
-Style Landing Page
-Style App Page
-Style Team Page
-Style User Invited Page
-Create Tutorial / First time login
 Validate against google login status (https://developers.google.com/identity/sign-in/web/listeners)
 Check if on team when requesting badges by team (just returns 0 badges right now if not on team)
 When user unsubscribes, remove endpoint
@@ -69,6 +65,11 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+PolyFill fetch
+  Promisify require(whatwg-fetch) / Polyfill manager / "ready" manager?
+  Only download if needed
+  http://anujnair.com/blog/13-conditionally-load-multiple-polyfills-using-webpack-promises-and-code-splitting
+
 Error Message Manager (watches for errorevent)?
   Maybe use the UIManager to watch for this and throw a pop up
 
