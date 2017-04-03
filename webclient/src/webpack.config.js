@@ -65,6 +65,7 @@ module.exports = {
             template: 'html/app.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'appEntry'
             ]
         }),
@@ -74,6 +75,7 @@ module.exports = {
             template: 'html/apitest.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'apitestEntry'
             ]
         }),
@@ -83,6 +85,7 @@ module.exports = {
             template: 'html/invited.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'invitedEntry'
             ]
         }),
@@ -92,6 +95,7 @@ module.exports = {
             template: 'html/invitedNotLoggedIn.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'invitedNotLoggedInEntry'
             ]
         }),
@@ -101,6 +105,7 @@ module.exports = {
             template: 'html/landing.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'landingEntry'
             ]
         }),
@@ -110,6 +115,7 @@ module.exports = {
             template: 'html/team.html',
             hash: true,
             chunks: [
+                'general/resources',
                 'teamEntry'
             ]
         }),
