@@ -1,5 +1,11 @@
 Plan:
 
+Look into Version Injection
+  https://www.npmjs.com/package/webpack-auto-inject-version
+
+How to include static assets into build step
+  compress and copy images etc..
+
 Style Landing Page
 Style App Page
 Style Team Page
@@ -27,6 +33,8 @@ Test APIs against odd characters
 Handle Sending Badge to yourself (Currently fails)
 Analytics
 Offline notification page (for updates once live?)
+Setup Prod and Dev build scripts
+
 ---------------------------------------
 
 Known Bugs
@@ -34,8 +42,7 @@ Known Bugs
 ---------------------------------------
 
 Before Release:
-Look into Version Injection
-  https://www.npmjs.com/package/webpack-auto-inject-version
+
 
 Query Performance: https://neo4j.com/docs/cypher-refcard/current/ (see bottom right of page)
 

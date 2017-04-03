@@ -2,6 +2,7 @@
 
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackAutoInject = require('./forWebPack/webpack-auto-inject-version');
 
 module.exports = {
     entry: {
@@ -119,6 +120,12 @@ module.exports = {
                 warnings: false
             },
             sourceMap: true
+        }),
+
+        new WebpackAutoInject({
+            autoIncrease: true,
+            injectByTag: true,
+            injectAsComment: true
         }),
 
         function() {
