@@ -1,7 +1,7 @@
 Plan:
 
-Look into Version Injection
-  https://www.npmjs.com/package/webpack-auto-inject-version
+Webpack clean build
+https://www.npmjs.com/package/clean-webpack-plugin
 
 How to include static assets into build step
   compress and copy images etc..
@@ -72,6 +72,9 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Look into Version Injection
+  https://www.npmjs.com/package/webpack-auto-inject-version
+
 PolyFill fetch
   Promisify require(whatwg-fetch) / Polyfill manager / "ready" manager?
   Only download if needed

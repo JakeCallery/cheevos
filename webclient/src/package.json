@@ -1,6 +1,6 @@
 {
     "name": "Badger-Client",
-    "version": "0.1.103",
+    "version": "0.1.105",
     "description": "Badger Web Client",
     "main": "index.js",
     "dependencies": {
@@ -27,9 +27,7 @@
         "typings": "^1.4.0"
     },
     "scripts": {
-        "start": "webpack --patch",
-        "watch": "webpack --colors --progress --watch --patch",
-        "devBuild": "webpack --patch --colors --progress"
+        "watch": "webpack --env.patch --colors --progress --watch"
     },
     "repository": {
         "type": "git",
