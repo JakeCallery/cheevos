@@ -1,11 +1,4 @@
 Plan:
-
-Webpack clean build
-https://www.npmjs.com/package/clean-webpack-plugin
-
-How to include static assets into build step
-  compress and copy images etc..
-
 Style Landing Page
 Style App Page
 Style Team Page
@@ -72,6 +65,13 @@ Think about usage of Amazon SNS for emails and SQS for a web push queue (offload
 -----------------------------------------
 
 DONE:
+Webpack clean build
+https://www.npmjs.com/package/clean-webpack-plugin
+
+How to include static assets into build step
+  compress and copy images etc..
+
+
 Look into Version Injection
   https://www.npmjs.com/package/webpack-auto-inject-version
 
