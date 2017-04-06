@@ -8,6 +8,7 @@
     "shortid": "2.2.8",
     "uuid": "3.0.1",
     "web-push": "3.2.1",
+    "webpack": "2.3.3",
     "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
@@ -26,7 +27,7 @@
     "style-loader": "0.13.1",
     "typings": "^1.4.0",
     "url-loader": "0.5.7",
-    "webpack": "2.1.0-beta.27"
+    "webpack": "^2.3.3"
   },
   "scripts": {
     "watch": "webpack --env.patch --colors --progress --watch"

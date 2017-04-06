@@ -5,7 +5,7 @@ import l from 'jac/logger/Logger';
 import DOMUtils from 'jac/utils/DOMUtils';
 import EventDispatcher from 'jac/events/EventDispatcher';
 
-class BadgeUIMaker extends EventDispatcher {
+export default class BadgeUIMaker extends EventDispatcher {
     constructor($doc){
         super();
 
@@ -82,5 +82,3 @@ class BadgeUIMaker extends EventDispatcher {
     }
 
 }
-
-module.exports = BadgeUIMaker;
