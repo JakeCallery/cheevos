@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackAutoInject = require('./forWebPack/webpack-auto-inject-version');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -61,6 +62,13 @@ module.exports = {
     },
 
     plugins: [
+        new CleanWebpackPlugin(['dist'], {
+            root: __dirname + '/../',
+            verbose: true,
+            dry: false,
+            exclude: []
+        }),
+
         new HtmlWebpackPlugin({
             filename: 'app.html',
             template: 'html/app.html',
