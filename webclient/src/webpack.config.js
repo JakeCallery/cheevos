@@ -3,6 +3,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackAutoInject = require('./forWebPack/webpack-auto-inject-version');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
 
 module.exports = {
     entry: {
@@ -118,6 +119,10 @@ module.exports = {
                 'general/resources',
                 'teamEntry'
             ]
+        }),
+
+        new ImageminPlugin({
+
         }),
 
         new webpack.optimize.UglifyJsPlugin({
