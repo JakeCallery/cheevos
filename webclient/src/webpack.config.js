@@ -128,7 +128,7 @@ module.exports = {
                 'teamEntry'
             ]
         }),
-
+/*
         new ImageminPlugin({
 
         }),
@@ -140,7 +140,7 @@ module.exports = {
             },
             sourceMap: true
         }),
-
+*/
         new WebpackAutoInject({
             autoIncrease: true,
             injectByTag: true,
