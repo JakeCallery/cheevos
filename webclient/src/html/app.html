@@ -7,34 +7,7 @@
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
-    <div class="headerDiv">
-        <% if (isLoggedIn) { %>
-            <div class="profileContainer">
-                <div class="imgContainer">
-                    <img id="profileImg" src="<%=profileImageUrl%>" alt="profile image">
-                </div>
-                <div id="profileOverlayContainer" class="profileOverlayContainer displayNone">
-                    <div class="profileOverlay">
-                        <p class="userNameP toolTip">
-                            <%=userName%>
-                            <span class="toolTipText">This Person Is Awesome</span>
-                        </p>
-                        <div class="notificationSwitchContainer">
-                            <label for="notificationsCheckbox">Notifications On This Device<input class="notificationsCheckbox" id="notificationsCheckbox" type="checkbox"></label>
-                        </div>
-                        <button id="manageTeamsButton" class="manageTeamsButton">Manage Teams</button>
-                        <button id="logOutButton" class="logOutButton">Log Out</button>
-                    </div>
-                </div>
-            </div>
-       <% } else { %>
-            <a href="/auth/google">Google Login</a>
-       <% } %>
-    </div>
-
-    <div id="pageNameDiv" class="pageNameDiv">
-        <h1 class="pageNameH1">Achievement Badger</h1>
-    </div>
+    <% include appHeader.html %>
 
     <div class="createBadgeDiv">
         <h2>Send a badge!</h2>

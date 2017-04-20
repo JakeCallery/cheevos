@@ -17,6 +17,7 @@ router.get('/', function (req, res) {
             isSubscribed: isSubscribed,
             userName: req.user.firstName + ' ' + req.user.lastName,
             profileImageUrl: req.user.profileImg,
+            isTeamPage: true
         });
     } else {
         //Landing Page

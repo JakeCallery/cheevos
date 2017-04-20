@@ -8,30 +8,7 @@
 </head>
 
 <body>
-    <div class="headerDiv">
-        <% if (isLoggedIn) { %>
-        <div class="profileContainer">
-            <div class="imgContainer">
-                <img id="profileImg" src="<%=profileImageUrl%>" alt="profile image">
-            </div>
-            <div id="profileOverlayContainer" class="profileOverlayContainer displayNone">
-                <div class="profileOverlay">
-                    <p class="userNameP toolTip">
-                        <%=userName%>
-                        <span class="toolTipText">This Person Is Awesome</span>
-                    </p>
-                    <div class="notificationSwitchContainer">
-                        <label for="notificationsCheckbox">Notifications On This Device<input class="notificationsCheckbox" id="notificationsCheckbox" type="checkbox"></label>
-                    </div>
-                    <button id="mainPageButton" class="MainPageButton">Main Page</button>
-                    <button id="logOutButton" class="logOutButton">Log Out</button>
-                </div>
-            </div>
-        </div>
-        <% } else { %>
-        <a href="/auth/google">Google Login</a>
-        <% } %>
-    </div>
+    <% include appHeader.html %>
 
     <h2>My Teams</h2>
     <div id="myTeamsDiv" class="myTeamsDiv">

@@ -70,6 +70,14 @@ module.exports = {
         }),
 
         new HtmlWebpackPlugin({
+            filename: 'appHeader.html',
+            template: 'html/appHeader.html',
+            hash: true,
+            chunks: [
+            ]
+        }),
+
+        new HtmlWebpackPlugin({
             filename: 'app.html',
             template: 'html/app.html',
             hash: true,
