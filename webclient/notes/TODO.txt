@@ -65,6 +65,7 @@ Possibilities:
 Send an id with page serve to use as a "key" for the api This will help prevent people from using the api when not from the page(probably not needed as we have cookies)
 customizable notification display times
 Think about usage of Amazon SNS for emails and SQS for a web push queue (offload web push to lambda?)
+Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
