@@ -1,0 +1,45 @@
+---
+- hosts: all
+  vars:
+    pve_user: "root@pam"
+    pve_api_host: pvehost
+    pve_api_password: "!Nugget&Izzy!"
+    pve_node: "pve"
+
+- hosts: master
+  remote_user: root
+
+  tasks:
+    - name: Create LXC Test
+      proxmox:
+        vmid: 150
+        node: pve
+        api_host: 192.168.1.85
+        api_user: "root@pam"
+        api_password: "!Nugget&Izzy!"
+        password: "password"
+        hostname: "ansibletestlxc"
+        ostemplate: 'local:vztmpl/centos-7-default_20161207_amd64.tar.xz'
+        netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.250/24,bridge=vmbr0"}'
+        storage: "local-zfs"
+        pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQvYqA/oebgydsCNaPKCCI++WYAXghF+Ss3DbS5gUHx+3qG3dR9R4yU6bEv0KCvHQQcNpjbbbmqFy/HMKEYts2f0PTMHdPxnMx7XgMeHFfQlK5WTttPU5YLS9c/LkpUZcCcDjtAdOylsQ19yRIUIb+t5ncqSLvMsMc3g3u5Lybh872Av28qXMUdh6UUEK3MMLDmTBuGaDqHaWVv/c+ye1f24GKRSo1H4owtOJi45lLEDSgSv3d1/Ann67loT/RIR+hBTIpnqAldptiLjkr/rjdBBnkSAAzFIBxQ9kFt0wE0UsWO+wYO7E9la79qNGLQHbc26FRAPuwiff1LbQ8qq+T root@AnsibleMaster"
+
+    - name: Waiting for LXC Creation (sleep)
+      wait_for:
+        sleep: 5
+
+    - name: Start LXC
+      proxmox:
+        vmid: 150
+        node: pve
+        api_host: 192.168.1.85
+        api_user: root@pam
+        api_password: "!Nugget&Izzy!"
+        state: started
+
+    - name: Wait for LXC Staart
+      wait_for:
+        host: 192.168.1.250
+        state: started
+
+...

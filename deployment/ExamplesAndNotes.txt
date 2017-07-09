@@ -1,0 +1,3 @@
+ansible all -i ./inventory/hosts
+
+ansible-playbook -i ./inventory/hosts ./playground/ping_playbook.yml

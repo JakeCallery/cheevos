@@ -1,0 +1,9 @@
+Steps:
+Copy over /root/.ssh/id_rsa
+ssh-agent /bin/bash     (need to check this first, make sure it is not already running)
+ssh-add ~/.ssh/id_rsa
+
+Bit Bucket Host Fingerprint:
+97:8c:1b:f2:6f:14:6b:5c:3b:ec:aa:46:46:74:7c:40
+(will need to add to known hosts)
+

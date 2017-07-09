@@ -1,0 +1,75 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: master
+  remote_user: root
+
+  tasks:
+    - name: Create LXC Test
+      proxmox:
+        vmid: 150
+        node: pve
+        api_host: "{{ pve_host }}"
+        api_user: "{{ pve_api_user }}"
+        api_password: "{{ pve_api_password }}"
+        password: "password"
+        hostname: "ansibletestlxc"
+        ostemplate: 'local:vztmpl/centos-7-default_20161207_amd64.tar.xz'
+        netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.250/24,bridge=vmbr0"}'
+        storage: "local-zfs"
+        pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQvYqA/oebgydsCNaPKCCI++WYAXghF+Ss3DbS5gUHx+3qG3dR9R4yU6bEv0KCvHQQcNpjbbbmqFy/HMKEYts2f0PTMHdPxnMx7XgMeHFfQlK5WTttPU5YLS9c/LkpUZcCcDjtAdOylsQ19yRIUIb+t5ncqSLvMsMc3g3u5Lybh872Av28qXMUdh6UUEK3MMLDmTBuGaDqHaWVv/c+ye1f24GKRSo1H4owtOJi45lLEDSgSv3d1/Ann67loT/RIR+hBTIpnqAldptiLjkr/rjdBBnkSAAzFIBxQ9kFt0wE0UsWO+wYO7E9la79qNGLQHbc26FRAPuwiff1LbQ8qq+T root@AnsibleMaster"
+
+    - name: Start LXC
+      proxmox:
+        vmid: 150
+        node: pve
+        api_host: "{{ pve_host }}"
+        api_user: "{{ pve_api_user }}"
+        api_password: "{{ pve_api_password }}"
+        state: started
+
+- hosts: pvehost
+  remote_user: root
+
+  tasks:
+    - name: Pause For Start Up
+      pause:
+        seconds: 10
+
+    - name: Install OpenSSH Server
+      command: pct exec 150 -- yum install -y openssh-server
+
+    - name: Pause for openssh install
+      pause:
+        seconds: 10
+
+    - name: Restart sshd
+      command: pct exec 150 -- systemctl restart sshd
+
+- hosts: testlxc
+  remote_user: root
+
+  tasks:
+    - name: Wait for SSH
+      wait_for:
+        port: 22
+
+    - name: Install Net Tools
+      yum:
+        name: net-tools
+        state: latest
+
+    - name: Install EPEL Repo
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Install NodeJS
+      yum:
+        name: nodejs
+        state: latest
+
+    - name: Get Node Version
+      command: node --version
+...

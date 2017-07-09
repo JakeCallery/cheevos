@@ -1,0 +1,4 @@
+Add ssh key (see notes.txt)
+start ssh-agent (see notes.txt)
+add key to ssh-agent (see notes.txt)
+git clone git@bitbucket.org:JakeCallery/cheevos.git
