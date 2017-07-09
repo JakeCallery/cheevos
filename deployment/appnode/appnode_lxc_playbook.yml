@@ -46,35 +46,4 @@
 
     - name: Restart sshd
       command: pct exec 140 -- systemctl restart sshd
-
-- hosts: appnode
-  remote_user: root
-
-  tasks:
-    - name: Wait for Port 22
-      wait_for:
-        port: 22
-
-    - name: Install Net Tools
-      yum:
-        name: net-tools
-        state: latest
-
-    - name: Install EPEL Repo
-      yum:
-        name: epel-release
-        state: latest
-
-    - name: Install NodeJS
-      yum:
-        name: nodejs
-        state: latest
-
-    - name: Get Node Version
-      command: node --version
-
-    - name: Install Git
-      yum:
-        name: git
-        state: latest
 ...
