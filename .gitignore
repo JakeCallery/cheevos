@@ -2,7 +2,8 @@
 node_modules
 *.pyc
 .vagrant
-dist
+/webclient/dist
+/webserver/views/dist
 *.avi
 *.ogg
 TestAccounts.txt
