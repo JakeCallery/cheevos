@@ -25,9 +25,6 @@
         name: nodejs
         state: latest
 
-#    - name: Get Node Version
-#      command: node --version
-
     - name: Install Git
       yum:
         name: git

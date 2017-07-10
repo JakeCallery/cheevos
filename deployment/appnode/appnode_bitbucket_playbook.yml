@@ -1,0 +1,32 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+    - name: Copy Bit Bucket Private Key
+      copy:
+        src: /cheevos_deployment/keys/bitbucket_private
+        dest: /root/.ssh/id_rsa
+        owner: root
+        group: root
+        mode: 0600
+
+    - name: Copy known_hosts
+      copy:
+        src: /cheevos_deployment/keys/bitbucket_known_hosts
+        dest: /root/.ssh/known_hosts
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Copy bash profile
+      copy:
+        src: /cheevos_deployment/appnode/filesToCopy/bash_profile
+        dest: /root/.bash_profile
+        owner: root
+        group: root
+        mode: 0644
+...

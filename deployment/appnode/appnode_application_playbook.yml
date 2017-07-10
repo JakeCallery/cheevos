@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+   - name: Download Application Repo
+     git:
+      repo: 'git@bitbucket.org:JakeCallery/cheevos.git'
+      accept_hostkey: yes
+      dest: /cheevos
+#      key_file: /root/.ssh/id_rsa
+...
