@@ -1,10 +1,10 @@
-Copy webserver "keys" directory
 npm install (webserver)
 npm install (webclient)
 webpack (webclient)
 start application (nodejs bits)
 
 DONE:
+Copy webserver "keys" directory
 Add ssh key (see notes.txt)
 start ssh-agent (see notes.txt)
 add key to ssh-agent (see notes.txt)
