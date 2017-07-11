@@ -1,7 +1,9 @@
 webpack (webclient)
+create script to start webserver
 start application (nodejs bits)
 
 DONE:
+copy over webserver "certs" (/cheevos/certs)
 npm install webpack globally
 npm install (webserver)
 npm install (webclient)

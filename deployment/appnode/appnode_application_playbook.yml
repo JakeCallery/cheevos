@@ -18,6 +18,11 @@
        src: /cheevos/webserver/keys
        dest: /cheevos/webserver
 
+    - name: Copy Webserver Certs
+      copy:
+        src: /cheevos/certs
+        dest: /cheevos
+
     - name: Install Webpack globally
       npm:
         name: webpack
