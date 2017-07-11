@@ -1,9 +1,10 @@
-npm install (webserver)
-npm install (webclient)
 webpack (webclient)
 start application (nodejs bits)
 
 DONE:
+npm install webpack globally
+npm install (webserver)
+npm install (webclient)
 Copy webserver "keys" directory
 Add ssh key (see notes.txt)
 start ssh-agent (see notes.txt)

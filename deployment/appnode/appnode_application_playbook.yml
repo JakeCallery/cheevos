@@ -6,16 +6,28 @@
   remote_user: root
 
   tasks:
-   - name: Download Application Repo
-     git:
-      repo: 'git@bitbucket.org:JakeCallery/cheevos.git'
-      accept_hostkey: yes
-      dest: /cheevos
+    - name: Download Application Repo
+      git:
+        repo: 'git@bitbucket.org:JakeCallery/cheevos.git'
+        accept_hostkey: yes
+        dest: /cheevos
 #      key_file: /root/.ssh/id_rsa
 
-   - name: Copy Webserver Keys Direcotry
-     copy:
+    - name: Copy Webserver Keys Direcotry
+      copy:
        src: /cheevos/webserver/keys
        dest: /cheevos/webserver
 
+    - name: Install Webpack globally
+      npm:
+        name: webpack
+        global: yes
+
+    - name: Install WebServer Dependencies
+      npm:
+        path: /cheevos/webserver/src
+
+    - name: Install WebClient Dependencies
+      npm:
+        path: /cheevos/webclient/src
 ...
