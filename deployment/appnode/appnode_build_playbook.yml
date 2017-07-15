@@ -1,0 +1,10 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+    - name: Webpack client app
+      script: ./remoteScripts/buildClient.sh
