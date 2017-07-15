@@ -5,12 +5,6 @@ log: ngrok.log
 
 tunnels:
   webclient:
-    proto: tls
-    addr: 8443
-    hostname: badger.jakecallery.com
-
-  webclient_http:
     proto: http
     addr: 80
     hostname: badger.jakecallery.com
-
