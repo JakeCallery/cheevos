@@ -11,6 +11,7 @@
         repo: 'git@bitbucket.org:JakeCallery/cheevos.git'
         accept_hostkey: yes
         dest: /cheevos
+        force: true
 #      key_file: /root/.ssh/id_rsa
 
     - name: Copy Webserver Keys Direcotry
