@@ -1,7 +1,9 @@
 Plan:
+!!Implement Create New Team UI!!
 Deployment Scripts
   create initial database (db tools autorun)
   launch with pm2
+
   Install NodeJS 6.9.2 (crashes with current node version)
     Maybe handle node versions with nvm:
       https://github.com/creationix/nvm#git-install
