@@ -20,13 +20,30 @@
         name: epel-release
         state: latest
 
-    - name: Install NodeJS
-      yum:
-        name: nodejs
-        state: latest
-
     - name: Install Git
       yum:
         name: git
         state: latest
+
+    - name: Git NVM
+      git:
+        repo: 'https://github.com/creationix/nvm.git'
+        dest: /root/.nvm
+
+    - name: chmod 700 nvm.sh
+      file:
+        path: /root/.nvm/nvm.sh
+        mode: 700
+
+#      shell: '/bin/bash -c "chmod 755 /root/.nvm/nvm.sh && source /root/.nvm/nvm.sh && nvm install 6.9.2 && nvm alias default 6.9.2"'
+    - name: NVM Install NodeJS and set alias
+      shell: 'nvm install 6.9.2 && nvm alias default 6.9.2"'
+      args:
+        creates: /home/root/.nvm/alias
+
+#    - name: Install NodeJS
+#      yum:
+#        name: nodejs
+#        state: latest
+
 ...
