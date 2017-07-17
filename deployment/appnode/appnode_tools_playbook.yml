@@ -20,6 +20,11 @@
         name: epel-release
         state: latest
 
+    - name: Install Development Tools
+      yum:
+        name: "@Development tools"
+        state: present
+
     - name: Install NodeJS
       yum:
         name: nodejs

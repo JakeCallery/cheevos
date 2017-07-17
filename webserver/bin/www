@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
+//Segfault Handler
+const SegfaultHandler = require('segfault-handler');
+SegfaultHandler.registerHandler("crash.log"); // With no argument, SegfaultHandler will generate a generic log file name
+
 /**
  * Module dependencies.
  */

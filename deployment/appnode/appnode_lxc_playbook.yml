@@ -19,6 +19,7 @@
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.240/24,bridge=vmbr0"}'
         storage: "local-zfs"
         pubkey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQvYqA/oebgydsCNaPKCCI++WYAXghF+Ss3DbS5gUHx+3qG3dR9R4yU6bEv0KCvHQQcNpjbbbmqFy/HMKEYts2f0PTMHdPxnMx7XgMeHFfQlK5WTttPU5YLS9c/LkpUZcCcDjtAdOylsQ19yRIUIb+t5ncqSLvMsMc3g3u5Lybh872Av28qXMUdh6UUEK3MMLDmTBuGaDqHaWVv/c+ye1f24GKRSo1H4owtOJi45lLEDSgSv3d1/Ann67loT/RIR+hBTIpnqAldptiLjkr/rjdBBnkSAAzFIBxQ9kFt0wE0UsWO+wYO7E9la79qNGLQHbc26FRAPuwiff1LbQ8qq+T root@AnsibleMaster"
+        disk: 25
 
     - name: Start LXC
       proxmox:
