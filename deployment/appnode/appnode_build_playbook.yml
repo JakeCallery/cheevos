@@ -8,3 +8,14 @@
   tasks:
     - name: Webpack client app
       script: ./remoteScripts/buildClient.sh
+
+    - name: Remove dist under webserver
+      file:
+        path: /cheevos/webserver/dist
+        state: absent
+
+    - name: Setup dist link
+      file:
+        src:  /cheevos/webclient/dist
+        dest: /cheevos/webserver/views/dist
+        state: link
