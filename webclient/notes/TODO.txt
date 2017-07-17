@@ -1,4 +1,6 @@
 Plan:
+Deployment Scripts
+Let's Encrypt Cert auto renew
 Style Landing Page
 Style App Page
 Style Team Page

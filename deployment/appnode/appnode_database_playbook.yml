@@ -1,0 +1,22 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+    - name: Install gpg key for Neo4j
+      rpm_key:
+        state: present
+        key: http://debian.neo4j.org/neotechnology.gpg.key
+
+    - name: Add Neo4j Repo to yum.repos.d
+      copy:
+        src: /cheevos/deployment/appnode/filesToCopy/neo4j.repo
+        dest: /etc/yum.repos.d/
+
+    - name: Install Neo4j (yum)
+      yum:
+        name: neo4j-3.2.2
+        state: latest
