@@ -10,6 +10,14 @@
       wait_for:
         port: 22
 
+    - name: Copy bash profile
+      copy:
+        src: /cheevos_deployment/appnode/filesToCopy/bash_profile
+        dest: /root/.bash_profile
+        owner: root
+        group: root
+        mode: 0644
+
     - name: Install Net Tools
       yum:
         name: net-tools
@@ -20,12 +28,27 @@
         name: epel-release
         state: latest
 
-    - name: Install Git
+    - name: Install tar
+      yum:
+        name: tar
+        state: latest
+
+    - name: install the 'Development tools' package group
+      yum:
+        name: "@Development tools"
+        state: present
+
+    - name: Install GIT
       yum:
         name: git
         state: latest
 
-    - name: Git NVM
+    - name: Install NPM
+      yum:
+        name: npm
+        state: latest
+
+    - name: GIT NVM
       git:
         repo: 'https://github.com/creationix/nvm.git'
         dest: /root/.nvm
@@ -38,6 +61,7 @@
 
     - name: NVM Install NodeJS
       shell: |
+        source /root/.nvm/nvm.sh
         nvm install 6.9.2
         nvm alias default 6.9.2
       args:

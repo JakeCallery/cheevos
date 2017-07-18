@@ -26,9 +26,10 @@
         src: /cheevos/deployment/appnode/filesToCopy/neo4j.conf
         dest: /etc/neo4j
 
-    - name: Set initial password
-      command: neo4j-admin set-initial-password "{{ neo4j_pass }}"
-      creates: /var/lib/neo4j/data/dbms/auth
+#    - name: Set initial password
+#      command: neo4j-admin set-initial-password "test"
+#      args:
+#        creates: /var/lib/neo4j/data/dbms/auth
 
     - name: Enable Neo4j on boot (systemctl)
       systemd:
