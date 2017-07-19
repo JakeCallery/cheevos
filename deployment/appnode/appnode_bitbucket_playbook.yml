@@ -21,12 +21,4 @@
         owner: root
         group: root
         mode: 0644
-
-    - name: Copy bash profile
-      copy:
-        src: /cheevos_deployment/appnode/filesToCopy/bash_profile
-        dest: /root/.bash_profile
-        owner: root
-        group: root
-        mode: 0644
 ...

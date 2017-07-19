@@ -3,7 +3,8 @@
 
 //Segfault Handler
 const SegfaultHandler = require('segfault-handler');
-SegfaultHandler.registerHandler("crash.log"); // With no argument, SegfaultHandler will generate a generic log file name
+// With no argument, SegfaultHandler will generate a generic log file name
+SegfaultHandler.registerHandler("crash.log");
 
 /**
  * Module dependencies.
@@ -19,6 +20,8 @@ let serverOptions = {
     cert: fs.readFileSync('../certs/fullchain.pem'),
     ca: fs.readFileSync('../certs/chain.pem'),
 };
+
+console.log('ServerOptions: ', serverOptions);
 
 /**
  * Get port from environment and store in Express.

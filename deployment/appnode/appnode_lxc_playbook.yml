@@ -15,6 +15,8 @@
         api_password: "{{ pve_api_password }}"
         password: "password"
         hostname: "appnode1"
+        disk: 25
+        memory: 1024
         ostemplate: 'local:vztmpl/centos-7-default_20161207_amd64.tar.xz'
         netif: '{"net0":"name=eth0,gw=192.168.1.1,ip=192.168.1.240/24,bridge=vmbr0"}'
         storage: "local-zfs"
