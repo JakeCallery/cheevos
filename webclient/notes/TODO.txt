@@ -1,27 +1,11 @@
 Plan:
 !!Implement Create New Team UI!!
 Deployment Scripts
+  Maybe swap order of DB and Application scripts
+  	DB takes up a lot of memory, so app compile fails sometimes
+  set up retries for app compile deployment
   create initial database (db tools autorun)
   launch with pm2
-
-  Install NodeJS 6.9.2 (crashes with current node version)
-    Maybe handle node versions with nvm:
-      https://github.com/creationix/nvm#git-install
-
-      example tasks:
-      https://gist.github.com/komuW/b3b5d24977d4df7bd549
-      https://gist.github.com/JakeCallery/90cbc8a903d7cd33f2036549c7fea93c
-      ---
-      - name: Install nvm
-        shell: >
-          curl https://raw.githubusercontent.com/creationix/nvm/v0.7.0/install.sh | sh
-          creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
-      - name: Install node and set version
-        shell: >
-          /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 0.10 && nvm alias default 0.10"
-          creates=/home/{{ ansible_user_id }}/.nvm/alias
-
-
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
@@ -95,6 +79,23 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Install NodeJS 6.9.2 (crashes with current node version)
+    Maybe handle node versions with nvm:
+      https://github.com/creationix/nvm#git-install
+
+      example tasks:
+      https://gist.github.com/komuW/b3b5d24977d4df7bd549
+      https://gist.github.com/JakeCallery/90cbc8a903d7cd33f2036549c7fea93c
+      ---
+      - name: Install nvm
+        shell: >
+          curl https://raw.githubusercontent.com/creationix/nvm/v0.7.0/install.sh | sh
+          creates=/home/{{ ansible_user_id }}/.nvm/nvm.sh
+      - name: Install node and set version
+        shell: >
+          /bin/bash -c "source ~/.nvm/nvm.sh && nvm install 0.10 && nvm alias default 0.10"
+          creates=/home/{{ ansible_user_id }}/.nvm/alias
+
 Create a symlink to from webserver/views/dist to webclient/dist
 
 Webpack clean build
