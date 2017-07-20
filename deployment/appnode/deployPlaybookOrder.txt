@@ -1,6 +1,6 @@
 appnode_lxc_playbook
 appnode_tools_playbook
 appnode_bitbucket_playbook
-appnode_database_playbook
 appnode_application_playbook
 appnode_build_playbook
+appnode_database_playbook
