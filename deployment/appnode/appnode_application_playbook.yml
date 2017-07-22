@@ -16,13 +16,13 @@
 
     - name: Copy Webserver Keys Direcotry
       copy:
-       src: /cheevos/webserver/keys
-       dest: /cheevos/webserver
+       src: /cheevos_keys/
+       dest: /cheevos/webserver/keys
 
     - name: Copy Webserver Certs
       copy:
-        src: /cheevos/certs
-        dest: /cheevos
+        src: /cheevos_certs/
+        dest: /cheevos/certs
 
     - name: Install Webpack globally
       npm:
