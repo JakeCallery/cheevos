@@ -37,7 +37,7 @@
         state: started
 
     - name: Wait for DB to start
-      script: /cheevos/deployment/appnode/remoteScripts/waitforDBStart.sh
+      script: /cheevos/deployment/appnode/remoteScripts/waitForDBStart.sh
       args:
         creates: /etc/neo4j/db_started
 
