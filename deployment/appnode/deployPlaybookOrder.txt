@@ -4,3 +4,4 @@ appnode_bitbucket_playbook
 appnode_application_playbook
 appnode_build_playbook
 appnode_database_playbook
+appnode_dbtools_playbook
