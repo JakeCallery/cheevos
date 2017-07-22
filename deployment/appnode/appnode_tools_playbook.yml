@@ -12,7 +12,7 @@
 
     - name: Copy bash profile
       copy:
-        src: /cheevos/appnode/filesToCopy/bash_profile
+        src: /cheevos/deployment/appnode/filesToCopy/bash_profile
         dest: /root/.bash_profile
         owner: root
         group: root
