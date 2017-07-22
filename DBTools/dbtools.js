@@ -46,13 +46,16 @@ let emptyDB = function(){
                 .then(($dbResult) => {
                     session.close();
                     console.log('EmptyDB result: ', $dbResult);
+                    process.exit(0);
                 })
                 .catch(($error) => {
                     session.close();
                     console.error('EmptyDB Error: ', $error);
+                    process.exit(1);
                 })
         } else {
             console.log('Whew, that was a close one!');
+            process.exit(0);
         }
     });
 
@@ -104,10 +107,12 @@ if(args.options['apply-constraints']){
         .then(($dbResponse) => {
             session.close();
             console.log('DB Response: ', $dbResponse);
+            process.exit(0);
         })
         .catch(($error) => {
             session.close();
             console.log('Error: ', $error);
+            process.exit(1);
         });
 }
 
