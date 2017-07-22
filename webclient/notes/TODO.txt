@@ -1,9 +1,6 @@
 Plan:
 !!Implement Create New Team UI!!
 Deployment Scripts
-  Maybe swap order of DB and Application scripts
-  	DB takes up a lot of memory, so app compile fails sometimes
-  set up retries for app compile deployment
   create initial database (db tools autorun)
   launch with pm2
 
@@ -79,6 +76,9 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Maybe swap order of DB and Application scripts
+  	DB takes up a lot of memory, so app compile fails sometimes
+  set up retries for app compile deployment
 Install NodeJS 6.9.2 (crashes with current node version)
     Maybe handle node versions with nvm:
       https://github.com/creationix/nvm#git-install
