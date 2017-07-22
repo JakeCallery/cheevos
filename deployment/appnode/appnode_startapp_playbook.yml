@@ -1,0 +1,18 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+    - name: Install PM2 Globally
+      npm:
+       name: pm2
+       global: yes
+
+    - name: Start Application (with pm2)
+      command: pm2 start www
+      args:
+        chdir: /cheevos/webserver/bin
+
