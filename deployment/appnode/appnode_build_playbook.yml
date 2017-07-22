@@ -7,7 +7,7 @@
 
   tasks:
     - name: Webpack client app
-      script: ./remoteScripts/buildClient.sh
+      script: /cheevos/deployment/appnode/remoteScripts/buildClient.sh
 
     - name: Remove dist under webserver
       file:

@@ -37,11 +37,11 @@
         state: started
 
     - name: Wait for DB to start
-      script: ./remoteScripts/waitforDBStart.sh
+      script: /cheevos/deployment/appnode/remoteScripts/waitforDBStart.sh
       args:
         creates: /etc/neo4j/db_started
 
     - name: Change DB Password
-      script: ./remoteScripts/updateDBPassword.sh {{ neo4j_pass|quote }}
+      script: /cheevos/deployment/appnode/remoteScripts/updateDBPassword.sh {{ neo4j_pass|quote }}
       args:
         creates: /etc/neo4j/pass_set
