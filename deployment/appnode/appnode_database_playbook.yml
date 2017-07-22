@@ -59,4 +59,4 @@
     - name: Apply DB Constraints
       script: /cheevos/deployment/appnode/remoteScripts/applyDBConstraints.sh
       args:
-        creates: /etc/neo4j/dbconstraintsapplied
+        creates: /etc/neo4j/db_constraints_applied
