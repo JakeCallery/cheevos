@@ -12,7 +12,6 @@
         accept_hostkey: yes
         dest: /cheevos
         force: true
-#      key_file: /root/.ssh/id_rsa
 
     - name: Copy Webserver Keys Direcotry
       copy:

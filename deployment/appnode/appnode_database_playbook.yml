@@ -45,18 +45,3 @@
       script: /cheevos/deployment/appnode/remoteScripts/updateDBPassword.sh {{ neo4j_pass|quote }}
       args:
         creates: /etc/neo4j/pass_set
-
-    - name: Create DB Tools Auth Config Directory
-      file:
-        path: /cheevos/DBTools/keys
-        state: directory
-
-    - name: Copy DB Tools authConfig
-      copy:
-        src: /cheevos_keys/authConfig.js
-        dest: /cheevos/DBTools/keys/authConfig.js
-
-    - name: Apply DB Constraints
-      script: /cheevos/deployment/appnode/remoteScripts/applyDBConstraints.sh
-      args:
-        creates: /etc/neo4j/db_constraints_applied

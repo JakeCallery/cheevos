@@ -1,0 +1,28 @@
+---
+- hosts: all
+  gather_facts: False
+
+- hosts: appnode
+  remote_user: root
+
+  tasks:
+    - name: Create DB Tools Auth Config Directory
+      file:
+        path: /cheevos/DBTools/keys
+        state: directory
+
+    - name: Copy DB Tools authConfig
+      copy:
+        src: /cheevos_keys/authConfig.js
+        dest: /cheevos/DBTools/keys/authConfig.js
+
+    - name: Install DBTools Dependencies
+      npm:
+        path: /cheevos/DBTools
+      retries: 10
+      delay: 3
+
+    - name: Apply DB Constraints
+      script: /cheevos/deployment/appnode/remoteScripts/applyDBConstraints.sh
+      args:
+        creates: /etc/neo4j/db_constraints_applied
