@@ -46,6 +46,11 @@
       args:
         creates: /etc/neo4j/pass_set
 
+    - name: Create DB Tools Auth Config Directory
+      file:
+        path: /cheevos/DBTools/keys
+        state: directory
+
     - name: Copy DB Tools authConfig
       copy:
         src: /cheevos_keys/authConfig.js
