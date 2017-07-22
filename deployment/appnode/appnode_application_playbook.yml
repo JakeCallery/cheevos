@@ -32,8 +32,13 @@
     - name: Install WebServer Dependencies
       npm:
         path: /cheevos/webserver/src
+      retries: 10
+      delay: 3
 
     - name: Install WebClient Dependencies
       npm:
         path: /cheevos/webclient/src
+      retries: 10
+      delay: 3
+
 ...
