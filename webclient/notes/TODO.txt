@@ -1,8 +1,5 @@
 Plan:
 !!Implement Create New Team UI!!
-Deployment Scripts
-  create initial database (db tools autorun)
-  launch with pm2
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
@@ -76,6 +73,10 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Deployment Scripts
+  create initial database (db tools autorun)
+  launch with pm2
+
 Maybe swap order of DB and Application scripts
   	DB takes up a lot of memory, so app compile fails sometimes
   set up retries for app compile deployment
