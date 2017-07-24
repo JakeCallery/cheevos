@@ -45,14 +45,17 @@ router.post('/', (req, res) => {
     }))
     .catch(($error) => {
         console.log('List Members Error: ', $error);
+        let resObj = {
+            status:'ERROR'
+        };
         if($error.hasOwnProperty('error')){
             //we generated the error
-            let resObj = {
-                error:$error.error,
-                status:'ERROR'
-            };
-            res.status(400).json(resObj);
+            resObj.error = $error.error;
+        } else {
+            resObj.error = $error
         }
+        res.status(400).json(resObj);
+
     });
 });
 

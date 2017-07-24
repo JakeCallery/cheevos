@@ -208,7 +208,7 @@ class Team {
                 });
             } else {
                 return new Promise((resolve, reject) => {
-                    reject('Add Member Error, no records returned');
+                    reject('Get Member Error, no records returned');
                 });
             }
         })

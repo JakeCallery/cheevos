@@ -1,9 +1,4 @@
 Plan:
-Fix bug where get members fails to return if there are no additional members to return other than
-the current user
-
-!!Implement Create New Team UI!!
-Return new team info with creation of new team
 
 Implement Delete Team UI
 Implemente Remove Member UI
@@ -80,6 +75,12 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Fix bug where get members fails to return if there are no additional members to return other than
+the current user
+
+!!Implement Create New Team UI!!
+Return new team info with creation of new team
+
 Deployment Scripts
   create initial database (db tools autorun)
   launch with pm2
