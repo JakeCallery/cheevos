@@ -135,11 +135,23 @@ class TeamUIManager extends EventDispatcher {
 
         //Close old teamUIs
         let teamDivs = DOMUtils.getChildNodesByClassName(this.myTeamsDiv, 'teamDiv');
+        l.debug('Team Divs: ', teamDivs);
         for(let t = 0; t < teamDivs.length; t++){
             let td = teamDivs[t];
+            l.debug('TD: ', td);
+            //TODO: findNextMembersDiv walks through the whole list and not
+            //TODO: just the current TeamDiv
             let membersDiv = this.findNextMembersDiv(td);
-            membersDiv.closeUI();
-            td.closeUI();
+            if(membersDiv) {
+                l.debug('Closing Members Div: ', membersDiv);
+                membersDiv.closeUI();
+            }
+
+            if(td){
+                l.debug('Closing TD: ', td);
+                td.closeUI();
+            }
+
         }
 
         //Create new teamUIs
@@ -179,11 +191,16 @@ class TeamUIManager extends EventDispatcher {
         }
     }
 
+    //TODO: THIS IS BUG!!
+    //TODO: This walks too far, need to only search in 1 team div
     findNextMembersDiv($rootEl){
         let root = $rootEl;
         while(root.nextSibling){
+            l.debug('next sib');
             if(!DOMUtils.hasClass(root.nextSibling,'membersDiv')){
+                l.debug('Old root: ', root);
                 root = root.nextSibling;
+                l.debug('New root: ', root);
             } else {
                 l.debug('Found Members Div');
                 return root.nextSibling;

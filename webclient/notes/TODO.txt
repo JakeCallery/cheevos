@@ -1,5 +1,12 @@
 Plan:
+Fix bug where get members fails to return if there are no additional members to return other than
+the current user
+
 !!Implement Create New Team UI!!
+Return new team info with creation of new team
+
+Implement Delete Team UI
+Implemente Remove Member UI
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew

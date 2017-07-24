@@ -20,16 +20,23 @@ router.post('/', (req, res) => {
         console.log('CreateTeam attempt: ' + attempt);
         return Team.createTeam(req.body.teamName, user.id)
         .then(($dbResult) => {
-            //console.log('Create Team Result: ', $dbResult);
+            console.log('Create Team Result: ', $dbResult);
 
-            //TODO: return JSON result here
+            let team = $dbResult.records[0].get('team');
+
             let resObj = {
                 status:'SUCCESS'
             };
+
+            resObj.data = {
+                teamName: team.properties.teamName,
+                teamId: team.properties.teamId
+            };
+
             res.status(200).json(resObj);
         })
         .catch(($error) => {
-            if ($error.fields[0].code == 'Neo.ClientError.Schema.ConstraintValidationFailed') {
+            if ($error.fields[0].code === 'Neo.ClientError.Schema.ConstraintValidationFailed') {
                 console.log('duplicate team id, retrying: ' + attempt);
                 retry('create team duplicate id');
             } else {

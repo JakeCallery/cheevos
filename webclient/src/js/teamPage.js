@@ -39,32 +39,8 @@ readyManager.ready()
     let swManager = new ServiceWorkerManager();
     let reqManager = new TeamPageRequestManager();
 
-    //Request Teams
-    reqManager.getTeams()
-        .then(($response) => {
-            if($response.status === Status.SUCCESS){
-                geb.dispatchEvent(new JacEvent('newteamlist', $response.data));
-            } else {
-                l.error('Unknown response status: ', $response.status);
-            }
-        })
-        .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error));
-        });
 
-//Get Blocked Members
-    reqManager.getBlockedMembers()
-        .then(($response) => {
-            if($response.status === Status.SUCCESS){
-                geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
-            } else {
-                l.error('Unknown response status: ', $response.status);
-            }
-        })
-        .catch(($error) => {
-            geb.dispatchEvent(new JacEvent('errorevent', $error));
-        });
-
+    //Set up listeners
     uigeb.addEventListener('requestunblockuser', ($evt) => {
         let evtId = $evt.id;
         l.debug('Event ID: ', evtId);
@@ -91,6 +67,27 @@ readyManager.ready()
             .catch(($error) => {
                 geb.dispatchEvent(new JacEvent('errorevent', $error));
             })
+    });
+
+    geb.addEventListener('requestteamlist', ($evt) => {
+        l.debug('Caught Request Team List');
+        reqManager.getTeams()
+            .then(($response) => {
+                if($response.status === Status.SUCCESS){
+                    geb.dispatchEvent(new JacEvent('newteamlist', $response.data));
+                } else {
+                    l.error('Unknown response status: ', $response.status);
+                }
+            })
+            .catch(($error) => {
+                l.debug('team list error: ', $error);
+                geb.dispatchEvent(new JacEvent('errorevent', $error));
+            });
+    });
+
+    geb.addEventListener('newteamcreated', ($evt) => {
+        l.debug('Caught New Team Created');
+        geb.dispatchEvent(new JacEvent('requestteamlist'));
     });
 
     geb.addEventListener('requestmainpage', ($evt) => {
@@ -194,7 +191,7 @@ readyManager.ready()
                 if($response.status === Status.SUCCESS){
                     geb.dispatchEvent(new JacEvent('newteamcreated', $response.data));
                 } else {
-                    l.error('Unknown reponse status: ', $response.status);
+                    l.error('Unknown response status: ', $response.status);
                 }
             })
             .catch(($error) => {
@@ -205,6 +202,23 @@ readyManager.ready()
     //Kick Off Managers
     uiManager.init();
     errManager.init();
+
+    //Request Teams
+    l.debug('Requesting Teams');
+    geb.dispatchEvent(new JacEvent('requestteamlist'));
+
+    //Get Blocked Members
+    reqManager.getBlockedMembers()
+    .then(($response) => {
+        if($response.status === Status.SUCCESS){
+            geb.dispatchEvent(new JacEvent('newblockedmemberlist', $response.data));
+        } else {
+            l.error('Unknown response status: ', $response.status);
+        }
+    })
+    .catch(($error) => {
+        geb.dispatchEvent(new JacEvent('errorevent', $error));
+    });
 
     l.debug('New Team Page');
 })
