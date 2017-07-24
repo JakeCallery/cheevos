@@ -187,6 +187,21 @@ readyManager.ready()
             });
     });
 
+    geb.addEventListener('requestcreateteam', ($evt) => {
+        l.debug('caught request create team');
+        reqManager.createTeam($evt.data.teamName)
+            .then(($response) => {
+                if($response.status === Status.SUCCESS){
+                    geb.dispatchEvent(new JacEvent('newteamcreated', $response.data));
+                } else {
+                    l.error('Unknown reponse status: ', $response.status);
+                }
+            })
+            .catch(($error) => {
+                geb.dispatchEvent(new JacEvent('errorevent', $error));
+            });
+    });
+
     //Kick Off Managers
     uiManager.init();
     errManager.init();

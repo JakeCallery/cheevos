@@ -36,12 +36,15 @@ class TeamUIManager extends EventDispatcher {
         //DOM ELEMENTS
         this.myTeamsDiv = this.doc.getElementById('myTeamsDiv');
         this.blockedUsersDiv = this.doc.getElementById('blockedUsersDiv');
+        this.createTeamButton = this.doc.getElementById('createTeamButton');
+        this.createTeamNameField = this.doc.getElementById('createTeamNameField');
 
         //Delegates
         self.newTeamListDelegate = EventUtils.bind(self, self.handleNewTeamList);
         self.newMemberListDelegate = EventUtils.bind(self, self.handleNewMemberList);
         self.newBlockedMemberListDelegate = EventUtils.bind(self, self.handleNewBlockedMemberList);
         self.showInviteUIDelegate = EventUtils.bind(self, self.handleShowInviteUI);
+        self.createTeamClickDelegate = EventUtils.bind(self, self.handleCreateTeamButtonClick);
 
         //Global Events
         this.geb.addEventListener('newteamlist', self.newTeamListDelegate);
@@ -49,8 +52,20 @@ class TeamUIManager extends EventDispatcher {
         this.geb.addEventListener('newblockedmemberlist', self.newBlockedMemberListDelegate);
         this.geb.addEventListener('requestinviteui', self.showInviteUIDelegate);
 
+        //Local Events
+        this.createTeamButton.addEventListener('click', self.createTeamClickDelegate);
+
         //Init
 
+    }
+
+    handleCreateTeamButtonClick($evt){
+        l.debug('Caught Create Team Button Click');
+        this.geb.dispatchEvent(new JacEvent('requestcreateteam',
+            {
+                teamName: createTeamNameField.value
+            }
+        ));
     }
 
     handleShowInviteUI($evt){

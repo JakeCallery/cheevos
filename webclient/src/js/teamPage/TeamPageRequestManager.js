@@ -67,8 +67,7 @@ class TeamPageRequestManager extends EventDispatcher {
                     data: $error
                 });
             });
-        })
-
+        });
     }
 
     //TODO: Limit number of members returned
@@ -321,6 +320,40 @@ class TeamPageRequestManager extends EventDispatcher {
             })
             .catch(($error) => {
                 l.error('Invite Error: ', $error);
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
+        });
+    }
+
+    createTeam($teamName) {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            l.debug('Creating Team');
+            fetch('/api/createTeam', {
+                method: 'POST',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    teamName: $teamName
+                })
+            })
+            .then(($response) => {
+                return $response.json();
+            })
+            .then(($res) => {
+                l.debug('Create Team Response: ', $res);
+                resolve({
+                    status: $res.status,
+                    data: $res.data
+                })
+            })
+            .catch(($error) => {
+                l.error('Create Team Error: ', $error);
                 reject({
                     status: Status.ERROR,
                     data: $error
