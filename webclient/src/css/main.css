@@ -308,11 +308,13 @@ Members Div
 }
 
 .memberItemModeratorCheckBox {
-
+    flex-grow: 0;
 }
 
 .memberItemModeratorLabel {
-
+    text-align: left;
+    padding-right: 0.5em;
+    flex-grow: 0;
 }
 
 /****************

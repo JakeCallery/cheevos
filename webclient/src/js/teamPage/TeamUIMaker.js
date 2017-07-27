@@ -220,7 +220,7 @@ class TeamUIMaker extends EventDispatcher {
         isModCB.name = 'isModCheckbox_' + $memberObj.id + '_' + shortid.generate();
         isModCB.memberId = $memberObj.id;
         DOMUtils.addClass(isModCB, 'memberItem');
-        DOMUtils.addClass(isModCB, 'memberItemModeratorCheckbox');
+        DOMUtils.addClass(isModCB, 'memberItemModeratorCheckBox');
         if($memberObj.isMod){
             isModCB.checked = true;
         }
@@ -253,6 +253,12 @@ class TeamUIMaker extends EventDispatcher {
         };
         isModCB.addEventListener('click', isModCB.clickHandler);
 
+        let isModLabel = this.doc.createElement('label');
+        isModLabel.for = isModCB.name;
+        isModLabel.innerHTML = 'Moderator';
+        DOMUtils.addClass(isModLabel, 'memberItem');
+        DOMUtils.addClass(isModLabel, 'memberItemModeratorLabel');
+
         container.closeUI = function(){
             l.debug('Closing MemberUI');
             self.geb.removeEventListener('newblockuserstatus', isBlockedCB.changeHandler);
@@ -271,6 +277,7 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(memberNameEl);
         container.appendChild(isBlockedLabel);
         container.appendChild(isBlockedCB);
+        container.appendChild(isModLabel);
         container.appendChild(isModCB);
 
         return container;
