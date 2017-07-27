@@ -38,19 +38,26 @@ class TeamUIMaker extends EventDispatcher {
         let isModCheckbox = this.doc.createElement('input');
         isModCheckbox.disabled = true;
         isModCheckbox.type = 'checkbox';
-        isModCheckbox.name = 'isModCheckbox';
-        DOMUtils.addClass(isModCheckbox, 'teamItemIsModCheckbox');
+        isModCheckbox.name = 'isModCheckbox' + $teamObj.teamId;
         DOMUtils.addClass(isModCheckbox, 'teamItem');
+        DOMUtils.addClass(isModCheckbox, 'teamItemIsModCheckbox');
+
         if($teamObj.isModerator){
             isModCheckbox.checked = true;
         }
 
+        let isModLabel = this.doc.createElement('label');
+        isModLabel.for = isModCheckbox.name;
+        isModLabel.innerHTML = 'Moderator';
+        DOMUtils.addClass(isModLabel, 'teamItem');
+        DOMUtils.addClass(isModLabel, 'teamItemIsModLabel');
+
         //Team Notifications Enabled
         let notificationCheckbox = this.doc.createElement('input');
         notificationCheckbox.type = 'checkbox';
-        notificationCheckbox.name = 'notificationCheckbox';
-        DOMUtils.addClass(notificationCheckbox, 'teamItemNotificationCheckbox');
+        notificationCheckbox.name = 'notificationCheckbox' + $teamObj.teamId;
         DOMUtils.addClass(notificationCheckbox, 'teamItem');
+        DOMUtils.addClass(notificationCheckbox, 'teamItemNotificationCheckbox');
         if($teamObj.teamNotificationsEnabled) {
             notificationCheckbox.checked = true;
         }
@@ -64,6 +71,12 @@ class TeamUIMaker extends EventDispatcher {
             ));
         };
         notificationCheckbox.addEventListener('click', notificationCheckbox.clickHandler);
+
+        let notificationLabel = this.doc.createElement('label');
+        notificationLabel.for = notificationCheckbox.name;
+        notificationLabel.innerHTML = 'Notifications';
+        DOMUtils.addClass(notificationLabel, 'teamItemNotificationLabel');
+        DOMUtils.addClass(notificationLabel, 'teamItem');
 
         //Invite User to team
         let inviteButton = this.doc.createElement('button');
@@ -133,7 +146,9 @@ class TeamUIMaker extends EventDispatcher {
 
         //Add to container
         container.appendChild(teamNameEl);
+        container.appendChild(isModLabel);
         container.appendChild(isModCheckbox);
+        container.appendChild(notificationLabel);
         container.appendChild(notificationCheckbox);
         container.appendChild(inviteButton);
 

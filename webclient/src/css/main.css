@@ -248,11 +248,22 @@ MyTeams Div
 }
 
 .teamItemIsModCheckbox {
+    flex-grow: 0;
+}
 
+.teamItemIsModLabel {
+    text-align: right;
+    padding-right: 0.5em;
 }
 
 .teamItemNotificationCheckbox {
+    flex-grow: 0;
+}
 
+.teamItemNotificationLabel {
+    text-align: left;
+    padding-right: 0.5em;
+    flex-grow: 0;
 }
 
 .inviteToTeamButton {
