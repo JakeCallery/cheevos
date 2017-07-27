@@ -299,10 +299,19 @@ Members Div
 }
 
 .memberItemBlockedCheckbox {
+    flex-grow: 0;
+}
 
+.memberItemBlockedLabel {
+    text-align: right;
+    padding-right: 0.5em;
 }
 
 .memberItemModeratorCheckBox {
+
+}
+
+.memberItemModeratorLabel {
 
 }
 

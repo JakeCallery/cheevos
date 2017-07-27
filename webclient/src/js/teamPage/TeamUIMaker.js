@@ -9,6 +9,7 @@ import GlobalEventBus from 'jac/events/GlobalEventBus';
 import JacEvent from 'jac/events/JacEvent';
 import UIGEB from 'general/UIGEB';
 import UIRequestEvent from 'general/UIRequestEvent';
+import shortid from 'shortid';
 
 class TeamUIMaker extends EventDispatcher {
     constructor($doc){
@@ -75,8 +76,8 @@ class TeamUIMaker extends EventDispatcher {
         let notificationLabel = this.doc.createElement('label');
         notificationLabel.for = notificationCheckbox.name;
         notificationLabel.innerHTML = 'Notifications';
-        DOMUtils.addClass(notificationLabel, 'teamItemNotificationLabel');
         DOMUtils.addClass(notificationLabel, 'teamItem');
+        DOMUtils.addClass(notificationLabel, 'teamItemNotificationLabel');
 
         //Invite User to team
         let inviteButton = this.doc.createElement('button');
@@ -178,7 +179,7 @@ class TeamUIMaker extends EventDispatcher {
         //IsBlocked / Block / Unblock
         let isBlockedCB = this.doc.createElement('input');
         isBlockedCB.type = 'checkbox';
-        isBlockedCB.name = 'isBlockedCheckbox';
+        isBlockedCB.name = 'isBlockedCheckbox_' + $memberObj.id + '_' + shortid.generate();
         isBlockedCB.memberId = $memberObj.id;
         DOMUtils.addClass(isBlockedCB, 'memberItem');
         DOMUtils.addClass(isBlockedCB, 'memberItemBlockedCheckbox');
@@ -207,10 +208,16 @@ class TeamUIMaker extends EventDispatcher {
         };
         self.geb.addEventListener('newblockuserstatus', isBlockedCB.newStatusHandler);
 
+        let isBlockedLabel = this.doc.createElement('label');
+        isBlockedLabel.for = isBlockedCB.name;
+        isBlockedLabel.innerHTML = 'Blocked';
+        DOMUtils.addClass(isBlockedLabel, 'memberItem');
+        DOMUtils.addClass(isBlockedLabel, 'memberItemBlockedLabel');
+
         //IsMod / Make Mode / Remove Mod
         let isModCB = this.doc.createElement('input');
         isModCB.type = 'checkbox';
-        isModCB.name = 'isModCheckbox';
+        isModCB.name = 'isModCheckbox_' + $memberObj.id + '_' + shortid.generate();
         isModCB.memberId = $memberObj.id;
         DOMUtils.addClass(isModCB, 'memberItem');
         DOMUtils.addClass(isModCB, 'memberItemModeratorCheckbox');
@@ -262,6 +269,7 @@ class TeamUIMaker extends EventDispatcher {
         //Add to container
         container.appendChild(profileImg);
         container.appendChild(memberNameEl);
+        container.appendChild(isBlockedLabel);
         container.appendChild(isBlockedCB);
         container.appendChild(isModCB);
 
