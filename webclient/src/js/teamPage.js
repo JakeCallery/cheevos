@@ -167,7 +167,7 @@ readyManager.ready()
             }
         })
         .catch(($error) => {
-            getb.dispatchEvent(new JacEvent('errorevent', $error));
+            geb.dispatchEvent(new JacEvent('errorevent', $error));
         });
     });
 

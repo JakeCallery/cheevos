@@ -377,11 +377,22 @@ class TeamPageRequestManager extends EventDispatcher {
                 })
             })
             .then(($response) => {
-                l.debug('Response: ', $response);
+                return $response.json();
+            })
+            .then(($res) => {
+                l.debug('Remove Member Response: ', $res);
+                resolve({
+                    status: $res.status,
+                    data: $res.data
+                });
             })
             .catch(($error) => {
                 l.error('Remove Member Error');
-            })
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
         });
     }
 }

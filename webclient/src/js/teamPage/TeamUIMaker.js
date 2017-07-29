@@ -259,19 +259,6 @@ class TeamUIMaker extends EventDispatcher {
         DOMUtils.addClass(isModLabel, 'memberItem');
         DOMUtils.addClass(isModLabel, 'memberItemModeratorLabel');
 
-        container.closeUI = function(){
-            l.debug('Closing MemberUI');
-            self.geb.removeEventListener('newblockuserstatus', isBlockedCB.changeHandler);
-            isBlockedCB.changeHandler = undefined;
-            isBlockedCB.removeEventListener('change', isBlockedCB.changeHandler);
-            isBlockedCB.changeHandler = undefined;
-            isModCB.removeEventListener('change', isModCB.changeHandler);
-            isModCB.removeEventListener = undefined;
-
-            container.parentNode.removeChild(container);
-            container = undefined;
-        };
-
         //Remove Member
         let removeMemberDiv = this.doc.createElement('div');
         let removeMemberButton = this.doc.createElement('button');
@@ -311,7 +298,7 @@ class TeamUIMaker extends EventDispatcher {
             },
             () => {
                 l.debug('-- Caught remove member request complete');
-                //TODO: Remove Member Entry from UI
+                container.closeUI();
             })
 
         };
@@ -321,6 +308,22 @@ class TeamUIMaker extends EventDispatcher {
         verifyButtonDiv.appendChild(cancelRemoveMememberButton);
         verifyButtonDiv.appendChild(acceptRemoveMemberButton);
         removeMemberDiv.appendChild(verifyButtonDiv);
+
+        //UI Cleanup
+        container.closeUI = function(){
+            l.debug('Closing MemberUI');
+            self.geb.removeEventListener('newblockuserstatus', isBlockedCB.changeHandler);
+            isBlockedCB.changeHandler = undefined;
+            isBlockedCB.removeEventListener('change', isBlockedCB.changeHandler);
+            isBlockedCB.changeHandler = undefined;
+            isModCB.removeEventListener('change', isModCB.changeHandler);
+            isModCB.removeEventListener = undefined;
+            removeMemberButton.clickHandler = undefined;
+            cancelRemoveMememberButton.clickHandler = undefined;
+            acceptRemoveMemberButton.clickHandler = undefined;
+            container.parentNode.removeChild(container);
+            container = undefined;
+        };
 
         //Add to container
         container.appendChild(profileImg);
