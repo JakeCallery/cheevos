@@ -167,6 +167,21 @@
 			$referenceElement.parentNode.insertBefore($newElement, $referenceElement.nextSibling);
 		};
 
+	    DOMUtils.disableContainer = function($rootElement){
+			$rootElement.disabled = true;
+            let allChildNodes = $rootElement.getElementsByTagName('*');
+            for(let i = 0; i < allChildNodes.length; i++){
+                allChildNodes[i].disabled = true;
+            }
+		};
+
+	    DOMUtils.enableContainer = function($rootElement) {
+			$rootElement.disabled = false;
+            let allChildNodes = $rootElement.getElementsByTagName('*');
+            for(let i = 0; i < allChildNodes.length; i++){
+                allChildNodes[i].disabled = false;
+            }
+        };
         //Return constructor
         return DOMUtils;
     })();

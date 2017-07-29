@@ -361,6 +361,29 @@ class TeamPageRequestManager extends EventDispatcher {
             });
         });
     }
+
+    removeMember($memberId, $teamid) {
+        return new Promise((resolve, reject) => {
+            l.debug('Removing member');
+            fetch('/api/removeMemberFromTeam', {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    memberId: $memberId,
+                    teamId: $teamid
+                })
+            })
+            .then(($response) => {
+                l.debug('Response: ', $response);
+            })
+            .catch(($error) => {
+                l.error('Remove Member Error');
+            })
+        });
+    }
 }
 
 export default TeamPageRequestManager;

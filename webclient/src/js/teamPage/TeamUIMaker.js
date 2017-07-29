@@ -272,6 +272,56 @@ class TeamUIMaker extends EventDispatcher {
             container = undefined;
         };
 
+        //Remove Member
+        let removeMemberDiv = this.doc.createElement('div');
+        let removeMemberButton = this.doc.createElement('button');
+        removeMemberButton.innerHTML = 'Remove';
+
+        let verifyButtonDiv = this.doc.createElement('div');
+        let cancelRemoveMememberButton = this.doc.createElement('button');
+        cancelRemoveMememberButton.innerHTML = 'Cancel';
+
+        let acceptRemoveMemberButton = this.doc.createElement('button');
+        acceptRemoveMemberButton.innerHTML = 'Accept';
+
+        DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+
+        removeMemberButton.clickHandler = ($evt) => {
+            $evt.stopPropagation();
+            l.debug('Caught Remove Click');
+            DOMUtils.addClass(removeMemberButton, 'is-hidden');
+            DOMUtils.removeClass(verifyButtonDiv, 'is-hidden');
+        };
+        removeMemberButton.addEventListener('click', removeMemberButton.clickHandler);
+
+        cancelRemoveMememberButton.clickHandler = ($evt) => {
+            l.debug('Cancel Clicked');
+            DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+            DOMUtils.removeClass(removeMemberButton, 'is-hidden');
+        };
+        cancelRemoveMememberButton.addEventListener('click', cancelRemoveMememberButton.clickHandler);
+
+        acceptRemoveMemberButton.clickHandler = ($evt) => {
+            l.debug('Accept Clicked');
+            DOMUtils.disableContainer(container);
+
+            self.uigeb.dispatchUIEvent('requestremovemember', {
+                teamId: $teamId,
+                memberId: $memberObj.id
+            },
+            () => {
+                l.debug('-- Caught remove member request complete');
+                //TODO: Remove Member Entry from UI
+            })
+
+        };
+        acceptRemoveMemberButton.addEventListener('click', acceptRemoveMemberButton.clickHandler);
+
+        removeMemberDiv.appendChild(removeMemberButton);
+        verifyButtonDiv.appendChild(cancelRemoveMememberButton);
+        verifyButtonDiv.appendChild(acceptRemoveMemberButton);
+        removeMemberDiv.appendChild(verifyButtonDiv);
+
         //Add to container
         container.appendChild(profileImg);
         container.appendChild(memberNameEl);
@@ -279,6 +329,7 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(isBlockedCB);
         container.appendChild(isModLabel);
         container.appendChild(isModCB);
+        container.appendChild(removeMemberDiv);
 
         return container;
     }
