@@ -12,6 +12,8 @@ Style App Page
 Style Team Page
 Style User Invited Page
 
+Quick Send badge from team page?
+
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
 
