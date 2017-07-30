@@ -41,6 +41,11 @@ readyManager.ready()
 
 
     //Set up listeners
+    geb.addEventListener('requestlogout', ($evt) => {
+        l.debug('Caught Logout request');
+        window.location = '/logout';
+    });
+
     uigeb.addEventListener('requestunblockuser', ($evt) => {
         let evtId = $evt.id;
         l.debug('Event ID: ', evtId);

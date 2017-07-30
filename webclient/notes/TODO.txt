@@ -5,9 +5,6 @@ Plan:
 Fix bug where get members fails to return if there are no additional members to return other than
 the current user
 
-Fix logout button not working on team page
-
-
 Style Landing Page
 Style App Page
 Style Team Page
@@ -86,6 +83,7 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Fix logout button not working on team page
 Disable Remove Member (or remove button?) if not team moderator
 Disable Invite Button if note team mod?
 
