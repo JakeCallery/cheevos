@@ -1,7 +1,5 @@
 Plan:
 
-** force new login if cookie is not on server (switching from dev to prod for instance)
-
 Style Landing Page
 Style App Page
 Style Team Page
@@ -26,6 +24,10 @@ Create Tutorial / First time login
 ---------------------------------------
 
 Upcoming Plan:
+** redis integration for cookies/sessions
+** force new login if cookie is not on server (switching from dev to prod for instance)
+** Might need to wait for redis integration
+
 Decide on whether or not to show badges sent while user was blocked
   after they become unblocked
 
