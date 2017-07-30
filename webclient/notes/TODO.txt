@@ -2,9 +2,6 @@ Plan:
 
 ** force new login if cookie is not on server (switching from dev to prod for instance)
 
-Disable Remove Member (or remove button?) if not team moderator
-Disable Invite Button if note team mod?
-
 Fix bug where get members fails to return if there are no additional members to return other than
 the current user
 
@@ -17,6 +14,8 @@ Style Team Page
 Style User Invited Page
 
 Quick Send badge from team page?
+
+Handle timing issues if someone is removed from team at the same time they are working with or sending to
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
@@ -87,6 +86,9 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Disable Remove Member (or remove button?) if not team moderator
+Disable Invite Button if note team mod?
+
 Handle Unauthorized errors for team and member removal
 
 Implement Delete Team UI

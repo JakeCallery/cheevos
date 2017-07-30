@@ -235,7 +235,10 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(notificationLabel);
         container.appendChild(notificationCheckbox);
         container.appendChild(inviteButton);
-        container.appendChild(removeTeamDiv);
+
+        if($teamObj.isModerator) {
+            container.appendChild(removeTeamDiv);
+        }
 
         return container;
     }
@@ -427,7 +430,9 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(isBlockedCB);
         container.appendChild(isModLabel);
         container.appendChild(isModCB);
-        container.appendChild(removeMemberDiv);
+        if($isModerator){
+            container.appendChild(removeMemberDiv);
+        }
 
         return container;
     }
