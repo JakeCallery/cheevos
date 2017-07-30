@@ -388,6 +388,7 @@ class TeamUIMaker extends EventDispatcher {
                     l.debug('Remove Failed, resetting ui');
                     DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
                     DOMUtils.removeClass(removeMemberButton, 'is-hidden');
+                    DOMUtils.enableContainer(container);
                 }
 
             })

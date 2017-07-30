@@ -1,5 +1,7 @@
 Plan:
 
+** force new login if cookie is not on server (switching from dev to prod for instance)
+
 Disable Remove Member (or remove button?) if not team moderator
 Disable Invite Button if note team mod?
 
@@ -8,7 +10,6 @@ the current user
 
 Fix logout button not working on team page
 
-** force new login if cookie is not on server (switching from dev to prod for instance)
 
 Style Landing Page
 Style App Page
@@ -86,9 +87,10 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Handle Unauthorized errors for team and member removal
 
 Implement Delete Team UI
-Implemente Remove Member UI
+Implement Remove Member UI
 
 !!Implement Create New Team UI!!
 Return new team info with creation of new team
