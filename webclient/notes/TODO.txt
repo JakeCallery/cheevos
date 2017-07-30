@@ -3,12 +3,14 @@ Plan:
 Fix bug where get members fails to return if there are no additional members to return other than
 the current user
 
-Upgrade everything to node 6.10.*
-Let's Encrypt Cert auto renew
 Style Landing Page
 Style App Page
 Style Team Page
 Style User Invited Page
+
+Upgrade everything to node 6.10.*
+Let's Encrypt Cert auto renew
+
 
 Update Profile Link on login
   Doesn't seem to update on profile image change
