@@ -362,7 +362,7 @@ class TeamPageRequestManager extends EventDispatcher {
         });
     }
 
-    removeMember($memberId, $teamid) {
+    removeMember($memberId, $teamId) {
         return new Promise((resolve, reject) => {
             l.debug('Removing member');
             fetch('/api/removeMemberFromTeam', {
@@ -373,7 +373,40 @@ class TeamPageRequestManager extends EventDispatcher {
                 }),
                 body: JSON.stringify({
                     memberId: $memberId,
-                    teamId: $teamid
+                    teamId: $teamId
+                })
+            })
+            .then(($response) => {
+                return $response.json();
+            })
+            .then(($res) => {
+                l.debug('Remove Member Response: ', $res);
+                resolve({
+                    status: $res.status,
+                    data: $res.data
+                });
+            })
+            .catch(($error) => {
+                l.error('Remove Member Error');
+                reject({
+                    status: Status.ERROR,
+                    data: $error
+                });
+            });
+        });
+    }
+
+    removeTeam($teamId) {
+        return new Promise((resolve, reject) => {
+            l.debug('Removing Team: ', $teamId);
+            fetch('/api/removeTeam', {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                }),
+                body: JSON.stringify({
+                    teamId:$teamId
                 })
             })
             .then(($response) => {
