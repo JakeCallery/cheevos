@@ -161,13 +161,19 @@ readyManager.ready()
             if($response.status === Status.SUCCESS){
                 l.debug('Status: ', $response.status);
                 geb.dispatchEvent(new JacEvent('teammemberremoved', $response.data));
-                uigeb.completeUIEvent(evtId, $response);
             } else {
                 l.error('Unknown Response Status: ', $response.status);
+                geb.dispatchEvent(new JacEvent('errorevent', $response.status));
             }
+            return $response;
         })
         .catch(($error) => {
             geb.dispatchEvent(new JacEvent('errorevent', $error));
+            return $error;
+        })
+        .then(($response) => {
+            l.debug('Completing UI Event: ', $response);
+            uigeb.completeUIEvent(evtId, $response);
         });
     });
 
@@ -180,17 +186,21 @@ readyManager.ready()
             if($response.status === Status.SUCCESS){
                 l.debug('Status: ', $response.status);
                 geb.dispatchEvent(new JacEvent('teamremoved', $response.data));
-                uigeb.completeUIEvent(evtId, $response);
             } else {
                 l.error('Unknown Response Status: ', $response.status);
                 geb.dispatchEvent(new JacEvent('errorevent', $response.status));
-                uigeb.completeUIEvent(evtId, $response);
             }
+            return $response;
         })
         .catch(($error) => {
             geb.dispatchEvent(new JacEvent('errorevent', $error));
+            return $error;
+        })
+        .then(($response) => {
+            l.debug('Completing UI Event: ', $response);
             uigeb.completeUIEvent(evtId, $response);
         });
+
     });
 
     geb.addEventListener('requestchangeteamnotifications', ($evt) => {

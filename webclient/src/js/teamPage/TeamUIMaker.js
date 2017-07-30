@@ -156,7 +156,7 @@ class TeamUIMaker extends EventDispatcher {
                     teamId: $teamObj.teamId
                 },
                 ($response) => {
-                    l.debug('-- Caught remove team request complete: ' + $response);
+                    l.debug('-- Caught remove team request complete: ', $response);
                     if($response.status === Status.SUCCESS) {
                         container.closeUI();
                     } else {
@@ -380,9 +380,16 @@ class TeamUIMaker extends EventDispatcher {
                 teamId: $teamId,
                 memberId: $memberObj.id
             },
-            () => {
-                l.debug('-- Caught remove member request complete');
-                container.closeUI();
+            ($response) => {
+                l.debug('-- Caught remove member request complete: ', $response);
+                if($response.status === Status.SUCCESS){
+                    container.closeUI();
+                } else {
+                    l.debug('Remove Failed, resetting ui');
+                    DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+                    DOMUtils.removeClass(removeMemberButton, 'is-hidden');
+                }
+
             })
 
         };
