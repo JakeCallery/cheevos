@@ -1,5 +1,8 @@
 Plan:
 
+Disable Remove Member (or remove button?) if not team moderator
+Disable Invite Button if note team mod?
+
 Fix bug where get members fails to return if there are no additional members to return other than
 the current user
 
