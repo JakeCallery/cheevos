@@ -2,9 +2,6 @@ Plan:
 
 ** force new login if cookie is not on server (switching from dev to prod for instance)
 
-Fix bug where get members fails to return if there are no additional members to return other than
-the current user
-
 Style Landing Page
 Style App Page
 Style Team Page
@@ -16,7 +13,6 @@ Handle timing issues if someone is removed from team at the same time they are w
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
-
 
 Update Profile Link on login
   Doesn't seem to update on profile image change
@@ -83,6 +79,9 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
+Fix bug where get members fails to return if there are no additional members to return other than
+the current user
+
 Fix logout button not working on team page
 Disable Remove Member (or remove button?) if not team moderator
 Disable Invite Button if note team mod?

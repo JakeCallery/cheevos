@@ -91,26 +91,34 @@ class TeamPageRequestManager extends EventDispatcher {
             })
             .then(($res) => {
                 l.debug('List Members API Response: ', $res);
-                let memberObjs = [];
-                for(let i = 0; i < $res.data.members.length; i++){
-                    let obj = $res.data.members[i];
-                    let member = new MemberObj(obj.name,
-                        obj.id,
-                        obj.profileImg,
-                        $res.data.teamId,
-                        obj.isBlocked,
-                        obj.isMod);
-                    memberObjs.push(member);
-                }
-
-                resolve({
-                    status: Status.SUCCESS,
-                    data:{
-                        myId: $res.data.myId,
-                        teamId:$res.data.teamId,
-                        members:memberObjs
+                if($res.status === "SUCCESS"){
+                    let memberObjs = [];
+                    for(let i = 0; i < $res.data.members.length; i++){
+                        let obj = $res.data.members[i];
+                        let member = new MemberObj(obj.name,
+                            obj.id,
+                            obj.profileImg,
+                            $res.data.teamId,
+                            obj.isBlocked,
+                            obj.isMod);
+                        memberObjs.push(member);
                     }
-                });
+
+                    resolve({
+                        status: Status.SUCCESS,
+                        data:{
+                            myId: $res.data.myId,
+                            teamId:$res.data.teamId,
+                            members:memberObjs
+                        }
+                    });
+                } else {
+                    l.debug('Rejecting: ', $res.error);
+                    reject({
+                        status: Status.ERROR,
+                        error: $res.error
+                    });
+                }
             })
             .catch(($error) => {
                 l.error('List Members API Error: ', $error);

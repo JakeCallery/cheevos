@@ -70,7 +70,8 @@ readyManager.ready()
                 }
             })
             .catch(($error) => {
-                geb.dispatchEvent(new JacEvent('errorevent', $error));
+                l.debug('Error Obj: ', $error);
+                geb.dispatchEvent(new JacEvent('errorevent', $error.error));
             })
     });
 
