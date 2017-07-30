@@ -1,7 +1,7 @@
 Plan:
 
-Implement Delete Team UI
-Implemente Remove Member UI
+Fix bug where get members fails to return if there are no additional members to return other than
+the current user
 
 Upgrade everything to node 6.10.*
 Let's Encrypt Cert auto renew
@@ -75,8 +75,9 @@ Integration with IFTTT / Automated Achievements?
 -----------------------------------------
 
 DONE:
-Fix bug where get members fails to return if there are no additional members to return other than
-the current user
+
+Implement Delete Team UI
+Implemente Remove Member UI
 
 !!Implement Create New Team UI!!
 Return new team info with creation of new team
