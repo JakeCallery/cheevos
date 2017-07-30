@@ -413,14 +413,14 @@ class TeamPageRequestManager extends EventDispatcher {
                 return $response.json();
             })
             .then(($res) => {
-                l.debug('Remove Member Response: ', $res);
+                l.debug('Remove Team Response: ', $res);
                 resolve({
                     status: $res.status,
                     data: $res.data
                 });
             })
             .catch(($error) => {
-                l.error('Remove Member Error');
+                l.error('Remove Team Error');
                 reject({
                     status: Status.ERROR,
                     data: $error

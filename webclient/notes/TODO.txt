@@ -8,7 +8,7 @@ the current user
 
 Fix logout button not working on team page
 
-force new login if cookie is not on server (switching from dev to prod for instance)
+** force new login if cookie is not on server (switching from dev to prod for instance)
 
 Style Landing Page
 Style App Page

@@ -10,6 +10,7 @@ import JacEvent from 'jac/events/JacEvent';
 import UIGEB from 'general/UIGEB';
 import UIRequestEvent from 'general/UIRequestEvent';
 import shortid from 'shortid';
+import Status from 'general/Status';
 
 class TeamUIMaker extends EventDispatcher {
     constructor($doc){
@@ -154,9 +155,17 @@ class TeamUIMaker extends EventDispatcher {
             self.uigeb.dispatchUIEvent('requestremoveteam', {
                     teamId: $teamObj.teamId
                 },
-                () => {
-                    l.debug('-- Caught remove team request complete');
-                    container.closeUI();
+                ($response) => {
+                    l.debug('-- Caught remove team request complete: ' + $response);
+                    if($response.status === Status.SUCCESS) {
+                        container.closeUI();
+                    } else {
+                        l.debug('Remove failed, resetting ui');
+                        DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+                        DOMUtils.removeClass(removeTeamButton, 'is-hidden');
+                        DOMUtils.enableContainer(container);
+                    }
+
                 })
 
         };

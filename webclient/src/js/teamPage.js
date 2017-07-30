@@ -183,10 +183,13 @@ readyManager.ready()
                 uigeb.completeUIEvent(evtId, $response);
             } else {
                 l.error('Unknown Response Status: ', $response.status);
+                geb.dispatchEvent(new JacEvent('errorevent', $response.status));
+                uigeb.completeUIEvent(evtId, $response);
             }
         })
         .catch(($error) => {
             geb.dispatchEvent(new JacEvent('errorevent', $error));
+            uigeb.completeUIEvent(evtId, $response);
         });
     });
 

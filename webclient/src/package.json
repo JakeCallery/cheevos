@@ -1,6 +1,6 @@
 {
     "name": "Badger-Client",
-    "version": "0.1.118",
+    "version": "0.1.119",
     "description": "Badger Web Client",
     "main": "index.js",
     "dependencies": {

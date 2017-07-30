@@ -16,7 +16,7 @@ router.delete('/', (req, res) => {
             return Team.removeTeam(req.body.teamId);
         } else {
             return new Promise((resolve, reject) => {
-                reject('Only team moderators may remove a team');
+                reject('ACCESS_DENIED');
             });
         }
     })
@@ -33,7 +33,13 @@ router.delete('/', (req, res) => {
             error: $error,
             status: 'ERROR'
         };
-        res.status(400).json(resObj);
+        if($error === 'ACCESS_DENIED'){
+            resObj.message =  'Only team moderators may remove the team';
+            res.status(401).json(resObj);
+        } else {
+            res.status(400).json(resObj);
+        }
+
     });
 });
 
