@@ -171,6 +171,25 @@ readyManager.ready()
         });
     });
 
+    uigeb.addEventListener('requestremoveteam', ($evt) => {
+        l.debug('caught request to remove team: ', $evt.data);
+        let evtId = $evt.id;
+        l.debug('Event ID: ', evtId);
+        reqManager.removeTeam($evt.data.teamId)
+        .then(($response) => {
+            if($response.status === Status.SUCCESS){
+                l.debug('Status: ', $response.status);
+                geb.dispatchEvent(new JacEvent('teamremoved', $response.data));
+                uigeb.completeUIEvent(evtId, $response);
+            } else {
+                l.error('Unknown Response Status: ', $response.status);
+            }
+        })
+        .catch(($error) => {
+            geb.dispatchEvent(new JacEvent('errorevent', $error));
+        });
+    });
+
     geb.addEventListener('requestchangeteamnotifications', ($evt) => {
         l.debug('caught request change team notifications');
         reqManager.setTeamNotificationsStatus($evt.data.teamId, $evt.data.newTeamNotificationsStatus)

@@ -116,6 +116,58 @@ class TeamUIMaker extends EventDispatcher {
         };
         self.geb.addEventListener('inviteuiclosing', container.inviteUIClosingHandler);
 
+        //Remove Team
+        let removeTeamDiv = this.doc.createElement('div');
+        let removeTeamButton = this.doc.createElement('button');
+        removeTeamButton.innerHTML = 'Remove';
+
+        let verifyButtonDiv = this.doc.createElement('div');
+        let cancelRemoveTeamButton = this.doc.createElement('button');
+        cancelRemoveTeamButton.innerHTML = 'Cancel';
+
+        let acceptRemoveTeamButton = this.doc.createElement('button');
+        acceptRemoveTeamButton.innerHTML = 'Accept';
+
+        DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+
+        removeTeamButton.clickHandler = ($evt) => {
+            $evt.stopPropagation();
+            l.debug('Caught Remove Click');
+            DOMUtils.addClass(removeTeamButton, 'is-hidden');
+            DOMUtils.removeClass(verifyButtonDiv, 'is-hidden');
+        };
+        removeTeamButton.addEventListener('click', removeTeamButton.clickHandler);
+
+        cancelRemoveTeamButton.clickHandler = ($evt) => {
+            l.debug('Cancel Clicked');
+            $evt.stopPropagation();
+            DOMUtils.addClass(verifyButtonDiv, 'is-hidden');
+            DOMUtils.removeClass(removeTeamButton, 'is-hidden');
+        };
+        cancelRemoveTeamButton.addEventListener('click', cancelRemoveTeamButton.clickHandler);
+
+        acceptRemoveTeamButton.clickHandler = ($evt) => {
+            l.debug('Accept Clicked');
+            $evt.stopPropagation();
+            DOMUtils.disableContainer(container);
+
+            self.uigeb.dispatchUIEvent('requestremoveteam', {
+                    teamId: $teamObj.teamId
+                },
+                () => {
+                    l.debug('-- Caught remove team request complete');
+                    container.closeUI();
+                })
+
+        };
+        acceptRemoveTeamButton.addEventListener('click', acceptRemoveTeamButton.clickHandler);
+
+        removeTeamDiv.appendChild(removeTeamButton);
+        verifyButtonDiv.appendChild(cancelRemoveTeamButton);
+        verifyButtonDiv.appendChild(acceptRemoveTeamButton);
+        removeTeamDiv.appendChild(verifyButtonDiv);
+
+        //Top Level Container
         container.clickHandler = function($evt) {
             let el = $evt.currentTarget;
             let teamId = self.getTeamIdFromElementId(el.id);
@@ -138,10 +190,32 @@ class TeamUIMaker extends EventDispatcher {
 
         container.closeUI = function(){
             l.debug('Closing TeamDiv UI');
+
+            if(inviteButton.isUIOpen){
+                //close old UI
+                l.debug('Closing invite UI');
+                let parent = container.parentNode;
+                let inviteUI = DOMUtils.getDirectChildById(parent, 'inviteContainer_' + $teamObj.teamId);
+                inviteUI.closeUI();
+                inviteButton.isUIOpen = false;
+            }
+
+            if(container.collapsed === false){
+                //Close Member list first
+                container.collapsed = true;
+                let membersDivNode = self.findNextMembersDiv(container);
+                if(typeof(membersDivNode) !== 'undefined'){ membersDivNode.closeUI(); }
+            }
             notificationCheckbox.removeEventListener('click', notificationCheckbox.clickHandler);
             inviteButton.removeEventListener('click', inviteButton.clickHandler);
             self.geb.removeEventListener('inviteuiclosing', container.inviteUIClosingHandler);
             container.removeEventListener('click', container.clickHandler);
+            removeTeamButton.removeEventListener('click', removeTeamButton.clickHandler);
+            removeTeamButton.clickHandler = undefined;
+            cancelRemoveTeamButton.removeEventListener('click', cancelRemoveTeamButton.clickHandler);
+            cancelRemoveTeamButton.clickHandler = undefined;
+            acceptRemoveTeamButton.removeEventListener('click', acceptRemoveTeamButton.clickHandler);
+            acceptRemoveTeamButton.clickHandler = undefined;
             container.parentNode.removeChild(container);
         };
 
@@ -152,6 +226,7 @@ class TeamUIMaker extends EventDispatcher {
         container.appendChild(notificationLabel);
         container.appendChild(notificationCheckbox);
         container.appendChild(inviteButton);
+        container.appendChild(removeTeamDiv);
 
         return container;
     }
@@ -318,8 +393,11 @@ class TeamUIMaker extends EventDispatcher {
             isBlockedCB.changeHandler = undefined;
             isModCB.removeEventListener('change', isModCB.changeHandler);
             isModCB.removeEventListener = undefined;
+            removeMemberButton.removeEventListener('click', removeMemberButton.clickHandler);
             removeMemberButton.clickHandler = undefined;
+            cancelRemoveMememberButton.removeEventListener('click', cancelRemoveMememberButton.clickHandler);
             cancelRemoveMememberButton.clickHandler = undefined;
+            acceptRemoveMemberButton.removeEventListener('click', acceptRemoveMemberButton.clickHandler);
             acceptRemoveMemberButton.clickHandler = undefined;
             container.parentNode.removeChild(container);
             container = undefined;
